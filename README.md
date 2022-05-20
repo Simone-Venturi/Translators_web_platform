@@ -1,13 +1,5 @@
 # Translators_web_platform
 
-Thesis project, MSc in Engineering and Computer Science at the University of Bologna.
-
-The project is divided into three folders:
-- backend: code to take data from the sensors and send to Rasperry;
-- frontend: take data form serial port and save in Firestore database;
-- docker: web application realized with Vue to show and analize data.
-
-
 Progetto sviluppato per la mia tesi di laurea magistrale in Ingegneria e Scienze Unformatiche presso l'Università di Bologna.
 
 Il progetto si suddivide in tre cartelle principali:
