@@ -1,15 +1,11 @@
 module.exports = {
     runSeeders: () => {
-        console.log("Creation ROLE")
-        require("./role.seeder").createRoles();
-        console.log("Creation USER")
-        require("./user.seeder").createUsers();
-        console.log("Creation LANGUAGE")
-        require("./language.seeder").createLanguages();
-        console.log("Creation SENTENCE")
-        require("./sentence.seeder").createSentences();
-        console.log("Creation TRANSLATION")
-        require("./translation.seeder").createTranslations();
-        console.log("END Creation")
+        require("./role.seeder").createRoles()
+            .then( () => require("./user.seeder").createUsers())
+            .then( () => require("./language.seeder").createLanguages()
+                .then( () => require("./sentence.seeder").createSentences()
+                    .then(() => require("./translation.seeder").createTranslations()
+                        .then( () => require("./review.seeder").createReviews()
+            ))))
     }
 }

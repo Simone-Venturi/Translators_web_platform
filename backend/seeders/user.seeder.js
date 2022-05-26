@@ -5,8 +5,8 @@ const User = db.user;
 
 /* creation basic users */
 module.exports = {
-    createUsers : () => {  
-        User.create({
+    createUsers : async () => {  
+        await User.create({
             id: 1,
             username: "translator",
             email: "translator@simone.it",
@@ -14,7 +14,7 @@ module.exports = {
             roleId: 1
         });
         
-        User.create({
+        await User.create({
             id: 2,
             username: "data scientist",
             email: "datascientist@simone.it",
@@ -22,7 +22,7 @@ module.exports = {
             roleId: 2
         });
         
-        User.create({
+        await User.create({
             id: 3,
             username: "admin",
             email: "admin@simone.it",

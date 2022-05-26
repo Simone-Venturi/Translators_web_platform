@@ -4,20 +4,20 @@ const Language = db.language;
 
 /* creation basic users */
 module.exports = {
-    createLanguages : () => {  
-        Language.create({
+    createLanguages : async () => {  
+        await Language.create({
             idlanguage: 1,
             title: "English",
             abbreviation: "EN"
         });
         
-        Language.create({
+        await Language.create({
             idlanguage: 2,
             title: "Italian",
             abbreviation: "IT"
         });
         
-        Language.create({
+        await Language.create({
             idlanguage: 3,
             title: "Chinese",
             abbreviation: "ZH"

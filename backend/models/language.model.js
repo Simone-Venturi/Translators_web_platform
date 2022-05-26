@@ -2,7 +2,8 @@ module.exports = (sequelize, Sequelize) => {
     const Language = sequelize.define("languages", {
       idlanguage: {
         type: Sequelize.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
       title: {
         type: Sequelize.STRING
