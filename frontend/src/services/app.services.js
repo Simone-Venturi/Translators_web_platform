@@ -2,15 +2,20 @@ import axios from 'axios'
 import {
     setApiURL,
     setJsonEndpointHeaders
-} from './config.service'
+} from '@/services/config.services'
 
-export const API_LOGIN_ENDPOINT = process.env.LOGIN_ENDPOINT,
-API_LOGOUT_ENDPOINT = process.env.LOGOUT_ENDPOINT,
-ApiClient = axios.create({
-    baseURL: setApiURL(),
-    responseType: 'json',
-    withCredentials: true
-})
+export const API_LOGIN_ENDPOINT = process.env.VUE_APP_LOGIN_ENDPOINT,
+    API_LOGOUT_ENDPOINT = process.env.VUE_APP_LOGOUT_ENDPOINT,
+    
+    API_TEST_ALL_ENDPOINT = process.env.VUE_APP_TEST_ALL,
+    API_TEST_ADMIN_ENDPOINT = process.env.VUE_APP_TEST_ADMIN,
+    API_TEST_TRANSLATOR_ENDPOINT = process.env.VUE_APP_TEST_TRANSLATOR,
+    API_TEST_DATASCIENTIST_ENDPOINT = process.env.VUE_APP_TEST_DATASCIENTIST,
+
+    ApiClient = axios.create({
+        baseURL: setApiURL(),
+        responseType: 'json'
+    })
 
 ApiClient.defaults.header = setJsonEndpointHeaders()
 
@@ -19,5 +24,10 @@ export default {
     ApiClient,
     // ------------------ ENDPOINTS
     API_LOGIN_ENDPOINT,
-    API_LOGOUT_ENDPOINT
+    API_LOGOUT_ENDPOINT,    
+    
+    API_TEST_ALL_ENDPOINT,
+    API_TEST_ADMIN_ENDPOINT,
+    API_TEST_TRANSLATOR_ENDPOINT,
+    API_TEST_DATASCIENTIST_ENDPOINT
 }
