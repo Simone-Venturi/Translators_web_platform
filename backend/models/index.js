@@ -25,6 +25,7 @@ db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.language = require("../models/language.model.js")(sequelize, Sequelize);
 db.sentence = require("../models/sentence.model.js")(sequelize, Sequelize);
 db.translation = require("../models/translation.model.js")(sequelize, Sequelize);
+db.review = require("../models/review.model.js")(sequelize, Sequelize);
 
 db.role.hasMany(db.user);
 db.user.belongsTo(db.role);
@@ -65,4 +66,13 @@ db.user.hasMany(db.translation, {
 db.translation.belongsTo(db.user, {
   foreignKey: 'translator'
 });
+
+db.user.hasMany(db.review, {
+  foreignKey: 'translator'
+});
+db.review.belongsTo(db.user, {
+  foreignKey: 'translator'
+});
+db.translation.hasMany(db.review);
+db.review.belongsTo(db.translation);
 module.exports = db;
