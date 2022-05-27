@@ -9,6 +9,11 @@ Il progetto si suddivide in tre cartelle principali:
 
 ## Istruzioni momentanee per l'esecuzione:
 
+### docker
+```
+cd docker
+docker-compose up
+```
 ### backend
 ```
 cd backend
@@ -20,9 +25,4 @@ node index.js
 cd frontend
 npm i
 npm run serve
-```
-### docker
-```
-cd docker
-docker-compose up
 ```
