@@ -2,16 +2,16 @@
   <div class="container">
     <div class="row ml-4 mr-4">
       <div class="col-3">
-        <button class="selected" @click="showTranslate">Translate</button>
+        <MenuButton text="Translate" @click="showTranslate"/>
       </div>
       <div class="col-3">
-        <button class="not-selected" @click="showReview">Review</button>
+        <MenuButton text="Review" @click="showReview"/>
       </div>
       <div class="col-3">
-        <button class="not-selected" @click="showAlignment">Alignment</button>
+        <MenuButton text="Alignment" @click="showAlignment"/>
       </div>
       <div class="col-3">
-        <button class="not-selected" @click="showProfile">Profile</button>
+        <MenuButton text="Profile" @click="showProfile"/>
       </div>
     </div>    
     <div class="row h-100">
@@ -19,9 +19,15 @@
     </div>
   </div>
 </template>
+
 <script>
+import MenuButton from '@/components/MenuButton.vue'
+
 export default {
   name: "Translate",
+  components: {
+    MenuButton
+  },
   data() {
     return {
       content: "Translate",
@@ -61,14 +67,5 @@ export default {
 <style scoped>
   .col-3 {
     text-align: center;
-  }
-  button {
-    width: 100%;
-  }
-  .selected {
-    background-color: aqua;
-  }
-  .not-selected {
-    background-color: transparent;
   }
 </style>
