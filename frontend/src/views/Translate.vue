@@ -15,22 +15,31 @@
       </div>
     </div>    
     <div class="row h-100">
-      <h1>{{content}}</h1>
+      <p>Translate Sentences from 
+        <Dropdown optionLabel='title' :options="languages" placeholder="Select a language"/>
+         to 
+        <Dropdown optionLabel='title' :options="languages" placeholder="Select a language"/>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import MenuButton from '@/components/MenuButton.vue'
+import Dropdown from '@/components/DropdownLayout.vue';
+import LanguageService from "../services/language.service";
 
 export default {
   name: "Translate",
   components: {
-    MenuButton
+    MenuButton,
+    Dropdown
   },
   data() {
     return {
       content: "Translate",
+      selected: null,
+      languages: []
     };
   },
   methods:{
@@ -61,6 +70,17 @@ export default {
          }
       })
     }
+  },
+  mounted(){
+    LanguageService.getAllLanguages().then(
+      (response) => {
+        console.log(response)
+        this.languages = response.data;
+      },
+      (error) => {
+        console.log(error)
+      }
+    );
   }
 };
 </script>
