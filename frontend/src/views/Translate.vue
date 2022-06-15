@@ -15,11 +15,16 @@
       </div>
     </div>    
     <div class="row h-100">
-      <p>Translate Sentences from 
-        <Dropdown optionLabel='title' :options="languages" placeholder="Select a language"/>
-         to 
-        <Dropdown optionLabel='title' :options="languages" placeholder="Select a language"/>
-      </p>
+      <div class="col-12">
+        <p>Translate Sentences from 
+          <Dropdown optionLabel='title' optionValue='idlanguage' :options="languages" placeholder="Select a language" ref="languageFrom" @change="changeFrom"/>
+          to 
+          <Dropdown optionLabel='title' optionValue='idlanguage' :options="languages" placeholder="Select a language"  ref="languageTo" @change="changeTo"/>
+        </p>
+      </div>
+      <div class="col-12">
+        <TranslateDataTable :languageFrom="fromLanguageSelected" :languageTo="toLanguageSelected" ref="sentenceTable"/>
+      </div>
     </div>
   </div>
 </template>
@@ -27,19 +32,22 @@
 <script>
 import MenuButton from '@/components/MenuButton.vue'
 import Dropdown from '@/components/DropdownLayout.vue';
+import TranslateDataTable from '@/components/TranslateDataTable.vue';
 import LanguageService from "../services/language.service";
 
 export default {
   name: "Translate",
   components: {
     MenuButton,
-    Dropdown
+    Dropdown,
+    TranslateDataTable
   },
   data() {
     return {
       content: "Translate",
-      selected: null,
-      languages: []
+      languages: [],
+      fromLanguageSelected: null,
+      toLanguageSelected: null
     };
   },
   methods:{
@@ -69,12 +77,17 @@ export default {
             el.classList.remove("selected")
          }
       })
+    },
+    changeFrom(){
+      this.fromLanguageSelected = this.$refs.languageFrom.selected
+    },
+    changeTo(){
+      this.toLanguageSelected = this.$refs.languageTo.selected
     }
   },
   mounted(){
     LanguageService.getAllLanguages().then(
       (response) => {
-        console.log(response)
         this.languages = response.data;
       },
       (error) => {

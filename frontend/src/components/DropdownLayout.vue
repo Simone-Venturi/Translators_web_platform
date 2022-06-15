@@ -1,6 +1,6 @@
 <template>
     <div class="dropdown">
-        <Dropdown v-model="selected" :options="options" :optionLabel="optionLabel" :filter="true" :placeholder="placeholder" />
+        <Dropdown v-model="selected" :options="options" :optionLabel="optionLabel" :filter="true" :optionValue="optionValue" :placeholder="placeholder" @change="changeValue"/>
     </div>
 </template>
 
@@ -22,6 +22,10 @@ export default {
             type: String,
             default: "name",
         },
+        optionValue: {
+            type: String,
+            default: "value",
+        },
         placeholder: {
             type: String,
             default: "select..",
@@ -29,6 +33,12 @@ export default {
         options: { 
             type: Array, 
             default: null,
+        }
+    },
+    methods:{
+        changeValue(event){
+            this.selected = event.value
+            this.$emit('change')
         }
     }
 }
