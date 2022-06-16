@@ -81,7 +81,7 @@ export default {
     },
     methods: {
         translate(idsentence){
-            if(this.languageFrom === this.languageTo || this.allSentences.filter(sentence => sentence.idsentence === idsentence).languageId === this.languageTo){
+            if(this.languageFrom === this.languageTo || this.allSentences.filter(sentence => sentence.idsentence === idsentence)[0].languageId === this.languageTo){
                 console.log("ERROR: SAME LANGUAGES SELECTED")
             } else if(this.languageTo === null) {
                 console.log("ERROR: SELECT A LANGUAGE TO TRANSLATE")
