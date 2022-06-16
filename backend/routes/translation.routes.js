@@ -10,7 +10,7 @@ module.exports = function(app) {
   });
   app.post(
     "/api/translation/create",
-    authJwt.verifyToken,
+    [authJwt.verifyToken, authJwt.isTranslator],
     controller.createTranslation
   );  
 };
