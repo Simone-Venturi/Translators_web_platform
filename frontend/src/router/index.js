@@ -4,6 +4,7 @@ import Translate from "@/views/Translate.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 // lazy-loaded
+const Translation = () => import("@/views/Translation.vue")
 const Profile = () => import("@/components/Profile.vue")
 const routes = [
   {
@@ -22,6 +23,11 @@ const routes = [
   {
     path: "/translate",
     component: Translate,
+  },
+  {
+    path: "/translate/:idSentence/:idLanguageTo",
+    name: "translation",
+    component: Translation,
   },
   {
     path: "/login",
