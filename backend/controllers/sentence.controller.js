@@ -1,4 +1,3 @@
-const { sentence } = require("../models");
 const db = require("../models");
 const Sentence = db.sentence;
 
