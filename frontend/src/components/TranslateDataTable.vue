@@ -30,13 +30,27 @@
                 </template>
             </Column>
         </DataTable>
+        <Dialog header="Same language selected" :visible="displaySameLanguagesModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+            <p class="m-0">You tried to translate a sentence to the same language is written. <br/> Please select an other one.</p>
+            <template #footer>
+                <Button label="Ok" icon="pi pi-check" @click="toggleDisplaySameLanguagesModal" autofocus />
+            </template>
+        </Dialog>
+        <Dialog header="No language selected" :visible="displayNoLanguagesModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+            <p class="m-0">You tried to translate a sentence without select a language. <br/> Please select a language.</p>
+            <template #footer>
+                <Button label="Ok" icon="pi pi-check" @click="toggleDisplayNoLanguagesModal" autofocus />
+            </template>
+        </Dialog>
     </div>
 </template>
 
 <script>
 import DataTable from 'primevue/datatable';
 import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 import Column from 'primevue/column';
+import Dialog from 'primevue/dialog';
 import SentencesService from "../services/sentence.service";
 import {FilterMatchMode} from 'primevue/api';
 
@@ -49,7 +63,9 @@ export default {
             filters: {
                 'global': {value: null, matchMode: FilterMatchMode.CONTAINS}
             },
-            loading: true
+            loading: true,            
+            displaySameLanguagesModal: false,
+            displayNoLanguagesModal: false
         }
     },
     props: {
@@ -65,7 +81,9 @@ export default {
     components: {
         DataTable,
         Column,
-        InputText
+        InputText,
+        Dialog,
+        Button
     },
     mounted() {
         SentencesService.getAllSentences().then(result => {
@@ -81,14 +99,20 @@ export default {
     },
     methods: {
         translate(idsentence){
-            if(this.languageFrom === this.languageTo || this.allSentences.filter(sentence => sentence.idsentence === idsentence)[0].languageId === this.languageTo){
-                console.log("ERROR: SAME LANGUAGES SELECTED")
+            if((this.languageFrom === this.languageTo && this.languageFrom !== null) || this.allSentences.filter(sentence => sentence.idsentence === idsentence)[0].languageId === this.languageTo){
+                this.toggleDisplaySameLanguagesModal()
             } else if(this.languageTo === null) {
-                console.log("ERROR: SELECT A LANGUAGE TO TRANSLATE")
+                this.toggleDisplayNoLanguagesModal()
             } else {
                 this.$router.push('/translate/'+idsentence+'/'+this.languageTo)
             }
         },
+        toggleDisplaySameLanguagesModal() {
+            this.displaySameLanguagesModal = !this.displaySameLanguagesModal
+        },
+        toggleDisplayNoLanguagesModal() {
+            this.displayNoLanguagesModal = !this.displayNoLanguagesModal
+        }
     }
 }
 </script>
