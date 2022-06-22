@@ -1,5 +1,5 @@
 <template>    
-    <div class="row ml-4 mr-4">
+    <div class="row menu4button">
       <div class="col-3">
         <MenuButton class="menubutton" text="Translate" @click="showTranslate"/>
       </div>
@@ -65,5 +65,9 @@ export default {
 <style scoped>
   .col-3 {
     text-align: center;
+  }
+  .menu4button{
+    border: 2px solid black;
+    margin: 2% 0%;
   }
 </style>

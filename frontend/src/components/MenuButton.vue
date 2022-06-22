@@ -19,7 +19,9 @@ export default {
     width: 100%;
   }
   .selected {
-    background-color: aqua;
+    background-color: #41b883;
+    color: white;
+    font-weight: bold;
   }
   .not-selected {
     background-color: transparent;
