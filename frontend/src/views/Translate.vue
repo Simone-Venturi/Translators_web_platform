@@ -2,23 +2,17 @@
   <div class="container">
     <Menu />
     <div class="row h-100">
+      <LanguageFilter optionLabel="title" optionValue="idlanguage" :options="languages" placeholder="Select a language" @changeFrom="changeFrom" @changeTo="changeTo"/>
       <div class="col-12">
-        <p>Translate Sentences from 
-          <Dropdown optionLabel='title' optionValue='idlanguage' :options="languages" placeholder="Select a language" ref="languageFrom" @change="changeFrom"/>
-          to 
-          <Dropdown optionLabel='title' optionValue='idlanguage' :options="languages" placeholder="Select a language"  ref="languageTo" @change="changeTo"/>
-        </p>
-      </div>
-      <div class="col-12">
-        <TranslateDataTable :languageFrom="fromLanguageSelected" :languageTo="toLanguageSelected" ref="sentenceTable"/>
+        <TranslateDataTable :languageFrom="fromLanguageSelected" :languageTo="toLanguageSelected"/>
       </div>
     </div>
-  </div>
+  </div>  
 </template>
 
 <script>
 import Menu from '@/components/Menu.vue'
-import Dropdown from '@/components/DropdownLayout.vue';
+import LanguageFilter from '@/components/DropdownFilterComponent.vue';
 import TranslateDataTable from '@/components/TranslateDataTable.vue';
 import LanguageService from "../services/language.service";
 
@@ -26,7 +20,7 @@ export default {
   name: "Translate",
   components: {
     Menu,
-    Dropdown,
+    LanguageFilter,
     TranslateDataTable
   },
   data() {
@@ -38,11 +32,11 @@ export default {
     };
   },
   methods:{
-    changeFrom(){
-      this.fromLanguageSelected = this.$refs.languageFrom.selected
+    changeFrom(payload){
+      this.fromLanguageSelected = payload.id
     },
-    changeTo(){
-      this.toLanguageSelected = this.$refs.languageTo.selected
+    changeTo(payload){
+      this.toLanguageSelected = payload.id
     }
   },
   mounted(){
