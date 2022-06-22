@@ -52,12 +52,14 @@ db.sentence.hasMany(db.translation, {
   foreignKey: 'original'
 });
 db.translation.belongsTo(db.sentence, {
+  as: 'OriginalSentence',
   foreignKey: 'original'
 });
 db.sentence.hasMany(db.translation, {
   foreignKey: 'translated'
 });
-db.translation.belongsTo(db.language, {
+db.translation.belongsTo(db.sentence, {
+  as: 'TranslatedSentence',
   foreignKey: 'translated'
 });
 db.user.hasMany(db.translation, {

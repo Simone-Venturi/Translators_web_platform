@@ -8,6 +8,10 @@ module.exports = function(app) {
     );
     next();
   });
+  app.get(
+    "/api/translation/all",
+    controller.allTranslations
+  );  
   app.post(
     "/api/translation/create",
     [authJwt.verifyToken, authJwt.isTranslator],

@@ -2,6 +2,18 @@ const db = require("../models");
 const Translation = db.translation;
 const Sentence = db.sentence;
 
+exports.allTranslations = (req, res) => {
+    Translation.findAll({
+        attributes: ['id', 'avarage_score', 'n_scores'],
+        include: ['OriginalSentence','TranslatedSentence']
+    }).then( translations => {        
+        if (!translations) {
+            return res.status(404).send({ message: "Sentences not found." });
+        }
+
+        res.status(200).send(translations)
+    })
+}
 
 exports.createTranslation = (req, res) => {
     Sentence.create({

@@ -7,7 +7,7 @@ module.exports = {
     createTranslations : async () => {  
         await Translation.create({
             original: 2,
-            translated: 1,
+            translated: 3,
             translator: 1
         });
     }
