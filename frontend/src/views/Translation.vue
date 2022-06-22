@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Menu />
-    <div class="w-60">
+    <div class="w-80">
       <div class="row ml-4 mr-4">
         <div class="col-12">
           <h2>Translation</h2>
@@ -14,38 +14,51 @@
       </div>    
       <div class="row h-100">
         <div class="col-12">
-          <Textarea v-model="text" :autoResize="true" />
+          <Textarea v-model="text" :autoResize="true" rows="10" cols="80" />
         </div>
       </div>
       <div class="row d-flex justify-content-between">
         <div class="col-4">
-          <button @click="resetTranslation()">Cancel</button>
+          <GeneralButton @click="resetTranslation" text="Cancel" colorHover="red"/>
         </div>
         <div class="col-4">
-          <button @click="sendTranslation()">Submit Translation</button>
+          <GeneralButton @click="sendTranslation()" text="Submit Translation"/>
         </div>
       </div>
     </div>
+      <Dialog header="Empty translation" :visible="displayNoTranslationModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+          <p class="m-0">You provided an empty translation. <br/> Please provide one.</p>
+          <template #footer>
+              <Button label="Ok" icon="pi pi-check" @click="toggleDisplayNoTranslationModal" autofocus />
+          </template>
+      </Dialog>
   </div>
 </template>
 
 <script>
 import Textarea from 'primevue/textarea'
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
 import SentencesService from "../services/sentence.service";
 import TranslationsService from "../services/translation.service";
 import Menu from '@/components/Menu.vue'
+import GeneralButton from '@/components/GeneralButton.vue'
 
 export default {
   name: "Translation",
   components: {
     Menu,
-    Textarea
+    Textarea,
+    Dialog,
+    Button,
+    GeneralButton
   },
   data() {
     return {
       content: "Translate",
       sentence: {},
-      text: ''
+      text: '',
+      displayNoTranslationModal: false
     };
   },
   methods: {
@@ -59,11 +72,16 @@ export default {
             console.log(error)
           }
         )
+      } else {
+        this.toggleDisplayNoTranslationModal()
       }
     },
     resetTranslation(){
       this.text=''
-    }
+    },
+      toggleDisplayNoTranslationModal() {
+          this.displayNoTranslationModal = !this.displayNoTranslationModal
+      }
   },
   mounted(){
     SentencesService.getSentenceFromID(this.$route.params.idSentence).then(
@@ -81,8 +99,8 @@ export default {
 };
 </script>
 <style scoped>
-.w-60{
-  width: 60%;
-  margin: 1% 20%
+.w-80{
+  width: 80%;
+  margin: 1% 10%
 }
 </style>
