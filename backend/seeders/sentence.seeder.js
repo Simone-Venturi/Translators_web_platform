@@ -19,5 +19,20 @@ module.exports = {
             sentence: "L'acqua era deliziosa",
             languageId: 2
         });
+
+        await Sentence.create({
+            sentence: "Il pane è caldo",
+            languageId: 2
+        });
+
+        await Sentence.create({
+            sentence: "Oggi ho pranzato alle 13:00",
+            languageId: 2
+        });
+
+        await Sentence.create({
+            sentence: "Today I had lunch at 1:00 PM",
+            languageId: 1
+        });
     }
 }

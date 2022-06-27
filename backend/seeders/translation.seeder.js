@@ -10,5 +10,11 @@ module.exports = {
             translated: 3,
             translator: 1
         });
+
+        await Translation.create({
+            original: 5,
+            translated: 6,
+            translator: 1
+        });
     }
 }
