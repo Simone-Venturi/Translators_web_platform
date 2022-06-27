@@ -76,12 +76,8 @@ export default {
         }
     },
     props: {
-        languageFrom: {
-            type: Number,
-            default: null
-        },
-        languageTo: {
-            type: Number,
+        languageFilter: {
+            type: Object,
             default: null
         }
     },
@@ -94,44 +90,46 @@ export default {
         GeneralButton
     },
     mounted() {
-        TranslationsService.getAllTranslations().then(result => {
-            this.allTranslations = result.data;
-            this.allTranslations = this.allTranslations.map(translation => ({...translation, score_review: null}));
-            this.translations = this.allTranslations;
-            this.loading = false;
-        });
+        this.getTranslations();
     },
     watch: { 
-      	languageFrom: function(newVal, oldVal) {
-            this.translations = this.allTranslations
-                .filter(translation => translation.OriginalSentence.languageId === newVal)
-                .filter(translation => {
-                    if(this.languageTo == null){
-                        return true
-                    } else {
-                        return translation.TranslatedSentence.languageId == this.languageTo
-                    }
-                })
-        },
-        languageTo: function(newVal, oldVal) {
-            this.translations = this.allTranslations
-                .filter(translation => translation.TranslatedSentence.languageId === newVal)            
-                .filter((translation) => {
-                    if(this.languageFrom == null){
-                        return true
-                    } else {
-                        return translation.OriginalSentence.languageId == this.languageFrom
-                    }
-                })
+      	'languageFilter.update': function(newVal) {
+            if (newVal === true){
+                this.translations = this.allTranslations
+                    .filter(translation => {
+                        if(this.languageFilter.fromLanguageSelected == null){
+                            return true
+                        } else {   
+                            return translation.OriginalSentence.languageId == this.languageFilter.fromLanguageSelected
+                        }
+                    })
+                    .filter(translation => {
+                        if(this.languageFilter.toLanguageSelected == null){
+                            return true
+                        } else {
+                            return translation.TranslatedSentence.languageId == this.languageFilter.toLanguageSelected
+                        }
+                    })
+                this.$emit('updatedLanguageFilter');
+            }
         }
     },
     methods: {
+        getTranslations(){            
+            return TranslationsService.getAllTranslationsNotReviewed().then(result => {
+                this.allTranslations = result.data;
+                this.allTranslations = this.allTranslations.map(translation => ({...translation, score_review: null}));
+                this.translations = this.allTranslations;
+                this.loading = false;
+            })
+        },
         rate(id){
             let translation = this.translations.filter(translation => translation.id === id)[0]
             if(translation.score_review !== null){
                 ReviewsService.createReview(translation.id, translation.score_review).then(
                 (response) => {
-                    console.log(response)
+                    this.getTranslations()
+                        .then(() => this.$emit('rated'))
                 },
                 (error) => {
                     console.log(error)

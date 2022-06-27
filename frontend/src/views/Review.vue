@@ -4,7 +4,7 @@
     <div class="row h-100">
       <LanguageFilter optionLabel="title" optionValue="idlanguage" :options="languages" placeholder="Select a language" @changeFrom="changeFrom" @changeTo="changeTo"/>
       <div class="col-12">
-        <ReviewDataTable :languageFrom="fromLanguageSelected" :languageTo="toLanguageSelected"/>
+        <ReviewDataTable :languageFilter="languageFilter" @rated="updateFilter" @updatedLanguageFilter="updatedLanguageFilter"/>
       </div>
     </div>
   </div>  
@@ -27,17 +27,29 @@ export default {
     return {
       content: "Review",
       languages: [],
-      fromLanguageSelected: null,
-      toLanguageSelected: null
+      languageFilter: {        
+        fromLanguageSelected: null,
+        toLanguageSelected: null,
+        update: false
+      }
     };
   },
   methods:{
     changeFrom(payload){
-      this.fromLanguageSelected = payload.id
+      this.languageFilter.fromLanguageSelected = payload.id
+      this.languageFilter.update=true
+
     },
     changeTo(payload){
-      this.toLanguageSelected = payload.id
-    }
+      this.languageFilter.toLanguageSelected = payload.id
+      this.languageFilter.update=true
+    },
+    updateFilter(){
+      this.languageFilter.update=true
+    },
+    updatedLanguageFilter(){
+      this.languageFilter.update=false
+    },
   },
   mounted(){
     LanguageService.getAllLanguages().then(

@@ -10,11 +10,17 @@ module.exports = function(app) {
   });
   app.get(
     "/api/translation/all",
+    [authJwt.verifyToken],
     controller.allTranslations
   );  
   app.post(
     "/api/translation/create",
     [authJwt.verifyToken, authJwt.isTranslator],
     controller.createTranslation
-  );  
+  );
+  app.get(
+    "/api/translation/allNotReviewed",
+    [authJwt.verifyToken, authJwt.isTranslator],
+    controller.allTranslationsNotReviewdByUser
+  );
 };
