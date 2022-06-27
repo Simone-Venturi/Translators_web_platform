@@ -32,6 +32,12 @@
               <Button label="Ok" icon="pi pi-check" @click="toggleDisplayNoTranslationModal" autofocus />
           </template>
       </Dialog>
+      <Dialog header="Translation create with success" :visible="displayOkTranslationModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+          <p class="m-0">You created a translation successfully. <br/> Thank you.</p>
+          <template #footer>
+              <Button label="Ok" icon="pi pi-check" @click="closeDisplayOkTranslationModal" autofocus />
+          </template>
+      </Dialog>
   </div>
 </template>
 
@@ -58,7 +64,8 @@ export default {
       content: "Translate",
       sentence: {},
       text: '',
-      displayNoTranslationModal: false
+      displayNoTranslationModal: false,
+      displayOkTranslationModal: false
     };
   },
   methods: {
@@ -66,7 +73,7 @@ export default {
       if(this.text.length){
         TranslationsService.createTranslation(this.sentence.idsentence, this.text, parseInt(this.$route.params.idLanguageTo)).then(
           (response) => {
-            console.log(response)
+            this.toggleDisplayOkTranslationModal()
           },
           (error) => {
             console.log(error)
@@ -79,9 +86,16 @@ export default {
     resetTranslation(){
       this.text=''
     },
-      toggleDisplayNoTranslationModal() {
-          this.displayNoTranslationModal = !this.displayNoTranslationModal
-      }
+    toggleDisplayNoTranslationModal() {
+        this.displayNoTranslationModal = !this.displayNoTranslationModal
+    },
+    toggleDisplayOkTranslationModal(){
+        this.displayOkTranslationModal = !this.displayOkTranslationModal
+    },
+    closeDisplayOkTranslationModal(){
+      this.toggleDisplayOkTranslationModal()      
+      this.$router.push('/translate')
+    }
   },
   mounted(){
     SentencesService.getSentenceFromID(this.$route.params.idSentence).then(
