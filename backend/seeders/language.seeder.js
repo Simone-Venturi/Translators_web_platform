@@ -22,5 +22,17 @@ module.exports = {
             title: "Chinese",
             abbreviation: "ZH"
         });
+        
+        await Language.create({
+            idlanguage: 4,
+            title: "Spanish",
+            abbreviation: "ES"
+        });
+        
+        await Language.create({
+            idlanguage: 5,
+            title: "French",
+            abbreviation: "FR"
+        });
     }
 }

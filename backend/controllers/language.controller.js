@@ -11,4 +11,19 @@ exports.allLanguages = (req, res) => {
         }
         res.status(200).send(languages)
     });
-};
+}
+
+exports.allLanguagesKnownByUser = (req, res) => {
+    Language.findAll({
+        attributes: ['idlanguage', 'title', 'abbreviation'],
+        include: ['TranslatorTranslateLanguage'],
+        where: {
+            '$TranslatorTranslateLanguage.id$': { [db.Sequelize.Op.eq]: req.userId }
+        }
+    }).then( languages => {
+        if (!languages) {
+            return res.status(404).send({ message: "Languages not found." });
+        }
+        res.status(200).send(languages)
+    });
+}
