@@ -37,22 +37,22 @@ export default {
   methods:{
     changeFrom(payload){
       this.languageFilter.fromLanguageSelected = payload.id
-      this.languageFilter.update=true
+      this.updateFilter()
 
     },
     changeTo(payload){
       this.languageFilter.toLanguageSelected = payload.id
-      this.languageFilter.update=true
+      this.updateFilter()
     },
     updateFilter(){
       this.languageFilter.update=true
     },
     updatedLanguageFilter(){
       this.languageFilter.update=false
-    },
+    }
   },
   mounted(){
-    LanguageService.getAllLanguages().then(
+    LanguageService.getAllLanguagesFilteredByUser().then(
       (response) => {
         this.languages = response.data;
       },

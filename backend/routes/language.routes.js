@@ -11,6 +11,11 @@ module.exports = function(app) {
   app.get(
     "/api/language/all",
     authJwt.verifyToken,
+    controller.allLanguages
+  );
+  app.get(
+    "/api/language/known",
+    authJwt.verifyToken,
     controller.allLanguagesKnownByUser
   );
 };
