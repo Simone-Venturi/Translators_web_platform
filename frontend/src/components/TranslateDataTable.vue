@@ -89,6 +89,9 @@ export default {
             }
         }
     },
+    mounted(){
+        this.updateSentences()
+    },
     methods: {
         translate(idsentence){
             if((this.languageFilter.fromLanguageSelected === this.languageFilter.toLanguageSelected && this.languageFilter.fromLanguageSelected !== null) || this.sentences.filter(sentence => sentence.idsentence === idsentence)[0].languageId === this.languageFilter.toLanguageSelected){
