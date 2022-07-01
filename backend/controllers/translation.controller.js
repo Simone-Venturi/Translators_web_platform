@@ -1,8 +1,8 @@
-const { review } = require("../models");
 const db = require("../models");
 const Translation = db.translation;
 const Review = db.review;
 const Sentence = db.sentence;
+const Language = db.language;
 
 exports.allTranslations = (req, res) => {
     Translation.findAll({
@@ -41,7 +41,7 @@ exports.createTranslation = (req, res) => {
 exports.allTranslationsNotReviewdByUser = (req, res) => {
     Translation.findAll({
         attributes: ['id', 'avarage_score', 'n_scores'],
-        include: ['OriginalSentence','TranslatedSentence'],
+        include: ['OriginalSentence','TranslatedSentence']
     }).then( translations => {
         if (!translations) {
             return res.status(404).send({ message: "Translations not found." });
@@ -52,9 +52,24 @@ exports.allTranslationsNotReviewdByUser = (req, res) => {
                 translator: { [db.Sequelize.Op.eq]: req.userId }
             }
         }).then( reviews => {
-            let array_id = reviews.map(review => review.translationId)
-            translations = translations.filter(translation => !array_id.includes(translation.id))
-            res.status(200).send(translations)
+            let array_id_reviews = reviews.map(review => review.translationId)
+            translations = translations.filter(translation => !array_id_reviews.includes(translation.id))
+            Language.findAll({
+                attributes: ['idlanguage', 'title', 'abbreviation'],
+                include: ['TranslatorTranslateLanguage'],
+                where: {
+                    '$TranslatorTranslateLanguage.id$': { [db.Sequelize.Op.eq]: req.userId }
+                }
+            }).then( languages => {
+                if (!languages) {
+                    return res.status(404).send({ message: "Languages not found." });
+                }
+                let array_id_language = languages.map(language => language.idlanguage)
+                translations = translations
+                    .filter(translation => array_id_language.includes(translation.OriginalSentence.languageId))
+                    .filter(translation => array_id_language.includes(translation.TranslatedSentence.languageId))
+                res.status(200).send(translations)
+            });
         })
     })
 }
