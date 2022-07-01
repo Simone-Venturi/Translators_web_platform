@@ -4,7 +4,7 @@
     <div class="row h-100">
       <LanguageFilter optionLabel="title" optionValue="idlanguage" :options="languages" placeholder="Select a language" @changeFrom="changeFrom" @changeTo="changeTo"/>
       <div class="col-12">
-        <TranslateDataTable :languageFrom="fromLanguageSelected" :languageTo="toLanguageSelected"/>
+        <TranslateDataTable :languageFilter="languageFilter" @updatedLanguageFilter="updatedLanguageFilter"/>
       </div>
     </div>
   </div>  
@@ -27,20 +27,31 @@ export default {
     return {
       content: "Translate",
       languages: [],
-      fromLanguageSelected: null,
-      toLanguageSelected: null
+      languageFilter: {        
+        fromLanguageSelected: null,
+        toLanguageSelected: null,
+        update: false
+      }
     };
   },
   methods:{
     changeFrom(payload){
-      this.fromLanguageSelected = payload.id
+      this.languageFilter.fromLanguageSelected = payload.id
+      this.updateFilter()
     },
     changeTo(payload){
-      this.toLanguageSelected = payload.id
-    }
+      this.languageFilter.toLanguageSelected = payload.id
+      this.updateFilter()
+    },    
+    updateFilter(){
+      this.languageFilter.update=true
+    },
+    updatedLanguageFilter(){
+      this.languageFilter.update=false
+    },
   },
   mounted(){
-    LanguageService.getAllLanguages().then(
+    LanguageService.getAllLanguagesFilteredByUser().then(
       (response) => {
         this.languages = response.data;
       },

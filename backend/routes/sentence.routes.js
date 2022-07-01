@@ -12,7 +12,12 @@ module.exports = function(app) {
     "/api/sentence/all",
     authJwt.verifyToken,
     controller.allSentences
-  );  
+  );
+  app.get(
+    "/api/sentence/available/:fromLanguage/:toLanguage",
+    [authJwt.verifyToken, authJwt.isTranslator],
+    controller.getSentenceFromLanguageToTranslate
+  );
   app.get(
     "/api/sentence/:idSentence",
     authJwt.verifyToken,

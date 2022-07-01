@@ -48,6 +48,7 @@ db.language.hasMany(db.sentence, {
   foreignKey: 'languageId'
 });
 db.sentence.belongsTo(db.language, {
+  as: 'Language',
   foreignKey: 'languageId'
 });
 

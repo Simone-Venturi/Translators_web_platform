@@ -58,7 +58,6 @@ export default {
     name: "DataTableLayout",
     data() {
         return {
-            allSentences: null,
             sentences: null,
             filters: {
                 'global': {value: null, matchMode: FilterMatchMode.CONTAINS}
@@ -69,12 +68,8 @@ export default {
         }
     },
     props: {
-        languageFrom: {
-            type: Number,
-            default: null
-        },
-        languageTo: {
-            type: Number,
+        languageFilter: {
+            type: Object,
             default: null
         }
     },
@@ -85,26 +80,23 @@ export default {
         Dialog,
         Button
     },
-    mounted() {
-        SentencesService.getAllSentences().then(result => {
-            this.allSentences = result.data;
-            this.sentences = result.data;
-            this.loading = false;
-        });
-    },
     watch: { 
-      	languageFrom: function(newVal, oldVal) {
-          this.sentences = this.allSentences.filter(sentence => sentence.languageId === newVal)
+      	'languageFilter.update': function(newVal) {
+            if (newVal === true && this.languageFilter.fromLanguageSelected !== null){
+                this.updateSentences()
+            } else {
+                this.$emit('updatedLanguageFilter');
+            }
         }
     },
     methods: {
         translate(idsentence){
-            if((this.languageFrom === this.languageTo && this.languageFrom !== null) || this.allSentences.filter(sentence => sentence.idsentence === idsentence)[0].languageId === this.languageTo){
+            if((this.languageFilter.fromLanguageSelected === this.languageFilter.toLanguageSelected && this.languageFilter.fromLanguageSelected !== null) || this.sentences.filter(sentence => sentence.idsentence === idsentence)[0].languageId === this.languageFilter.toLanguageSelected){
                 this.toggleDisplaySameLanguagesModal()
-            } else if(this.languageTo === null) {
+            } else if(this.languageFilter.toLanguageSelected === null) {
                 this.toggleDisplayNoLanguagesModal()
             } else {
-                this.$router.push('/translate/'+idsentence+'/'+this.languageTo)
+                this.$router.push('/translate/'+idsentence+'/'+this.languageFilter.toLanguageSelected)
             }
         },
         toggleDisplaySameLanguagesModal() {
@@ -112,6 +104,13 @@ export default {
         },
         toggleDisplayNoLanguagesModal() {
             this.displayNoLanguagesModal = !this.displayNoLanguagesModal
+        },
+        updateSentences(){
+            SentencesService.getAllSentencesFromLanguageToTranslate(this.languageFilter.fromLanguageSelected, this.languageFilter.toLanguageSelected).then(result => {
+                this.sentences = result.data;
+                this.loading = false;
+                this.$emit('updatedLanguageFilter');
+            });
         }
     }
 }
