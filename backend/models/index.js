@@ -27,6 +27,7 @@ db.translator_translate_language = require("../models/translator_translate_langu
 db.sentence = require("../models/sentence.model.js")(sequelize, Sequelize);
 db.translation = require("../models/translation.model.js")(sequelize, Sequelize);
 db.review = require("../models/review.model.js")(sequelize, Sequelize);
+db.parallel_text = require("../models/parallel_text.model.js")(sequelize, Sequelize);
 
 db.role.hasMany(db.user);
 db.user.belongsTo(db.role);
@@ -81,4 +82,19 @@ db.review.belongsTo(db.user, {
 });
 db.translation.hasMany(db.review);
 db.review.belongsTo(db.translation);
+
+db.parallel_text.belongsTo(db.language, {
+  as: 'OriginalLanguage',
+  foreignKey: 'originalLanguage'
+});
+db.language.hasMany(db.parallel_text, {
+  foreignKey: 'originalLanguage'
+});
+db.parallel_text.belongsTo(db.language, {
+  as: 'TranslatedLanguage',
+  foreignKey: 'translatedLanguage'
+});
+db.language.hasMany(db.parallel_text, {
+  foreignKey: 'translatedLanguage'
+});
 module.exports = db;
