@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import Home from "@/views/Home.vue";
 import Translate from "@/views/Translate.vue";
 import Review from "@/views/Review.vue";
+import Alignment from "@/views/Alignment.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 // lazy-loaded
@@ -28,6 +29,10 @@ const routes = [
   {
     path: "/review",
     component: Review,
+  },
+  {
+    path: "/alignment",
+    component: Alignment,
   },
   {
     path: "/translate/:idSentence/:idLanguageTo",
