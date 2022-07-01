@@ -4,6 +4,7 @@
     <div class="row h-100">
       <LanguageFilter optionLabel="title" optionValue="idlanguage" :options="languages" placeholder="Select a language" @changeFrom="changeFrom" @changeTo="changeTo"/>
       <div class="col-12">
+        <AlignmentDataTable :languageFilter="languageFilter" @updatedLanguageFilter="updatedLanguageFilter"/>
       </div>
     </div>
   </div>  
@@ -12,12 +13,14 @@
 <script>
 import Menu from '@/components/Menu.vue'
 import LanguageFilter from '@/components/DropdownFilterComponent.vue';
+import AlignmentDataTable from '@/components/AlignmentDataTable.vue';
 import LanguageService from "../services/language.service";
 
 export default {
   name: "Alignment",
   components: {
     Menu,
+    AlignmentDataTable,
     LanguageFilter
   },
   data() {
