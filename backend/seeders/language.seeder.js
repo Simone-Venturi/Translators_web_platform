@@ -34,5 +34,11 @@ module.exports = {
             title: "French",
             abbreviation: "FR"
         });
+
+        await Language.create({
+            idlanguage: 6,
+            title: "Portuguese",
+            abbreviation: "PL"
+        });
     }
 }

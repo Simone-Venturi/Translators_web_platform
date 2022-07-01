@@ -34,5 +34,25 @@ module.exports = {
             sentence: "Today I had lunch at 1:00 PM",
             languageId: 1
         });
+
+        await Sentence.create({
+            sentence: "你好",
+            languageId: 3
+        });
+
+        await Sentence.create({
+            sentence: "Hello",
+            languageId: 1
+        });
+
+        await Sentence.create({
+            sentence: "Ciao",
+            languageId: 2
+        });
+        
+        await Sentence.create({
+            sentence: "Olá",
+            languageId: 6
+        });
     }
 }

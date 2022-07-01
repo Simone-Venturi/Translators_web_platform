@@ -34,6 +34,11 @@ module.exports = {
             translator: 3,
             language: 2
         })
+
+        await TranslatorTranslateLanguage.create({
+            translator: 3,
+            language: 3
+        })
         
         await TranslatorTranslateLanguage.create({
             translator: 3,
