@@ -21,10 +21,14 @@
         <div class="col-12">
           <Splitter style="height: 300px">
             <SplitterPanel>
-              <p>{{parallelText.originalText}}</p>
+              <ParallelText :parallelText="parallelText.originalText" 
+                @goUp="goUp" @goDown="goDown"
+              />
             </SplitterPanel>
             <SplitterPanel>
-              <p>{{parallelText.translatedText}}</p>
+              <ParallelText :parallelText="parallelText.translatedText" :translated=true 
+                @addBlock="addBlock" @goUp="goUp" @goDown="goDown"
+              />
             </SplitterPanel>
           </Splitter>
         </div>
@@ -36,6 +40,7 @@
 <script>
 import AlignmentsService from "../services/alignment.service";
 import Menu from '@/components/Menu.vue'
+import ParallelText from '@/components/ParallelText.vue'
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 
@@ -43,26 +48,68 @@ export default {
   name: "Translation",
   components: {
     Menu,
+    ParallelText,
     Splitter,
     SplitterPanel
   },
   data() {
     return {
       content: "Alignment",
+      regex: new RegExp(/[^.?!]+[.!?]+[\])'"`’”]*|.+/, 'g'),
+      emptyElement: ' .',
       parallelText: {},
       originalTextList: [],
       translatedTextList: []
     }
   },
   methods: {
+    addBlock(event){
+      if(event.translated){
+        let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
+        this.parallelText.translatedText = this.addEmpySentenceInArrayAtPosition(list, event.index).join('')
+      } else {
+
+      }
+    },
+    goUp(event){
+      if(event.translated){
+        let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
+        let element = list.splice(event.index, 1)[0]
+        list.splice(event.index -1, 0, element)
+        this.parallelText.translatedText = list.join('')
+      } else {
+        let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        let element = list.splice(event.index, 1)[0]
+        list.splice(event.index -1, 0, element)
+        this.parallelText.originalText = list.join('')
+      }
+    },
+    goDown(event){
+      if(event.translated){
+        let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
+        let element = list.splice(event.index, 1)[0]
+        list.splice(event.index +1, 0, element)
+        this.parallelText.translatedText = list.join('')
+      } else {
+        let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        let element = list.splice(event.index, 1)[0]
+        list.splice(event.index +1, 0, element)
+        this.parallelText.originalText = list.join('')
+      }
+    },
+    splitParallelTextIntoSentence(parallelText){
+      return parallelText.match(this.regex)
+    },
+    addEmpySentenceInArrayAtPosition(array, index){
+      return [...array.slice(0,index), this.emptyElement, ...array.slice(index)]
+    }
   },
   mounted(){
     AlignmentsService.getAlignmentFromID(this.$route.params.idParallelText).then(
       (response) => {
         this.parallelText = response.data;
-        let regex = new RegExp(/[^.?!]+[.!?]+[\])'"`’”]*|.+/, 'g');
-        this.originalTextList = this.parallelText.originalText.match(regex)
-        this.translatedTextList = this.parallelText.translatedText.match(regex)
+        this.originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        this.translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
       },
       (error) => {
         console.log(error)
