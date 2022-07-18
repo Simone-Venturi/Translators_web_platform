@@ -31,6 +31,24 @@
           <div class="row">
             <div class="col-12 col-sm-12">
               <h4>Expertises</h4>
+              <div>
+                <h5>Languages</h5>
+                <MultiSelect v-model="languagesKnown" :options="allLanguages" optionLabel="title" placeholder="Select Languages" :filter="true" class="multiselect-custom">
+                    <template #value="slotProps">
+                        <div class="language-item language-item-value" v-for="option of slotProps.value" :key="option.idlanguage">
+                            <div>{{option.title}}</div>
+                        </div>
+                        <template v-if="!slotProps.value || slotProps.value.length === 0">
+                            Select languages
+                        </template>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="language-item">
+                            <div>{{slotProps.option.title}}</div>
+                        </div>
+                    </template>
+                </MultiSelect>
+              </div>
             </div>
           </div>
         </div>
@@ -53,8 +71,7 @@ export default {
   data(){
     return {
       allLanguages: null,
-      languagesKnown: null,
-      languagesKnown2: null
+      languagesKnown: null
     }
   },
   computed: {
