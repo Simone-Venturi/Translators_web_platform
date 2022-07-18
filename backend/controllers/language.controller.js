@@ -1,5 +1,6 @@
 const db = require("../models");
 const Language = db.language;
+const TranslatorTranslateLanguage = db.translator_translate_language;
 
 
 exports.allLanguages = (req, res) => {
@@ -32,4 +33,21 @@ exports.allLanguagesKnownByUser = (req, res) => {
         }});
         res.status(200).send(languages)
     });
+}
+
+exports.updateLanguagesKnownByUser = (req, res) => {
+    req.body.idsLanguages.map(id => TranslatorTranslateLanguage.upsert({
+        translator: req.userId,
+        language: id
+    }))
+    TranslatorTranslateLanguage.destroy({
+        attributes: ['id', 'translator', 'language'],
+        where: {
+            translator: { [db.Sequelize.Op.eq]: req.userId },
+            language: {[db.Sequelize.Op.notIn]: req.body.idsLanguages}
+        }
+    }).then( translator_translate_languages => {
+        res.sendStatus(200).send(translator_translate_languages)
+    });
+
 }

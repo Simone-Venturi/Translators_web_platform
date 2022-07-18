@@ -18,4 +18,9 @@ module.exports = function(app) {
     authJwt.verifyToken,
     controller.allLanguagesKnownByUser
   );
+  app.post(
+    "/api/language/known",
+    authJwt.verifyToken,
+    controller.updateLanguagesKnownByUser
+  );
 };
