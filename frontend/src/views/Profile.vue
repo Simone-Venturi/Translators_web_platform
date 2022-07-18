@@ -30,24 +30,37 @@
         <div class="col-sm-9">
           <div class="row">
             <div class="col-12 col-sm-12">
-              <h4>Expertises</h4>
-              <div>
-                <h5>Languages</h5>
-                <MultiSelect v-model="languagesKnown" :options="allLanguages" optionLabel="title" placeholder="Select Languages" :filter="true" class="multiselect-custom">
-                    <template #value="slotProps">
-                        <div class="language-item language-item-value" v-for="option of slotProps.value" :key="option.idlanguage">
-                            <div>{{option.title}}</div>
-                        </div>
-                        <template v-if="!slotProps.value || slotProps.value.length === 0">
-                            Select languages
+              <div class="container">
+                <div class="row">
+                  <div class="col-12">                    
+                    <h4>Expertises</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">                    
+                    <h5>Languages</h5>
+                  </div>
+                  <div class="col-9">
+                    <MultiSelect v-model="languageFilter" :options="allLanguages" optionLabel="title" placeholder="Select Languages" :filter="true" class="multiselect-custom">
+                        <template #value="slotProps">
+                            <div class="language-item language-item-value" v-for="option of slotProps.value" :key="option.idlanguage">
+                                <div>{{option.title}}</div>
+                            </div>
+                            <template v-if="!slotProps.value || slotProps.value.length === 0">
+                                Select languages
+                            </template>
                         </template>
-                    </template>
-                    <template #option="slotProps">
-                        <div class="language-item">
-                            <div>{{slotProps.option.title}}</div>
-                        </div>
-                    </template>
-                </MultiSelect>
+                        <template #option="slotProps">
+                            <div class="language-item">
+                                <div>{{slotProps.option.title}}</div>
+                            </div>
+                        </template>
+                    </MultiSelect>
+                  </div>
+                  <div class="col-3">
+                    <GeneralButton class="align-middle" text="Save" @click="saveLanguages()"/>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -60,17 +73,20 @@
 <script>
 import MultiSelect from 'primevue/multiselect';
 import Menu from '@/components/Menu.vue'
+import GeneralButton from '@/components/GeneralButton.vue'
 import LanguageService from "../services/language.service"
 
 export default {
   name: 'Profile',
   components: {
     Menu,
+    GeneralButton,
     MultiSelect
   },
   data(){
     return {
       allLanguages: null,
+      languageFilter: null,
       languagesKnown: null
     }
   },
@@ -86,6 +102,7 @@ export default {
       LanguageService.getAllLanguagesFilteredByUser().then(
         (response) => {
           this.languagesKnown = response.data;
+          this.languageFilter = response.data;
         },
         (error) => {
           console.log(error)
@@ -95,23 +112,45 @@ export default {
     LanguageService.getAllLanguages().then(
         (response) => {
           this.allLanguages = response.data;
-          console.log(this.allLanguages)
         },
         (error) => {
           console.log(error)
         }
       );
+  },
+  methods:{
+    saveLanguages(){
+      let originalLangugesIDs = this.languagesKnown.map(language => language.idlanguage).sort()
+      let modifiedLangugesIDs = this.languageFilter.map(language => language.idlanguage).sort()
+      if( Array.isArray(originalLangugesIDs) &&
+          Array.isArray(modifiedLangugesIDs) &&
+          originalLangugesIDs.length === modifiedLangugesIDs.length &&
+          originalLangugesIDs.every((val, index) => val === modifiedLangugesIDs[index])){
+      } else {
+        LanguageService.updateLanguagesKnowByUser(modifiedLangugesIDs).then(
+          (response) => {
+            console.log(error)
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      }
+    }
   }
 };
 </script>
 <style scoped>
+h4, h5 {
+  text-align: left;
+}
 ul {list-style-type: none;}
 i {
   font-size: 500%;
   margin: 5%;
 }
 .p-multiselect {
-    width: 70%;
+    width: 95%;
 }
 .p-multiselect-label:not(.p-placeholder) {
     padding-top: .25rem;
