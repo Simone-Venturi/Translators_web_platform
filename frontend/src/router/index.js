@@ -8,7 +8,7 @@ import Register from "@/views/Register.vue";
 // lazy-loaded
 const Translation = () => import("@/views/Translation.vue")
 const AlignmentText = () => import("@/views/AlignmentText.vue")
-const Profile = () => import("@/components/Profile.vue")
+const Profile = () => import("@/views/Profile.vue")
 const routes = [
   {
     path: "/",
