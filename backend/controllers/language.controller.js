@@ -24,6 +24,12 @@ exports.allLanguagesKnownByUser = (req, res) => {
         if (!languages) {
             return res.status(404).send({ message: "Languages not found." });
         }
+        languages = languages.map((language) =>  {
+            return {
+                idlanguage: language.idlanguage,
+                title: language.title,
+                abbreviation: language.abbreviation
+        }});
         res.status(200).send(languages)
     });
 }
