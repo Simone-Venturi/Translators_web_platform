@@ -48,6 +48,12 @@
             <Button label="Yes" icon="pi pi-check" @click="sendAlignment" autofocus />
         </template>
     </Dialog>
+    <Dialog header="Text alignment success" :visible="displayAlignmentSuccededModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+        <p class="m-0">The text alignment procedure succeded.</p>
+        <template #footer>
+            <Button label="Ok" icon="pi pi-check" @click="goToAlignmentPage" autofocus />
+        </template>
+    </Dialog>
   </div>
 </template>
 
@@ -77,6 +83,7 @@ export default {
       content: "Alignment",
       parallelText: {},
       displayDifferentLengthModal: false,
+      displayAlignmentSuccededModal: false
     }
   },
   methods: {
@@ -151,12 +158,16 @@ export default {
       });
       AlignmentsService.createAlignment(this.$route.params.idParallelText, translationObjectsArray, sentenceArray).then(
         (response) => {
-          console.log(response)
+          this.toggleDisplayAlignmentSuccededModal()
         },
         (error) => {
           console.log(error)
         }
       )
+    },
+    goToAlignmentPage(){
+      this.toggleDisplayAlignmentSuccededModal()
+      this.$router.push('/alignment')
     },
     splitParallelTextIntoSentence(parallelText){
       return parallelText.match(this.$store.getters['sentence/getRegex'])
@@ -169,6 +180,9 @@ export default {
     },
     toggleDisplayDifferentLengthModal(){
        this.displayDifferentLengthModal = !this.displayDifferentLengthModal
+    },
+    toggleDisplayAlignmentSuccededModal(){
+       this.displayAlignmentSuccededModal = !this.displayAlignmentSuccededModal
     }
   },
   mounted(){
