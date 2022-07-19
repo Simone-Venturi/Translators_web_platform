@@ -29,8 +29,7 @@ export default {
     },
     watch: {
         'parallelText': function(newVal) {
-            let regex = new RegExp(/[^.?!]+[.!?]+[\])'"`’”]*|.+/, 'g');
-            this.textList = newVal.match(regex)
+            this.textList = newVal.match(this.$store.getters['sentence/getRegex'])
         }
     },
     methods: {

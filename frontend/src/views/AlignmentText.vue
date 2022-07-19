@@ -55,8 +55,6 @@ export default {
   data() {
     return {
       content: "Alignment",
-      regex: new RegExp(/[^.?!]+[.!?]+[\])'"`’”]*|.+/, 'g'),
-      emptyElement: ' .',
       parallelText: {},
       originalTextList: [],
       translatedTextList: []
@@ -106,10 +104,10 @@ export default {
       }
     },
     splitParallelTextIntoSentence(parallelText){
-      return parallelText.match(this.regex)
+      return parallelText.match(this.$store.getters['sentence/getRegex'])
     },
     addEmptySentenceInArrayAtPosition(array, index){
-      return [...array.slice(0,index), this.emptyElement, ...array.slice(index)]
+      return [...array.slice(0,index), this.$store.getters['sentence/getEmptyStringElement'], ...array.slice(index)]
     },
     removeSentenceInArrayAtPosition(array, index){
       return [...array.slice(0, index), ...array.slice(index + 1)]
