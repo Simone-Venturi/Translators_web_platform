@@ -14,6 +14,11 @@ module.exports = function(app) {
     controller.allAlignments
   );
   app.get(
+    "/api/alignment/available",
+    authJwt.verifyToken,
+    controller.allAlignmentsAvailable
+  );
+  app.get(
     "/api/alignment/:parallelText",
     authJwt.verifyToken,
     controller.getParallelTextFromID

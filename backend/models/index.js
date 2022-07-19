@@ -97,4 +97,12 @@ db.parallel_text.belongsTo(db.language, {
 db.language.hasMany(db.parallel_text, {
   foreignKey: 'translatedLanguage'
 });
+db.parallel_text.hasOne(db.translation, {
+  as: 'Translations',
+  foreignKey: 'parallel_text_id'
+});
+db.translation.belongsTo(db.parallel_text, {
+  as: 'ParallelText',
+  foreignKey: 'parallel_text_id'
+});
 module.exports = db;

@@ -15,6 +15,16 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         unique: 'translation_unique'
       },
+      parallel_text_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: null
+      },
+      is_generated_from_alignment: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       avarage_score: {
         type: Sequelize.FLOAT,
         allowNull: true,
