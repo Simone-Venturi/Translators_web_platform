@@ -129,7 +129,7 @@ export default {
       } else {
         LanguageService.updateLanguagesKnowByUser(modifiedLangugesIDs).then(
           (response) => {
-            console.log(error)
+            console.log(response)
           },
           (error) => {
             console.log(error)
