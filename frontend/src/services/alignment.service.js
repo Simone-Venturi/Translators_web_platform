@@ -1,8 +1,8 @@
-import { ApiClient, API_ALL_ALIGNMENTS_ENDPOINT, API_GET_PARALLEL_TEXT_FROM_ID_ENDPOINT, API_CREATE_ALIGNMENT_ENDPOINT} from '@/services/app.services';
+import { ApiClient, API_ALIGNMENTS_AVAILABLE_ENDPOINT, API_GET_PARALLEL_TEXT_FROM_ID_ENDPOINT, API_CREATE_ALIGNMENT_ENDPOINT} from '@/services/app.services';
 import authHeader from '@/services/auth-header';
 class AlignmentsService {
   getAllAlignments() {
-    return ApiClient.get(API_ALL_ALIGNMENTS_ENDPOINT, { headers: authHeader() });
+    return ApiClient.get(API_ALIGNMENTS_AVAILABLE_ENDPOINT, { headers: authHeader() });
   }  
   getAlignmentFromID(id) {
     return ApiClient.get(API_GET_PARALLEL_TEXT_FROM_ID_ENDPOINT + '/' + id, { headers: authHeader() });
