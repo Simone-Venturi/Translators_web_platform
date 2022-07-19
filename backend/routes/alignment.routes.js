@@ -18,4 +18,9 @@ module.exports = function(app) {
     authJwt.verifyToken,
     controller.getParallelTextFromID
   );
+  app.post(
+    "/api/alignment/create",
+    authJwt.verifyToken,
+    controller.createAlignment
+  );
 };
