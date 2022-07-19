@@ -32,7 +32,22 @@
           </Splitter>
         </div>
       </div>
-    </div>      
+      <div class="row justify-content-end m-4">
+        <div class="col-md-auto">
+          <GeneralButton text="Cancel" colorHover="red" />
+        </div>
+        <div class="col-md-auto">
+          <GeneralButton text="Align" @click="validateAlignment()" />
+        </div>
+      </div>
+    </div>
+    <Dialog header="Different number of sentences" :visible="displayDifferentLengthModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+        <p class="m-0">You tried to send an alignment with a different number of sentences. <br/> Do you want to send it anyway?</p>
+        <template #footer>
+            <Button label="Cancel" class="p-button-danger" icon="pi pi-exclamation-circle" @click="toggleDisplayDifferentLengthModal" autofocus />
+            <Button label="Yes" icon="pi pi-check" @click="sendAlignment" autofocus />
+        </template>
+    </Dialog>
   </div>
 </template>
 
@@ -40,6 +55,9 @@
 import AlignmentsService from "../services/alignment.service";
 import Menu from '@/components/Menu.vue'
 import ParallelText from '@/components/ParallelText.vue'
+import GeneralButton from '@/components/GeneralButton.vue'
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 
@@ -48,6 +66,9 @@ export default {
   components: {
     Menu,
     ParallelText,
+    GeneralButton,
+    Button,
+    Dialog,
     Splitter,
     SplitterPanel
   },
@@ -55,8 +76,7 @@ export default {
     return {
       content: "Alignment",
       parallelText: {},
-      originalTextList: [],
-      translatedTextList: []
+      displayDifferentLengthModal: false,
     }
   },
   methods: {
@@ -102,6 +122,41 @@ export default {
         // this.parallelText.originalText = list.join('')
       }
     },
+    validateAlignment(){
+      let originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+      let translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
+      if(originalTextList.length !== translatedTextList.length){
+        this.toggleDisplayDifferentLengthModal()
+      } else {
+        this.sendAlignment()
+      }
+    },
+    sendAlignment(){
+      let originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+      let translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
+      let translationObjectsArray = []
+      let sentenceArray = []
+      originalTextList.forEach((element, index) => {
+        if(translatedTextList[index] == this.$store.getters['sentence/getEmptyStringElement']){
+          sentenceArray.push(element)
+        } else {
+          translationObjectsArray.push({
+            original_sentence: element,
+            translated_sentence: translatedTextList[index]
+          })
+        }
+      });
+      AlignmentsService.createAlignment(this.$route.params.idParallelText, translationObjectsArray, sentenceArray).then(
+        (response) => {
+          this.toggleDisplayDifferentLengthModal()
+          console.log(response)
+        },
+        (error) => {
+          this.toggleDisplayDifferentLengthModal()
+          console.log(error)
+        }
+      )
+    },
     splitParallelTextIntoSentence(parallelText){
       return parallelText.match(this.$store.getters['sentence/getRegex'])
     },
@@ -110,14 +165,15 @@ export default {
     },
     removeSentenceInArrayAtPosition(array, index){
       return [...array.slice(0, index), ...array.slice(index + 1)]
+    },
+    toggleDisplayDifferentLengthModal(){
+       this.displayDifferentLengthModal = !this.displayDifferentLengthModal
     }
   },
   mounted(){
     AlignmentsService.getAlignmentFromID(this.$route.params.idParallelText).then(
       (response) => {
         this.parallelText = response.data;
-        this.originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
-        this.translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
       },
       (error) => {
         console.log(error)
