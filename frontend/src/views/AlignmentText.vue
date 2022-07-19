@@ -19,10 +19,9 @@
       </div>
       <div class="row ml-4 mr-4">
         <div class="col-12">
-          <Splitter style="height: 300px">
+          <Splitter>
             <SplitterPanel>
-              <ParallelText :parallelText="parallelText.originalText" 
-                @goUp="goUp" @goDown="goDown"
+              <ParallelText :parallelText="parallelText.originalText"
               />
             </SplitterPanel>
             <SplitterPanel>
@@ -45,7 +44,7 @@ import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 
 export default {
-  name: "Translation",
+  name: "Alignment",
   components: {
     Menu,
     ParallelText,
@@ -84,10 +83,10 @@ export default {
         list.splice(event.index -1, 0, element)
         this.parallelText.translatedText = list.join('')
       } else {
-        let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
-        let element = list.splice(event.index, 1)[0]
-        list.splice(event.index -1, 0, element)
-        this.parallelText.originalText = list.join('')
+        // let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        // let element = list.splice(event.index, 1)[0]
+        // list.splice(event.index -1, 0, element)
+        // this.parallelText.originalText = list.join('')
       }
     },
     goDown(event){
@@ -97,10 +96,10 @@ export default {
         list.splice(event.index +1, 0, element)
         this.parallelText.translatedText = list.join('')
       } else {
-        let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
-        let element = list.splice(event.index, 1)[0]
-        list.splice(event.index +1, 0, element)
-        this.parallelText.originalText = list.join('')
+        // let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        // let element = list.splice(event.index, 1)[0]
+        // list.splice(event.index +1, 0, element)
+        // this.parallelText.originalText = list.join('')
       }
     },
     splitParallelTextIntoSentence(parallelText){
