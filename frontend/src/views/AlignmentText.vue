@@ -27,7 +27,7 @@
             </SplitterPanel>
             <SplitterPanel>
               <ParallelText :parallelText="parallelText.translatedText" :translated=true 
-                @addBlock="addBlock" @goUp="goUp" @goDown="goDown"
+                @addBlock="addBlock" @removeBlock="removeBlock" @goUp="goUp" @goDown="goDown"
               />
             </SplitterPanel>
           </Splitter>
@@ -66,7 +66,15 @@ export default {
     addBlock(event){
       if(event.translated){
         let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
-        this.parallelText.translatedText = this.addEmpySentenceInArrayAtPosition(list, event.index).join('')
+        this.parallelText.translatedText = this.addEmptySentenceInArrayAtPosition(list, event.index).join('')
+      } else {
+
+      }
+    },
+    removeBlock(event){
+      if(event.translated){
+        let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
+        this.parallelText.translatedText = this.removeSentenceInArrayAtPosition(list, event.index).join('')
       } else {
 
       }
@@ -100,8 +108,11 @@ export default {
     splitParallelTextIntoSentence(parallelText){
       return parallelText.match(this.regex)
     },
-    addEmpySentenceInArrayAtPosition(array, index){
+    addEmptySentenceInArrayAtPosition(array, index){
       return [...array.slice(0,index), this.emptyElement, ...array.slice(index)]
+    },
+    removeSentenceInArrayAtPosition(array, index){
+      return [...array.slice(0, index), ...array.slice(index + 1)]
     }
   },
   mounted(){
