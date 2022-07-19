@@ -9,7 +9,7 @@ class AlignmentsService {
   }
   createAlignment(idParallelText, translationObjectsArray, sentenceArray){
     return ApiClient.post(API_CREATE_ALIGNMENT_ENDPOINT, {
-      idParallelText: idParallelText,
+      idParallelText: parseInt(idParallelText),
       translationObjectsArray, translationObjectsArray,
       sentenceArray: sentenceArray
     },{headers: authHeader()})

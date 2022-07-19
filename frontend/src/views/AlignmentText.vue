@@ -125,13 +125,16 @@ export default {
     validateAlignment(){
       let originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
       let translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
-      if(originalTextList.length !== translatedTextList.length){
+      if(originalTextList.length != translatedTextList.length){
         this.toggleDisplayDifferentLengthModal()
       } else {
         this.sendAlignment()
       }
     },
     sendAlignment(){
+      if(this.displayDifferentLengthModal){
+        this.toggleDisplayDifferentLengthModal()
+      }
       let originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
       let translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
       let translationObjectsArray = []
@@ -148,11 +151,9 @@ export default {
       });
       AlignmentsService.createAlignment(this.$route.params.idParallelText, translationObjectsArray, sentenceArray).then(
         (response) => {
-          this.toggleDisplayDifferentLengthModal()
           console.log(response)
         },
         (error) => {
-          this.toggleDisplayDifferentLengthModal()
           console.log(error)
         }
       )
