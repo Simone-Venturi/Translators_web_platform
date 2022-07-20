@@ -71,7 +71,6 @@ exports.getParallelTextFromID = (req, res) => {
 }
 
 exports.createAlignment = (req, res) => {
-    console.log(req.body)
     ParallelText.findByPk(req.body.idParallelText)
         .then( parallelText => {
             if (!parallelText) {
