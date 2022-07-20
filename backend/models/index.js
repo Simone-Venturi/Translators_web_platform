@@ -80,7 +80,9 @@ db.user.hasMany(db.review, {
 db.review.belongsTo(db.user, {
   foreignKey: 'translator'
 });
-db.translation.hasMany(db.review);
+db.translation.hasMany(db.review, {
+  as: 'Reviews'
+});
 db.review.belongsTo(db.translation);
 
 db.parallel_text.belongsTo(db.language, {
