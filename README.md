@@ -20,6 +20,11 @@ cd backend
 npm i
 node index.js
 ```
+### seeder
+```
+cd backend
+npm run seed
+```
 ### frontend
 ```
 cd frontend
