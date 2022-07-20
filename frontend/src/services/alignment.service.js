@@ -28,6 +28,13 @@ class AlignmentsService {
         return element
       }
     })
+    sentenceArray = sentenceArray.map(element => {
+      if(element[0] == ' '){
+        return element.substring(1)
+      } else {
+        return element
+      }
+    })
     return ApiClient.post(API_CREATE_ALIGNMENT_ENDPOINT, {
       idParallelText: parseInt(idParallelText),
       translationObjectsArray, translationObjectsArray,
