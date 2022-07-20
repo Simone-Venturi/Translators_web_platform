@@ -2,21 +2,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:8080";
 var corsOptions = {
-  origin: "http://localhost:8080"
+  origin: CORS_ORIGIN
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./models");
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  require("./seeders/index").runSeeders();
-});
-
-app.get("/", (req, res) => {
-  res.json({ message: "Hello world!" });
+db.sequelize.sync({force:true}).then(() => {
+  console.log('Sync DB completed');
 });
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
