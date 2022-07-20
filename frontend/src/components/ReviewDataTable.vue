@@ -32,7 +32,7 @@
             <Column field="rate_sentence" header="Rating" style="min-width: 14rem">
                 <template #body="{data}">
                     <div style="display:inline-flex;">
-                        <rate :length="5" v-model="data.score_review" /> <span>({{data.n_scores}})</span>
+                        <rate :length="5" v-model="data.score_review" />
                     </div>
                 </template>
             </Column>
