@@ -9,22 +9,26 @@
       </div>
       <div class="row ml-4 mr-4">
         <div class="col-6">
-          <h3>Original text:</h3>
-          <p>{{parallelText.originalText}}</p>
+          <h3>Original text</h3>
+          <ul>
+            <li v-for="(element, index) in originalArraySentences" :key="index"> {{element}}</li>
+          </ul>
         </div>
         <div class="col-6">
-          <h3>Translated text:</h3>
-          <p>{{parallelText.translatedText}}</p>
+          <h3>Translated text</h3>
+          <ul>
+            <li v-for="(element, index) in translatedArraySentences" :key="index"> {{element}}</li>
+          </ul>
         </div>
       </div>
       <div class="row ml-4 mr-4">
         <div class="col-12">
           <Splitter>
-            <SplitterPanel>
+            <SplitterPanel :minSize="40">
               <ParallelText :parallelText="parallelText.originalText"
               />
             </SplitterPanel>
-            <SplitterPanel>
+            <SplitterPanel :minSize="40">
               <ParallelText :parallelText="parallelText.translatedText" :translated=true 
                 @addBlock="addBlock" @removeBlock="removeBlock" @goUp="goUp" @goDown="goDown"
               />
@@ -82,6 +86,8 @@ export default {
     return {
       content: "Alignment",
       parallelText: {},
+      originalArraySentences: [],
+      translatedArraySentences: [],
       displayDifferentLengthModal: false,
       displayAlignmentSuccededModal: false
     }
@@ -194,6 +200,14 @@ export default {
         console.log(error)
       }
     );
+  },
+  watch:{
+    'parallelText.originalText': function(newVal) {
+      this.originalArraySentences = this.splitParallelTextIntoSentence(newVal)
+    },
+    'parallelText.translatedText': function(newVal) {
+      this.translatedArraySentences = this.splitParallelTextIntoSentence(newVal)
+    }
   }
 };
 </script>
@@ -201,5 +215,16 @@ export default {
 .w-80{
   width: 80%;
   margin: 1% 10%
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+.p-component {
+  max-height: 500px;
+  overflow: hidden;
+}
+.p-splitter-panel {
+  overflow-y: scroll;
 }
 </style>
