@@ -46,8 +46,8 @@ exports.updateLanguagesKnownByUser = (req, res) => {
             translator: { [db.Sequelize.Op.eq]: req.userId },
             language: {[db.Sequelize.Op.notIn]: req.body.idsLanguages}
         }
-    }).then( translator_translate_languages => {
-        res.sendStatus(200).send(translator_translate_languages)
+    }).then( () => {
+        res.sendStatus(200)
     });
 
 }

@@ -14,7 +14,6 @@
 import Menu from '@/components/Menu.vue'
 import LanguageFilter from '@/components/DropdownFilterComponent.vue';
 import TranslateDataTable from '@/components/TranslateDataTable.vue';
-import LanguageService from "../services/language.service";
 
 export default {
   name: "Translate",
@@ -51,14 +50,7 @@ export default {
     },
   },
   mounted(){
-    LanguageService.getAllLanguagesFilteredByUser().then(
-      (response) => {
-        this.languages = response.data;
-      },
-      (error) => {
-        console.log(error)
-      }
-    );
+    this.languages = this.$store.getters['language/getAllLanguagesKnownByUser']
   }
 };
 </script>

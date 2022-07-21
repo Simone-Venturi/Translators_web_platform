@@ -98,25 +98,11 @@ export default {
   mounted() {
     if (!this.currentUser) {
       this.$router.push('/login');
-    } else {      
-      LanguageService.getAllLanguagesFilteredByUser().then(
-        (response) => {
-          this.languagesKnown = response.data;
-          this.languageFilter = response.data;
-        },
-        (error) => {
-          console.log(error)
-        }
-      );
+    } else {
+      this.languagesKnown = this.$store.getters['language/getAllLanguagesKnownByUser']
+      this.languageFilter = this.$store.getters['language/getAllLanguagesKnownByUser']
+      this.allLanguages = this.$store.getters['language/getAllLanguagesAvailable']
     }
-    LanguageService.getAllLanguages().then(
-        (response) => {
-          this.allLanguages = response.data;
-        },
-        (error) => {
-          console.log(error)
-        }
-      );
   },
   methods:{
     saveLanguages(){
@@ -127,9 +113,10 @@ export default {
           originalLangugesIDs.length === modifiedLangugesIDs.length &&
           originalLangugesIDs.every((val, index) => val === modifiedLangugesIDs[index])){
       } else {
-        LanguageService.updateLanguagesKnowByUser(modifiedLangugesIDs).then(
-          (response) => {
-            console.log(response)
+        this.$store.dispatch('language/updateLanguagesKnowByUser', modifiedLangugesIDs).then(
+          () => {
+            this.languagesKnown = this.$store.getters['language/getAllLanguagesKnownByUser']
+            this.languageFilter = this.$store.getters['language/getAllLanguagesKnownByUser']
           },
           (error) => {
             console.log(error)

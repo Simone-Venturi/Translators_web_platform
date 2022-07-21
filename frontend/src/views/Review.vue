@@ -13,7 +13,6 @@
 <script>
 import Menu from '@/components/Menu.vue'
 import LanguageFilter from '@/components/DropdownFilterComponent.vue';
-import LanguageService from "../services/language.service";
 import ReviewDataTable from "@/components/ReviewDataTable.vue"
 
 export default {
@@ -52,14 +51,7 @@ export default {
     }
   },
   mounted(){
-    LanguageService.getAllLanguagesFilteredByUser().then(
-      (response) => {
-        this.languages = response.data;
-      },
-      (error) => {
-        console.log(error)
-      }
-    );
+    this.languages = this.$store.getters['language/getAllLanguagesKnownByUser']
   }
 };
 </script>

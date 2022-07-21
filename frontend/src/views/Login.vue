@@ -68,7 +68,21 @@ export default {
       this.loading = true;
       this.$store.dispatch("auth/login", user).then(
         () => {
-          this.$router.push("/profile");
+          this.$store.dispatch("language/readAllLanguages").then(
+            () => {
+              this.$store.dispatch("language/readAllLanguagesKnownByUser").then(
+                () => {
+                this.$router.push("/profile")
+                },
+                (error) => {
+                  console.log(error)
+                }
+              )
+            },
+            (error) => {
+              console.log(error)
+            }
+          )
         },
         (error) => {
           this.loading = false;
