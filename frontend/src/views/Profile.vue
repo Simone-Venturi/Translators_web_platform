@@ -61,6 +61,20 @@
                     <GeneralButton class="align-middle" text="Save" @click="saveLanguages()"/>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-12">
+                    <h5>Statistics</h5>
+                  </div>
+                  <div class="col-12">
+                    <p class="stats">Number of sentences translated: <span>{{getTranslationsNumber}}</span></p>
+                  </div>
+                  <div class="col-12">
+                    <p class="stats">Number of translation reviewed: <span>{{getAlignmentsNumber}}</span></p>
+                  </div>
+                  <div class="col-12">
+                    <p class="stats">Number of text aligned: <span>{{getReviewsNumber}}</span></p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -74,7 +88,6 @@
 import MultiSelect from 'primevue/multiselect';
 import Menu from '@/components/Menu.vue'
 import GeneralButton from '@/components/GeneralButton.vue'
-import LanguageService from "../services/language.service"
 
 export default {
   name: 'Profile',
@@ -93,6 +106,15 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    getTranslationsNumber(){
+      return this.$store.getters['stat/getTranslationsNumber']
+    },
+    getAlignmentsNumber(){
+      return this.$store.getters['stat/getAlignmentsNumber']
+    },
+    getReviewsNumber(){
+      return this.$store.getters['stat/getReviewsNumber']
     }
   },
   mounted() {
@@ -102,6 +124,7 @@ export default {
       this.languagesKnown = this.$store.getters['language/getAllLanguagesKnownByUser']
       this.languageFilter = this.$store.getters['language/getAllLanguagesKnownByUser']
       this.allLanguages = this.$store.getters['language/getAllLanguagesAvailable']
+      this.$store.dispatch('stat/readAllStatistics')
     }
   },
   methods:{
@@ -128,7 +151,7 @@ export default {
 };
 </script>
 <style scoped>
-h4, h5 {
+h4, h5, .stats {
   text-align: left;
 }
 ul {list-style-type: none;}

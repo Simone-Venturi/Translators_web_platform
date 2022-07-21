@@ -3,6 +3,7 @@ import createPersistedState from "vuex-persistedstate";
 import { auth } from "./auth.module"
 import { sentence } from "./sentence.module"
 import { language } from "./language.module"
+import { stat } from "./stat.module"
 export default createStore({
   state: {
   },
@@ -13,7 +14,8 @@ export default createStore({
   modules: {
     auth,
     sentence,
-    language
+    language,
+    stat
   },
   plugins: [createPersistedState()]
 })
