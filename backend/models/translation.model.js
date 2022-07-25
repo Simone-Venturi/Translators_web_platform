@@ -25,7 +25,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         defaultValue: false
       },
-      avarage_score: {
+      average_score: {
         type: Sequelize.FLOAT,
         allowNull: true,
         defaultValue: 0

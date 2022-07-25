@@ -6,7 +6,7 @@ const Language = db.language;
 
 exports.allTranslations = (req, res) => {
     Translation.findAll({
-        attributes: ['id', 'avarage_score', 'n_scores'],
+        attributes: ['id', 'average_score', 'n_scores'],
         include: ['OriginalSentence','TranslatedSentence']
     }).then( translations => {        
         if (!translations) {
@@ -40,7 +40,7 @@ exports.createTranslation = (req, res) => {
 
 exports.allTranslationsNotReviewdByUser = (req, res) => {
     Translation.findAll({
-        attributes: ['id', 'avarage_score', 'n_scores'],
+        attributes: ['id', 'average_score', 'n_scores'],
         include: ['OriginalSentence','TranslatedSentence']
     }).then( translations => {
         if (!translations) {

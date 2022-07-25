@@ -26,7 +26,7 @@ exports.createReview = (req, res) => {
                         let rev_mean_score = reviews
                             .map(single_review_filtered => single_review_filtered.score)
                             .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-                        translation.avarage_score = rev_mean_score / reviews.length
+                        translation.average_score = rev_mean_score / reviews.length
                         translation.n_scores += 1
                         translation.save().then(() => {return res.sendStatus(200)})
                     })
