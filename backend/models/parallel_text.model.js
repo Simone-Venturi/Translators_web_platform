@@ -6,11 +6,11 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true
       },
       originalText: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       translatedText: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       originalLanguage: {
