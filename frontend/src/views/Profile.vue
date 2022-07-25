@@ -74,6 +74,24 @@
                   <div class="col-12">
                     <p class="stats">Number of text aligned: <span>{{getReviewsNumber}}</span></p>
                   </div>
+                  <div class="col-12" v-if="visual(getReviewMeanAllTranslations)">
+                    <p class="stats">Average translations score: <span>{{doublePrecision(getReviewMeanAllTranslations)}}</span></p>
+                  </div>
+                  <div class="col-12" v-if="visual(getReviewWeightedAverageAllTranslations)">
+                    <p class="stats">Weigthed average translations score: <span>{{doublePrecision(getReviewWeightedAverageAllTranslations)}}</span></p>
+                  </div>
+                  <div class="col-12" v-if="visual(getReviewMeanTranslationsNotFromAlignment)">
+                    <p class="stats">Average translations which are not origined from an alignment score: <span>{{doublePrecision(getReviewMeanTranslationsNotFromAlignment)}}</span></p>
+                  </div>
+                  <div class="col-12" v-if="visual(getReviewWeightedAverageTranslationsNotFromAlignment)">
+                    <p class="stats">Weigthed average translations which are not origined from an alignment score: <span>{{doublePrecision(getReviewWeightedAverageTranslationsNotFromAlignment)}}</span></p>
+                  </div>
+                  <div class="col-12" v-if="visual(getReviewMeanTranslationsFromAlignment)">
+                    <p class="stats">Average translations which are origined from an alignment score: <span>{{doublePrecision(getReviewMeanTranslationsFromAlignment)}}</span></p>
+                  </div>
+                  <div class="col-12" v-if="visual(getReviewWeightedAverageTranslationsFromAlignment)">
+                    <p class="stats">Weigthed average translations which are origined from an alignment score: <span>{{doublePrecision(getReviewWeightedAverageTranslationsFromAlignment)}}</span></p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -115,6 +133,24 @@ export default {
     },
     getReviewsNumber(){
       return this.$store.getters['stat/getReviewsNumber']
+    },
+    getReviewMeanAllTranslations(){
+      return this.$store.getters['stat/getReviewMeanAllTranslations']
+    },
+    getReviewMeanTranslationsNotFromAlignment(){
+      return this.$store.getters['stat/getReviewMeanTranslationsNotFromAlignment']
+    },
+    getReviewMeanTranslationsFromAlignment(){
+      return this.$store.getters['stat/getReviewMeanTranslationsFromAlignment']
+    },
+    getReviewWeightedAverageAllTranslations(){
+      return this.$store.getters['stat/getReviewWeightedAverageAllTranslations']
+    },
+    getReviewWeightedAverageTranslationsNotFromAlignment(){
+      return this.$store.getters['stat/getReviewWeightedAverageTranslationsNotFromAlignment']
+    },
+    getReviewWeightedAverageTranslationsFromAlignment(){
+      return this.$store.getters['stat/getReviewWeightedAverageTranslationsFromAlignment']
     }
   },
   mounted() {
@@ -128,6 +164,12 @@ export default {
     }
   },
   methods:{
+    visual(value){
+      return value == 'nd' ? false : true
+    },
+    doublePrecision(value){
+      return value.toFixed(2)
+    },
     saveLanguages(){
       let originalLangugesIDs = this.languagesKnown.map(language => language.idlanguage).sort()
       let modifiedLangugesIDs = this.languageFilter.map(language => language.idlanguage).sort()

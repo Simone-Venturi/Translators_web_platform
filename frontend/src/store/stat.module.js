@@ -32,13 +32,31 @@ export const stat = {
       return state.profile
     },
     getTranslationsNumber(state){
-      return state.profile.translations
+      return state.profile == null ? 0 : state.profile.translations
     },
     getAlignmentsNumber(state){
-      return state.profile.alignments
+      return state.profile == null ? 0 : state.profile.alignments
     },
     getReviewsNumber(state){
-      return state.profile.reviews
+      return state.profile == null ? 0 : state.profile.reviews
+    },
+    getReviewMeanAllTranslations(state){
+      return state.profile == null ? 0 : state.profile.mean_review_all_translations
+    },
+    getReviewMeanTranslationsNotFromAlignment(state){
+      return state.profile == null ? 0 : state.profile.mean_review_translations_not_from_alignment
+    },
+    getReviewMeanTranslationsFromAlignment(state){
+      return state.profile == null ? 0 : state.profile.mean_review_translations_from_alignment
+    },
+    getReviewWeightedAverageAllTranslations(state){
+      return state.profile == null ? 0 : state.profile.weighted_average_review_all_translations
+    },
+    getReviewWeightedAverageTranslationsNotFromAlignment(state){
+      return state.profile == null ? 0 : state.profile.weighted_average_review_translations_not_from_alignment
+    },
+    getReviewWeightedAverageTranslationsFromAlignment(state){
+      return state.profile == null ? 0 : state.profile.weighted_average_review_translations_from_alignment
     }
   }
 };
