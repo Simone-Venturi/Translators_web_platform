@@ -29,7 +29,7 @@
                     {{data.TranslatedSentence.sentence}}
                 </template>
             </Column>
-            <Column field="rate_sentence" header="Rating" style="min-width: 14rem">
+            <Column field="rate_sentence" header="Rating" style="min-width: 15rem">
                 <template #body="{data}">
                     <div style="display:inline-flex;">
                         <rate :length="5" v-model="data.score_review" />
