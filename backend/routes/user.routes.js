@@ -29,4 +29,9 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.statistics
   );
+  app.get(
+    "/api/profile/chart",
+    [authJwt.verifyToken],
+    controller.chart
+  );
 };

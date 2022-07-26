@@ -94,3 +94,39 @@ exports.allAccess = (req, res) => {
       res.sendStatus(500)
     }
   };
+
+  exports.chart = async (req, res) => {
+    let date1month = new Date()
+    date1month.setMonth(date1month.getMonth() - 1)
+    try {
+      let translations = await Translation.findAll({
+        attributes: [
+          [db.Sequelize.fn('COUNT', db.Sequelize.col('id')), 'count'],
+          [db.Sequelize.fn('date_trunc', 'week', db.Sequelize.col('createdAt')), 'createdAtWeek'],
+        ],
+        where: {
+          translator: req.userId,
+          createdAt: {[db.Sequelize.Op.gte]: date1month}
+        },
+        group: [db.Sequelize.fn('date_trunc', 'week', db.Sequelize.col('createdAt')), 'createdAtWeek']
+      })
+      let reviews = await Review.findAll({
+        attributes: [
+          [db.Sequelize.fn('COUNT', db.Sequelize.col('id')), 'count'],
+          [db.Sequelize.fn('date_trunc', 'week', db.Sequelize.col('createdAt')), 'createdAtWeek'],
+        ],
+        where: {
+          translator: req.userId,
+          createdAt: {[db.Sequelize.Op.gte]: date1month}
+        },
+        group: [db.Sequelize.fn('date_trunc', 'week', db.Sequelize.col('createdAt')), 'createdAtWeek']
+      })
+      res.status(200).send({
+        translations: translations,
+        reviews: reviews
+      })
+    } catch(e){
+      res.sendStatus(500)
+    }
+
+  }
