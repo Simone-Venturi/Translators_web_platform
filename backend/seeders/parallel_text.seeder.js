@@ -55,5 +55,39 @@ module.exports = {
             originalLanguage: 1,
             translatedLanguage: 2
         });
+
+        await ParallelText.create({
+            originalText: "No existe la muerte. La gente solo muere cuando nos olvidamos de ellos.",
+            translatedText: "La morte non esiste. Le persone muoiono solo quando ci dimentichiamo di loro.",
+            originalLanguage: 4,
+            translatedLanguage: 2
+        });
+
+        await ParallelText.create({
+            originalText: "No soy extraño. Sólo no soy normal.",
+            translatedText: "Non sono strano. È solo che non sono normale.",
+            originalLanguage: 4,
+            translatedLanguage: 2
+        });
+
+        await ParallelText.create({
+            originalText: "El mundo hay que fabricárselo uno mismo, hay que crear peldaños que te suban, que te saquen del pozo. Hay que inventar la vida porque acaba siendo verdad.",
+            translatedText: "Il mondo uno deve crearselo, deve crearsi i gradini che lo portino su, che lo portino fuori dal pozzo. Uno deve inventarsi la vita affinché possa diventare realtà.",
+            originalLanguage: 4,
+            translatedLanguage: 2
+        });
+        
+        await ParallelText.create({
+            originalText: "As I walk through the valley of the shadow of death \
+            I take a look at my life, and realize there's nothin' left \
+            'Cause I've been blastin' and laughin' so long \
+            That even my momma thinks that my mind is gone.",
+            translatedText: "Mentre cammino attraverso la valle dell'ombra della morte \
+            Do' un'occhiata alla mia vita e mi rendo conto che non mi e' rimasto niente \
+            perchè mi sono ubriacato e ho riso cosi' a lungo, che \
+            anche mia mamma pensa che la mia testa sia partita.",
+            originalLanguage: 1,
+            translatedLanguage: 2
+        });
     }
 }
