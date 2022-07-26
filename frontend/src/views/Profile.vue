@@ -36,7 +36,7 @@
                     <h4>Expertises</h4>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                   <div class="col-12">                    
                     <h5>Languages</h5>
                   </div>
@@ -61,7 +61,7 @@
                     <GeneralButton class="align-middle" text="Save" @click="saveLanguages()"/>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                   <div class="col-12">
                     <h5>Statistics</h5>
                   </div>
@@ -93,6 +93,14 @@
                     <p class="stats">Weigthed average translations which are origined from an alignment score: <span>{{doublePrecision(getReviewWeightedAverageTranslationsFromAlignment)}}</span></p>
                   </div>
                 </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <h5>User trend</h5>
+                  </div>
+                  <div class="col-12">
+                    <Chart type="bar" :data="getChartData" :options="getChartOptions" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -104,6 +112,7 @@
 
 <script>
 import MultiSelect from 'primevue/multiselect';
+import Chart from 'primevue/chart';
 import Menu from '@/components/Menu.vue'
 import GeneralButton from '@/components/GeneralButton.vue'
 
@@ -111,6 +120,7 @@ export default {
   name: 'Profile',
   components: {
     Menu,
+    Chart,
     GeneralButton,
     MultiSelect
   },
@@ -151,6 +161,53 @@ export default {
     },
     getReviewWeightedAverageTranslationsFromAlignment(){
       return this.$store.getters['stat/getReviewWeightedAverageTranslationsFromAlignment']
+    },
+    getChartData() {
+      return {
+          labels: this.$store.getters['stat/getChartStatisticsLabels'],
+          datasets: [{
+              type: 'bar',
+              label: 'Translations',
+              backgroundColor: '#66BB6A',
+              data: this.$store.getters['stat/getChartStatisticsTranslationsData'],
+              borderColor: 'white',
+              borderWidth: 2
+          }, {
+              type: 'bar',
+              label: 'Reviews',
+              backgroundColor: '#FFA726',
+              data: this.$store.getters['stat/getChartStatisticsReviewsData']
+          }]
+      }
+    },
+    getChartOptions(){
+      return {
+          plugins: {
+              legend: {
+                  labels: {
+                      color: '#495057'
+                  }
+              }
+          },
+          scales: {
+              x: {
+                  ticks: {
+                      color: '#495057'
+                  },
+                  grid: {
+                      color: '#ebedef'
+                  }
+              },
+              y: {
+                  ticks: {
+                      color: '#495057'
+                  },
+                  grid: {
+                      color: '#ebedef'
+                  }
+              }
+          }
+      }
     }
   },
   mounted() {
@@ -161,6 +218,7 @@ export default {
       this.languageFilter = this.$store.getters['language/getAllLanguagesKnownByUser']
       this.allLanguages = this.$store.getters['language/getAllLanguagesAvailable']
       this.$store.dispatch('stat/readAllStatistics')
+      this.$store.dispatch('stat/readChartStatistics')
     }
   },
   methods:{
