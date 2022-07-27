@@ -1,12 +1,12 @@
 <template>
     <div class="datatable">
-        <DataTable :value="translations" :paginator="true" class="p-datatable-translations" :rows="10" dataKey="idtranslation" filterDisplay="menu" :loading="loading"
+        <DataTable :value="translations" :paginator="true" class="p-datatable-translations" :rows="10" dataKey="idtranslation" :filters="filters" filterDisplay="menu" :loading="loading"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[10,25,50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            :globalFilterFields="['original_sentence', 'translated_sentence']" responsiveLayout="scroll">
+            :globalFilterFields="['OriginalSentence.sentence', 'TranslatedSentence.sentence']" responsiveLayout="scroll">
             <template #header>
-                 <div class="flex justify-content-center align-items-center">
-                    <h5 class="m-0">Translations</h5>
+                 <div style="display:flex" class="flex justify-content-between">
+                    <h5 class="m-0">Reviews</h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
                         <InputText v-model="filters['global'].value" placeholder="Keyword Search" />

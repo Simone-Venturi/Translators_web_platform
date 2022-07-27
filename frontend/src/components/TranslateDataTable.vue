@@ -1,11 +1,11 @@
 <template>
     <div class="datatable">
-        <DataTable :value="sentences" :paginator="true" class="p-datatable-sentences" :rows="10" dataKey="idsentence" filterDisplay="menu" :loading="loading"
+        <DataTable :value="sentences" :paginator="true" class="p-datatable-sentences" :rows="10" dataKey="idsentence" :filters="filters" filterDisplay="menu" :loading="loading"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[10,25,50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             :globalFilterFields="['sentence']" responsiveLayout="scroll">
             <template #header>
-                 <div class="flex justify-content-center align-items-center">
+                 <div  style="display:flex" class="flex justify-content-between">
                     <h5 class="m-0">Sentences</h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
