@@ -69,10 +69,10 @@
                     <p class="stats">Number of sentences translated: <span>{{getTranslationsNumber}}</span></p>
                   </div>
                   <div class="col-12">
-                    <p class="stats">Number of translation reviewed: <span>{{getAlignmentsNumber}}</span></p>
+                    <p class="stats">Number of translation reviewed: <span>{{getReviewsNumber}}</span></p>
                   </div>
                   <div class="col-12">
-                    <p class="stats">Number of text aligned: <span>{{getReviewsNumber}}</span></p>
+                    <p class="stats">Number of text aligned: <span>{{getAlignmentsNumber}}</span></p>
                   </div>
                   <div class="col-12" v-if="visual(getReviewMeanAllTranslations)">
                     <p class="stats">Average translations score: <span>{{doublePrecision(getReviewMeanAllTranslations)}}</span></p>

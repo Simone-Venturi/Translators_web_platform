@@ -26,7 +26,9 @@ exports.allAccess = (req, res) => {
         where: {
           translator: req.userId,
           is_generated_from_alignment: true
-        }
+        },
+        distinct: true,
+        col: 'parallel_text_id'
       })
       let n_review = await Review.count({
         where: {
