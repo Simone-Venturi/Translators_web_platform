@@ -67,7 +67,6 @@ export default {
     text-align: center;
   }
   .menu4button{
-    border: 2px solid black;
     margin: 2% 0%;
   }
 </style>
