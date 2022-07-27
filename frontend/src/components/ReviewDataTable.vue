@@ -19,12 +19,12 @@
             <template #loading>
                 Loading translations. Please wait.
             </template>
-            <Column field="original_sentence" header="Sentences" sortable style="min-width: 14rem">
+            <Column field="OriginalSentence.sentence" header="Sentences" sortable style="min-width: 14rem">
                 <template #body="{data}">
                     {{data.OriginalSentence.sentence}}
                 </template>
             </Column>
-            <Column field="translated_sentence" header="Translations" sortable style="min-width: 14rem">
+            <Column field="TranslatedSentence.sentence" header="Translations" sortable style="min-width: 14rem">
                 <template #body="{data}">
                     {{data.TranslatedSentence.sentence}}
                 </template>
