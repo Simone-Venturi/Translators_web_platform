@@ -19,10 +19,11 @@ export default {
 
 <style scoped>
 button {
-  padding: 1% 10%;
+  padding: 3% 10%;
   background: transparent;
   -webkit-box-shadow: 6px 6px 10px 3px rgba(0,0,0,0.75); 
   box-shadow: 6px 6px 10px 3px rgba(0,0,0,0.75);
+  margin: 3% 10%;
 }
 
 button:hover{

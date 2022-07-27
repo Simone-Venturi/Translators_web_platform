@@ -24,9 +24,9 @@
                     {{data.sentence}}
                 </template>
             </Column>
-            <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
+            <Column headerStyle="min-width: 10rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
                 <template #body="{data}">
-                    <button type="button" @click="translate(data.idsentence)">Translate</button>
+                    <GeneralButton text="Translate" @click="translate(data.idsentence)" />
                 </template>
             </Column>
         </DataTable>
@@ -51,6 +51,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Column from 'primevue/column';
 import Dialog from 'primevue/dialog';
+import GeneralButton from '@/components/GeneralButton.vue'
 import SentencesService from "../services/sentence.service";
 import {FilterMatchMode} from 'primevue/api';
 
@@ -78,7 +79,8 @@ export default {
         Column,
         InputText,
         Dialog,
-        Button
+        Button,
+        GeneralButton
     },
     watch: { 
       	'languageFilter.update': function(newVal) {

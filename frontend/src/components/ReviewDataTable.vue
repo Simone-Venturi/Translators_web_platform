@@ -36,7 +36,7 @@
                     </div>
                 </template>
             </Column>
-            <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
+            <Column headerStyle="min-width: 8rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
                 <template #body="{data}">
                     <GeneralButton text="Rate" @click="rate(data.id)" />
                 </template>

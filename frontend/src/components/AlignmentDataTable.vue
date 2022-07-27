@@ -28,7 +28,7 @@
                     {{data.translatedText}}
                 </template>
             </Column>
-            <Column headerStyle="width: 4rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
+            <Column headerStyle="min-width: 8rem; text-align: center" bodyStyle="text-align: center; overflow: visible">
                 <template #body="{data}">
                     <GeneralButton text="Align" @click="align(data.id)" />
                 </template>
