@@ -17,7 +17,7 @@ docker-compose up
 Così saran creati 4 container:
 - database Postgres su porta di default 5432;
 - backend su porta 3000;
-- frontend su porta 8080;
+- frontend su porta 80;
 - istanza pgAdmin4 su porta 5555.
 
 ### Esecuzione dei seeder per la popolazione del database
