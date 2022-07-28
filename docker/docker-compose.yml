@@ -13,7 +13,7 @@ services:
       - postgres-translate-data:/var/lib/postgresql/data
     networks:
       - backend
-    restart: unless-stopped
+    restart: always
 
   pgadmin:
     image: dpage/pgadmin4
@@ -38,6 +38,7 @@ services:
       - "8080:8080"
     networks:
       - frontend
+    restart: always
 
   backend:
     build: ../backend
@@ -50,6 +51,7 @@ services:
     networks:
       - frontend
       - backend
+    restart: always
 
 volumes:
   postgres-translate-data:
