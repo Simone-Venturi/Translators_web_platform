@@ -66,9 +66,11 @@ export const stat = {
           reviews.push(0)
         }
       })
-      state.chart.labels = dates
-      state.chart.translations = translations
-      state.chart.reviews = reviews
+      state.chart = {
+        labels: dates,
+        translations: translations,
+        reviews: reviews
+      }
     },
     readChartStatisticsFailure(state) {
       state.chart = null
