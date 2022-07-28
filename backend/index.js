@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:8080";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost";
 var corsOptions = {
   origin: CORS_ORIGIN
 };
