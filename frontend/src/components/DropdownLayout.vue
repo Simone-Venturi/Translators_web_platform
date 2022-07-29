@@ -49,4 +49,9 @@ export default {
 .dropdown {
     display: inline;
 }
+@media only screen and (max-width: 600px) {
+  .dropdown {
+    display: block;
+  }
+}
 </style>
