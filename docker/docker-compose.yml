@@ -11,7 +11,9 @@ services:
       POSTGRES_DB: translate_platform
     volumes:
       - postgres-translate-data:/var/lib/postgresql/data
-    restart: unless-stopped
+    networks:
+      - backend
+    restart: always
 
   pgadmin:
     image: dpage/pgadmin4
@@ -22,7 +24,42 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: simone@simone.it
       PGADMIN_DEFAULT_PASSWORD: simonesimone
+    networks:
+      - backend
     restart: unless-stopped
+
+  frontend:
+    build: ../frontend
+    image: vue_app:0.0.1
+    depends_on:
+      - backend
+    container_name: "vue_app_container"
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+    restart: always
+
+  backend:
+    build: ../backend
+    image: express_app:0.0.1
+    depends_on:
+      - postgres
+    container_name: "express_app_container"
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend
+      - backend
+    restart: always
 
 volumes:
   postgres-translate-data:
+
+networks:
+  frontend:
+    name: custom_frontend
+    driver: bridge
+  backend:
+    name: custom_backend
+    driver: bridge
