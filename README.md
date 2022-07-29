@@ -12,7 +12,7 @@ Il progetto si suddivide in tre cartelle principali:
 ### Esecuzione del sistema
 ```
 cd docker
-docker-compose up
+docker compose up --build
 ```
 Così saran creati 4 container:
 - database Postgres su porta di default 5432;
