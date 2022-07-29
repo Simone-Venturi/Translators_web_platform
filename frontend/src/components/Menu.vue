@@ -69,4 +69,10 @@ export default {
   .menu4button{
     margin: 2% 0%;
   }
+  @media only screen and (max-width: 600px) {
+    .col-3 {
+      display: block;
+      padding: 0%;
+    }
+  }
 </style>

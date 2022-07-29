@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-1">
+            <div class="col-1 index">
                 <p>{{index + 1}}</p>
             </div>
             <div class="col-10">
                 <p>{{showSentenceText}}</p>
             </div>
-            <div v-if="translated" class="col-1">
+            <div v-if="translated" class="col-1 tools">
                 <div class="d-flex flex-column">
                     <div class="clickable" v-if="!isFirst" @click="goUp(index)"><i class="pi pi-arrow-circle-up"></i></div>
                     <div class="clickable" v-if="!isEmptyTranslation()" @click="addBlock(index)"><i class="pi pi-plus-circle"></i></div>
@@ -73,5 +73,18 @@ export default {
 <style scoped>
 .clickable:hover {
     cursor:pointer;
+}
+.tools, .index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+@media only screen and (max-width: 600px) {
+  .index{
+    display: none;
+  }
+  .col-1{
+    padding: 0 !important;
+  }
 }
 </style>

@@ -117,4 +117,10 @@ export default {
   width: 80%;
   margin: 1% 10%
 }
+@media only screen and (max-width: 600px) {
+  .w-80{
+    width: 100%;
+    margin: 1% 0%
+  }
+}
 </style>

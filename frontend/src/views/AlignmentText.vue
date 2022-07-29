@@ -8,13 +8,13 @@
         </div>
       </div>
       <div class="row ml-4 mr-4">
-        <div class="col-6">
+        <div class="col-sm-12 col-md-6">
           <h3>Original text</h3>
           <ul>
             <li v-for="(element, index) in originalArraySentences" :key="index"> {{element}}</li>
           </ul>
         </div>
-        <div class="col-6">
+        <div class="col-sm-12 col-md-6">
           <h3>Translated text</h3>
           <ul>
             <li v-for="(element, index) in translatedArraySentences" :key="index"> {{element}}</li>
@@ -215,6 +215,12 @@ export default {
 .w-80{
   width: 80%;
   margin: 1% 10%
+}
+@media only screen and (max-width: 600px) {
+  .w-80{
+    width: 100%;
+    margin: 1% 0%
+  }
 }
 ul {
   list-style-type: none;
