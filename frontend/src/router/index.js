@@ -21,6 +21,11 @@ const routes = [
     meta: {requiresDataScientist: true}
   },
   {
+    path: "/admin",
+    component: Home,
+    meta: {requiresAdmin: true}
+  },
+  {
     path: "/translate",
     component: Translate,
     meta: {requiresTranslator: true}
@@ -98,6 +103,19 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresDataScientist)) {
     const user = JSON.parse(sessionStorage.getItem('user'));
     if (!user.roles.role_data_scientist) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAdmin)) {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user.roles.role_admin) {
       next('/');
     } else {
       next();

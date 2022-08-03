@@ -22,7 +22,7 @@ verifyToken = (req, res, next) => {
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     user.getRole().then(role => {
-      if (role.name === "admin"){
+      if (role.role_admin === true){
           next();
           return;
       }

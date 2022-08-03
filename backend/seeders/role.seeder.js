@@ -9,21 +9,24 @@ module.exports = {
             id: 1,
             name: "translator",
             role_translator: true,
-            role_data_scientist: false
+            role_data_scientist: false,
+            role_admin: false
         });
     
         await Role.create({
             id: 2,
             name: "data scientist",
             role_translator: false,
-            role_data_scientist: true
+            role_data_scientist: true,
+            role_admin: false
         });
     
         await Role.create({
             id: 3,
             name: "admin",
             role_translator: true,
-            role_data_scientist: true
+            role_data_scientist: true,
+            role_admin: true
         });
     }
 }

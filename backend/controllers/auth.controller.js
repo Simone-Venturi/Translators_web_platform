@@ -47,6 +47,7 @@ exports.signin = (req, res) => {
           roles: {
             role_translator: role.role_translator,
             role_data_scientist: role.role_data_scientist,
+            role_admin: role.role_admin,
           },
           accessToken: token
         });

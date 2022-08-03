@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       role_data_scientist: {
         type: Sequelize.BOOLEAN
+      },
+      role_admin: {
+        type: Sequelize.BOOLEAN
       }
     });
     return Role;
