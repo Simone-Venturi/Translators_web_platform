@@ -107,10 +107,22 @@ exports.createAlignment = (req, res) => {
                 })
             });
             //create sentences without a translation
-            req.body.sentenceArray.forEach(element => {
+            req.body.sentenceArrayOriginal.forEach(element => {
                 Sentence.create({
                     sentence: element,
                     languageId: parallelText.originalLanguage
+                }).then( sentenceTranslated => {
+                    if(!sentenceTranslated){
+                        return res.status(404).send({ message: "SentenceTranslated not created." });
+                    }
+                })
+            });
+
+            //create sentences translated without a original text
+            req.body.sentenceArrayTranslated.forEach(element => {
+                Sentence.create({
+                    sentence: element,
+                    languageId: parallelText.translatedLanguage
                 }).then( sentenceTranslated => {
                     if(!sentenceTranslated){
                         return res.status(404).send({ message: "SentenceTranslated not created." });

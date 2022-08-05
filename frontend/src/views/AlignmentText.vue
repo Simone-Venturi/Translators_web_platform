@@ -26,6 +26,7 @@
           <Splitter>
             <SplitterPanel :minSize="40">
               <ParallelText :parallelText="parallelText.originalText"
+                @addBlock="addBlock" @removeBlock="removeBlock"
               />
             </SplitterPanel>
             <SplitterPanel :minSize="40">
@@ -98,7 +99,8 @@ export default {
         let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
         this.parallelText.translatedText = this.addEmptySentenceInArrayAtPosition(list, event.index).join('')
       } else {
-
+        let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        this.parallelText.originalText = this.addEmptySentenceInArrayAtPosition(list, event.index).join('')
       }
     },
     removeBlock(event){
@@ -106,7 +108,8 @@ export default {
         let list = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
         this.parallelText.translatedText = this.removeSentenceInArrayAtPosition(list, event.index).join('')
       } else {
-
+        let list = this.splitParallelTextIntoSentence(this.parallelText.originalText)
+        this.parallelText.originalText = this.removeSentenceInArrayAtPosition(list, event.index).join('')
       }
     },
     goUp(event){
@@ -151,18 +154,23 @@ export default {
       let originalTextList = this.splitParallelTextIntoSentence(this.parallelText.originalText)
       let translatedTextList = this.splitParallelTextIntoSentence(this.parallelText.translatedText)
       let translationObjectsArray = []
-      let sentenceArray = []
+      let sentenceArrayOriginal = []
+      let sentenceArrayTranslated = []
       originalTextList.forEach((element, index) => {
-        if(translatedTextList[index] == this.$store.getters['sentence/getEmptyStringElement']){
-          sentenceArray.push(element)
-        } else {
-          translationObjectsArray.push({
-            original_sentence: element,
-            translated_sentence: translatedTextList[index]
-          })
+        if (translatedTextList[index] != element){
+          if(translatedTextList[index] == this.$store.getters['sentence/getEmptyStringElement']){
+            sentenceArrayOriginal.push(element)
+          } else if(element == this.$store.getters['sentence/getEmptyStringElement']){
+            sentenceArrayTranslated.push(translatedTextList[index])
+          } else {
+            translationObjectsArray.push({
+              original_sentence: element,
+              translated_sentence: translatedTextList[index]
+            })
+          }
         }
       });
-      AlignmentsService.createAlignment(this.$route.params.idParallelText, translationObjectsArray, sentenceArray).then(
+      AlignmentsService.createAlignment(this.$route.params.idParallelText, translationObjectsArray, sentenceArrayOriginal, sentenceArrayTranslated).then(
         (response) => {
           this.toggleDisplayAlignmentSuccededModal()
         },
