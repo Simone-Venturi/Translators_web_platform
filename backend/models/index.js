@@ -28,6 +28,7 @@ db.sentence = require("../models/sentence.model.js")(sequelize, Sequelize);
 db.translation = require("../models/translation.model.js")(sequelize, Sequelize);
 db.review = require("../models/review.model.js")(sequelize, Sequelize);
 db.parallel_text = require("../models/parallel_text.model.js")(sequelize, Sequelize);
+db.dataset = require("../models/dataset.model.js")(sequelize, Sequelize);
 
 db.role.hasMany(db.user);
 db.user.belongsTo(db.role);
@@ -107,4 +108,14 @@ db.translation.belongsTo(db.parallel_text, {
   as: 'ParallelText',
   foreignKey: 'parallel_text_id'
 });
+
+db.dataset.hasMany(db.translation, {
+  as: 'Translations',
+  foreignKey: 'dataset_id'
+});
+db.translation.belongsTo(db.dataset, {
+  as: 'DataSet',
+  foreignKey: 'dataset_id'
+});
+
 module.exports = db;

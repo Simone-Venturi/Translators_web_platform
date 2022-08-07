@@ -20,6 +20,11 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: true,
         defaultValue: null
       },
+      dataset_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: null
+      },
       is_generated_from_alignment: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
