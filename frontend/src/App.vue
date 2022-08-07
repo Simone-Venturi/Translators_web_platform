@@ -11,6 +11,9 @@
             <li v-if="showDataScientistBoard" class="nav-item">
               <router-link to="/data" class="nav-link">Data Scientist Board</router-link>
             </li>
+            <li v-if="showAdminBoard" class="nav-item">
+              <router-link to="/admin" class="nav-link">Admin Board</router-link>
+            </li>
           </div>
           <div v-if="!currentUser" class="navbar-nav ml-auto">
             <li class="nav-item">
@@ -58,6 +61,12 @@ export default {
     showDataScientistBoard() {
       if (this.currentUser && this.currentUser['roles']) {
         return this.currentUser['roles']['role_data_scientist'];
+      }
+      return false;
+    },
+    showAdminBoard() {
+      if (this.currentUser && this.currentUser['roles']) {
+        return this.currentUser['roles']['role_admin'];
       }
       return false;
     }
