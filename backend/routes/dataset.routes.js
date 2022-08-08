@@ -18,4 +18,9 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.createDataSet
   );
+  app.post(
+    "/api/dataset/load",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.loadDataSet
+  );
 };
