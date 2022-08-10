@@ -20,7 +20,6 @@ export const dataset = {
       );
     },
     createDataset({dispatch}, payload){
-      console.log(payload)
       return DatasetsService.createDataset(payload.datasetName, payload.datasetURL).then(
         () =>{
           dispatch('readAllDatasets');
