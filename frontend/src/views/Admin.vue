@@ -1,17 +1,25 @@
 <template>
   <div class="container">
     <div class="row h-100">
-      <div class="col-12">
+      <div class="col-12 m-2">
         <h3>All Datasets</h3>
         <DatasetDataTable />
       </div>
-      <div class="col-12">
+      <div class="col-12 m-2">
         <h3>Create a new Dataset</h3>
-        <label for="new_dataset_name">Name</label> <input type="text" id="new_dataset_name" v-model="datasetName" />
-        <label for="new_dataset_url">URL</label> <input type="text" id="new_dataset_url" v-model="datasetURL" />
-        <GeneralButton text="create" @click="createDataset"/>
+        <div class="d-flex flex-wrap justify-content-start">
+          <span class="p-float-label m-4">
+            <InputText id="new_dataset_name" type="text" v-model="datasetName" />
+            <label for="new_dataset_name">Name</label>
+          </span>
+          <span class="p-float-label m-4">
+            <InputText id="new_dataset_url" type="text" v-model="datasetURL" />
+            <label for="new_dataset_url">URL</label>
+          </span>
+          <Button class="m-4" label="Create" @click="createDataset"/>
+        </div>
       </div>
-      <div class="col-12">
+      <div class="col-12 m-2">
         <h3>Load tmx resources of an existing Dataset</h3>
         <Dropdown optionLabel="name" optionValue="id" :options="$store.getters['dataset/getAllDatasets']" ref="dataset" placeholder="select a dataset" @change="changeDataset" />
         <FileUpload name="dataset[]" accept=".tmx" :customUpload="true" :multiple="true" @uploader="onUpload">
@@ -23,6 +31,12 @@
             <p class="m-0">You provided {{total_records}} records. <br/> {{translation_created}} records are created.  <br/> {{translation_not_created}} records generate an error.</p>
             <template #footer>
                 <Button label="Ok" icon="pi pi-check" @click="toggleDisplayCompletedLoadModal" autofocus />
+            </template>
+        </Dialog>
+        <Dialog header="Error load" :visible="displayErrorLoadModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+            <p class="m-0">An error occurred.</p>
+            <template #footer>
+                <Button label="Ok" icon="pi pi-check" @click="toggleDisplayErrorLoadModal" autofocus />
             </template>
         </Dialog>
       </div>
@@ -37,6 +51,7 @@ import GeneralButton from '@/components/GeneralButton.vue'
 import FileUpload from 'primevue/fileupload';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
 
 import DatasetsService from '@/services/dataset.service.js'
 
@@ -48,7 +63,8 @@ export default {
     GeneralButton,
     FileUpload,
     Dialog,
-    Button
+    Button,
+    InputText
   },
   data(){
     return {
@@ -58,7 +74,8 @@ export default {
       translation_created: 0,
       translation_not_created: 0,
       total_records: 0,
-      displayCompletedLoadModal: false
+      displayCompletedLoadModal: false,
+      displayErrorLoadModal: false
     }
   },
   mounted() {
@@ -67,6 +84,10 @@ export default {
   methods: {
     createDataset(){
       return this.$store.dispatch('dataset/createDataset', {datasetName: this.datasetName, datasetURL: this.datasetURL})
+        .then(() => {          
+          this.datasetName = null
+          this.datasetURL = null
+        })
     },    
     onUpload(event) {
       if(this.selectedDataset != null){
@@ -85,6 +106,9 @@ export default {
         .then((risposta) => {
           this.toggleDisplayCompletedLoadModal()
         })
+        .catch((error) => {
+          this.toggleDisplayErrorLoadModal()
+        })
       }
     },    
     changeDataset(){
@@ -92,12 +116,19 @@ export default {
     },
     toggleDisplayCompletedLoadModal(){
         this.displayCompletedLoadModal = !this.displayCompletedLoadModal
+    },
+    toggleDisplayErrorLoadModal(){
+        this.displayErrorLoadModal = !this.displayErrorLoadModal
     }
   }
 };
 </script>
 <style scoped>
-h3 {
+.col-12 *{
   text-align: left;
+}
+.row {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 </style>
