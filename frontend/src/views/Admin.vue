@@ -9,11 +9,11 @@
         <h3>Create a new Dataset</h3>
         <div class="d-flex flex-wrap justify-content-start">
           <span class="p-float-label m-4">
-            <InputText id="new_dataset_name" type="text" v-model="datasetName" />
+            <InputText id="new_dataset_name" type="text" v-model="datasetName" class="p-inputtext-lg" />
             <label for="new_dataset_name">Name</label>
           </span>
           <span class="p-float-label m-4">
-            <InputText id="new_dataset_url" type="text" v-model="datasetURL" />
+            <InputText id="new_dataset_url" type="text" v-model="datasetURL" class="p-inputtext-lg" />
             <label for="new_dataset_url">URL</label>
           </span>
           <Button class="m-4" label="Create" @click="createDataset"/>
