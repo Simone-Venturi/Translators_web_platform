@@ -21,12 +21,15 @@
       </div>
       <div class="col-12 m-2">
         <h3>Load tmx resources of an existing Dataset</h3>
-        <Dropdown optionLabel="name" optionValue="id" :options="$store.getters['dataset/getAllDatasets']" ref="dataset" placeholder="select a dataset" @change="changeDataset" />
-        <FileUpload name="dataset[]" accept=".tmx" :customUpload="true" :multiple="true" @uploader="onUpload">
-          <template #empty>
-                <p>Drag and drop files to here to upload.</p>
-            </template>
-        </FileUpload>
+          <div style="display:inline-flex;align-items:baseline;">
+            <label for="dataset-dropdown" class="m-2 p-2">Dataset</label>
+            <Dropdown optionLabel="name" optionValue="id" :options="$store.getters['dataset/getAllDatasets']" ref="dataset" placeholder="select a dataset" @change="changeDataset" ariaLabelledBy="dataset-dropdown" />
+          </div>
+          <FileUpload name="dataset[]" accept=".tmx" :customUpload="true" :multiple="true" @uploader="onUpload">
+            <template #empty>
+                  <p>Drag and drop files to here to upload.</p>
+              </template>
+          </FileUpload>
         <Dialog header="Completed load" :visible="displayCompletedLoadModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
             <p class="m-0">You provided {{total_records}} records. <br/> {{translation_created}} records are created.  <br/> {{translation_not_created}} records generate an error.</p>
             <template #footer>
