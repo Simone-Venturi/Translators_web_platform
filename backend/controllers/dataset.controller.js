@@ -91,3 +91,30 @@ exports.loadDataSet = async (req, res) => {
         res.sendStatus(500)
     }
 };
+
+exports.checkDataSetSize = async (req, res) => {
+    let translationsCount = await Translation.count({
+        include: ['OriginalSentence', 'TranslatedSentence'],
+        where: {
+            '$OriginalSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageFrom },
+            '$TranslatedSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageTo },
+            dataset_id: req.body.dataset,
+            average_score: {[db.Sequelize.Op.between]: [req.body.minReviewScore, req.body.maxReviewScore]}
+        }
+    })
+    console.log(translationsCount)
+    res.status(200).send({count: translationsCount})
+}
+
+exports.downalodDataSet = async (req, res) => {
+    let translations = await Translation.findAll({
+        include: ['OriginalSentence', 'TranslatedSentence'],
+        where: {
+            '$OriginalSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageFrom },
+            '$TranslatedSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageTo },
+            dataset_id: req.body.dataset,
+            average_score: {[db.Sequelize.Op.between]: [req.body.minReviewScore, req.body.maxReviewScore]}
+        }
+    })
+    res.status(200).send(translations)
+}

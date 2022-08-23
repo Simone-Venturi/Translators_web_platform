@@ -23,4 +23,14 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.loadDataSet
   );
+  app.post(
+    "/api/dataset/check",
+    [authJwt.verifyToken, authJwt.isDataScientist],
+    controller.checkDataSetSize
+  );
+  app.post(
+    "/api/dataset/download",
+    [authJwt.verifyToken, authJwt.isDataScientist],
+    controller.downalodDataSet
+  );
 };
