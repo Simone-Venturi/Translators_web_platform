@@ -1,10 +1,35 @@
-import { parseQuery } from 'vue-router';
 import DatasetsService from '../services/dataset.service';
 
 export const dataset = {
   namespaced: true,
   state: {
-    datasets: null
+    datasets: null,
+    reviewValues: [
+      {
+        id: 0,
+        val: "0"
+      },
+      {
+        id: 1,
+        val: "1"
+      },
+      {
+        id: 2,
+        val: "2"
+      },
+      {
+        id: 3,
+        val: "3"
+      },
+      {
+        id: 4,
+        val: "4"
+      },
+      {
+        id: 5,
+        val: "5"
+      }
+    ]
   },
   actions: {
     readAllDatasets({commit}){
@@ -42,6 +67,9 @@ export const dataset = {
   getters: {
     getAllDatasets(state){
       return state.datasets
+    },
+    getReviewValues(state){
+      return state.reviewValues
     }
   }
 };
