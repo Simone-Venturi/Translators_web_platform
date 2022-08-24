@@ -4,6 +4,7 @@ import Translate from "@/views/Translate.vue";
 import Review from "@/views/Review.vue";
 import Alignment from "@/views/Alignment.vue";
 import Admin from "@/views/Admin.vue";
+import DataScientistBoard from "@/views/DataScientistBoard.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 // lazy-loaded
@@ -18,7 +19,7 @@ const routes = [
   },
   {
     path: "/data",
-    component: Home,
+    component: DataScientistBoard,
     meta: {requiresDataScientist: true}
   },
   {
