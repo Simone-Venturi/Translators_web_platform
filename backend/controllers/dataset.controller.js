@@ -4,7 +4,7 @@ const Language = db.language;
 const Translation = db.translation;
 const Sentence = db.sentence;
 const xml2js = require('xml2js');
-
+const { bulkInsert } = require("../queues/dataset.queue");
 
 exports.allDataSets = async (req, res) => {
     let datasets = await DataSet.findAll()
@@ -43,46 +43,12 @@ exports.loadDataSet = async (req, res) => {
             if ( translated_language == null ){
                 res.status(404).send({message: 'Translated Language not found'})
             }
-            let translation_not_created = 0
-            let translation_created = 0
-            let total_records = 0
-            Promise.all(body[0].tu.map(async element => {
-                let original_sentence = await Sentence.findOrCreate({
-                    where: {
-                        sentence: element.tuv[0].seg[0],
-                        languageId: original_language.idlanguage
-                    }
-                })
-                let translated_sentence = await Sentence.findOrCreate({
-                    where: { 
-                        sentence: element.tuv[1].seg[0],
-                        languageId: translated_language.idlanguage
-                    }
-                })
-                let [translation, created] = await Translation.findOrCreate({
-                    where: {
-                        original: original_sentence[0].idsentence,
-                        translated: translated_sentence[0].idsentence,
-                        translator: req.userId,
-                        dataset_id: req.body.id
-                    }
-                })
-                if (translation == null){
-                    translation_not_created = translation_not_created + 1
-                }
-                if (created) {
-                    translation_created = translation_created + 1
-                }
-                total_records = total_records + 1 
-            })).then( () => {                
-                res.status(200).send({
-                    translation_created: translation_created,
-                    translation_not_created: translation_not_created,
-                    total_records: total_records
-                })
-            }).catch( () => {
-                res.status(500).send({message: 'error during dataset loading'})
-            })
+            const chunkSize = 1000;
+            for (let i = 0; i < body[0].tu.length; i += chunkSize) {
+                const chunk = body[0].tu.slice(i, i + chunkSize);
+                bulkInsert(chunk, original_language.idlanguage, translated_language.idlanguage, req.userId, req.body.id)
+            }             
+            res.sendStatus(200)
           })
           .catch((err) => {
             res.status(500).send({message: 'error during dataset parsing'})
