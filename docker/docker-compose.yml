@@ -34,6 +34,27 @@ services:
       retries: 3
     restart: always
 
+  redis:
+    image: redis:6.2-alpine
+    hostname: redis
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes: 
+      - redis-data:/data
+    links:
+     - redis-commander
+    restart: always
+
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    ports:
+      - "8082:8081"
+    restart: always
+
   mongo-express:
     image: mongo-express
     container_name: mongo-express
@@ -88,9 +109,14 @@ services:
     depends_on:
       - postgres
       - mongodb
+      - redis
     container_name: "express_app_container"
     ports:
       - "3000:3000"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     networks:
       - frontend
       - backend
@@ -98,7 +124,9 @@ services:
 
 volumes:
   postgres-translate-data:
-  mongodb-data:
+  mongodb-data:  
+  redis-data:
+    driver: local
 
 networks:
   frontend:
