@@ -31,7 +31,7 @@
               </template>
           </FileUpload>
         <Dialog header="Completed load" :visible="displayCompletedLoadModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
-            <p class="m-0">You provided {{total_records}} records. <br/> {{translation_created}} records are created.  <br/> {{translation_not_created}} records generate an error.</p>
+            <p class="m-0">Your request is being processed.</p>
             <template #footer>
                 <Button label="Ok" icon="pi pi-check" @click="toggleDisplayCompletedLoadModal" autofocus />
             </template>
