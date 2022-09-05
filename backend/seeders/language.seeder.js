@@ -1,6 +1,5 @@
 const db = require("../models");
 const path = require("path");
-const { language } = require("../models");
 
 const Language = db.language;
 
