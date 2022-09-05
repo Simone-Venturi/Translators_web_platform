@@ -3,8 +3,10 @@ const DataSet = db.dataset;
 const Language = db.language;
 const Translation = db.translation;
 const Sentence = db.sentence;
+const MongoDataset = db.mongoDataset;
 const xml2js = require('xml2js');
 const { bulkInsert } = require("../queues/dataset.queue");
+const { bulkInsertMongo } = require("../queues/translation.queue");
 
 exports.allDataSets = async (req, res) => {
     let datasets = await DataSet.findAll()
@@ -43,11 +45,26 @@ exports.loadDataSet = async (req, res) => {
             if ( translated_language == null ){
                 res.status(404).send({message: 'Translated Language not found'})
             }
-            const chunkSize = 1000;
-            for (let i = 0; i < body[0].tu.length; i += chunkSize) {
-                const chunk = body[0].tu.slice(i, i + chunkSize);
-                bulkInsert(chunk, original_language.idlanguage, translated_language.idlanguage, req.userId, req.body.id)
-            }             
+            const dataset = await DataSet.findByPk(req.body.id)
+            MongoDataset.findOne({name: dataset.name}, (err, mongoDataset) => {
+                console.log(mongoDataset)
+                if(mongoDataset == null) {
+                    MongoDataset.create({
+                        name: dataset.name,
+                        url: dataset.URL,
+                        languages: [original_language.abbreviation, translated_language.abbreviation]
+                    })
+                } else {
+                    mongoDataset.languages.indexOf(original_language.abbreviation) === -1 ? mongoDataset.languages.push(original_language.abbreviation) : 0 ;
+                    mongoDataset.languages.indexOf(translated_language.abbreviation) === -1 ? mongoDataset.languages.push(translated_language.abbreviation) : 0 ;
+                    mongoDataset.save()
+                }                
+                const chunkSize = 1000;
+                for (let i = 0; i < body[0].tu.length; i += chunkSize) {
+                    const chunk = body[0].tu.slice(i, i + chunkSize);
+                    bulkInsertMongo(chunk, original_language.abbreviation.toLowerCase(), translated_language.abbreviation.toLowerCase(), mongoDataset.name)                    
+                }             
+            })           
             res.sendStatus(200)
           })
           .catch((err) => {
