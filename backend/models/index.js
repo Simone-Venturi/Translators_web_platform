@@ -1,21 +1,31 @@
-const config = require("../config/db.config.js");
+const postgresConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(
-  config.DB,
-  config.USER,
-  config.PASSWORD,
+  postgresConfig.DB,
+  postgresConfig.USER,
+  postgresConfig.PASSWORD,
   {
-    host: config.HOST,
-    dialect: config.dialect,
+    host: postgresConfig.HOST,
+    dialect: postgresConfig.dialect,
     operatorsAliases: false,
     pool: {
-      max: config.pool.max,
-      min: config.pool.min,
-      acquire: config.pool.acquire,
-      idle: config.pool.idle
+      max: postgresConfig.pool.max,
+      min: postgresConfig.pool.min,
+      acquire: postgresConfig.pool.acquire,
+      idle: postgresConfig.pool.idle
     }
   }
 );
+
+const mongoConfig = require("../config/mongo.config.js");
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://127.0.0.1:27017/translate_platform').then(() => {
+    console.log('successfully connected to the database');
+}).catch(err => {
+    console.log('error connecting to the database');
+    process.exit();
+});
 
 const db = {};
 db.Sequelize = Sequelize;
@@ -29,6 +39,8 @@ db.translation = require("../models/translation.model.js")(sequelize, Sequelize)
 db.review = require("../models/review.model.js")(sequelize, Sequelize);
 db.parallel_text = require("../models/parallel_text.model.js")(sequelize, Sequelize);
 db.dataset = require("../models/dataset.model.js")(sequelize, Sequelize);
+db.mongoDataset = require("../models/mongodataset.model")(mongoose)
+db.mongoTranslation = require("../models/mongotranslation.model")(mongoose)
 
 db.role.hasMany(db.user);
 db.user.belongsTo(db.role);
