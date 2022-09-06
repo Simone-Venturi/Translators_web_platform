@@ -2,10 +2,9 @@ const db = require("../models");
 const DataSet = db.dataset;
 const Language = db.language;
 const Translation = db.translation;
-const Sentence = db.sentence;
 const MongoDataset = db.mongoDataset;
+const MongoTranslation = db.mongoTranslation;
 const xml2js = require('xml2js');
-const { bulkInsert } = require("../queues/dataset.queue");
 const { bulkInsertMongo } = require("../queues/translation.queue");
 
 exports.allDataSets = async (req, res) => {
@@ -58,7 +57,7 @@ exports.loadDataSet = async (req, res) => {
                     mongoDataset.languages.indexOf(original_language.abbreviation) === -1 ? mongoDataset.languages.push(original_language.abbreviation) : 0 ;
                     mongoDataset.languages.indexOf(translated_language.abbreviation) === -1 ? mongoDataset.languages.push(translated_language.abbreviation) : 0 ;
                     mongoDataset.save()
-                }                
+                }
                 const chunkSize = 1000;
                 for (let i = 0; i < body[0].tu.length; i += chunkSize) {
                     const chunk = body[0].tu.slice(i, i + chunkSize);
@@ -87,6 +86,16 @@ exports.checkDataSetSize = async (req, res) => {
     })
     console.log(translationsCount)
     res.status(200).send({count: translationsCount})
+}
+
+exports.checkMongoData = (req, res) => {
+    MongoTranslation.find({'en' : { $regex: new RegExp(req.body.text), $options: 'i' }})
+        .sort({createdAt: "desc"})
+        .lean()
+        .exec(async function (err, translations) {
+            console.log(translations)
+            return res.status(200).send({message: JSON.stringify(translations)});
+        });
 }
 
 exports.downalodDataSet = async (req, res) => {
