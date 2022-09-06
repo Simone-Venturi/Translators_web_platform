@@ -11,7 +11,8 @@ exports.bulkInsert = async (job) => {
     return {
         translation_created: result.translation_created,
         translation_not_created: result.translation_not_created,
-        total_records: result.total_records
+        total_records: result.total_records,
+        data: job.data
     }
 }
 
