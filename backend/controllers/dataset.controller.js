@@ -45,10 +45,9 @@ exports.loadDataSet = async (req, res) => {
                 res.status(404).send({message: 'Translated Language not found'})
             }
             const dataset = await DataSet.findByPk(req.body.id)
-            MongoDataset.findOne({name: dataset.name}, (err, mongoDataset) => {
-                console.log(mongoDataset)
+            MongoDataset.findOne({name: dataset.name}, async (err, mongoDataset) => {
                 if(mongoDataset == null) {
-                    MongoDataset.create({
+                    await MongoDataset.create({
                         name: dataset.name,
                         url: dataset.URL,
                         languages: [original_language.abbreviation, translated_language.abbreviation]
@@ -61,7 +60,7 @@ exports.loadDataSet = async (req, res) => {
                 const chunkSize = 1000;
                 for (let i = 0; i < body[0].tu.length; i += chunkSize) {
                     const chunk = body[0].tu.slice(i, i + chunkSize);
-                    bulkInsertMongo(chunk, original_language.abbreviation.toLowerCase(), translated_language.abbreviation.toLowerCase(), mongoDataset.name)                    
+                    bulkInsertMongo(chunk, original_language.abbreviation.toLowerCase(), translated_language.abbreviation.toLowerCase(), dataset.name, dataset.id, req.userId)                    
                 }             
             })           
             res.sendStatus(200)
