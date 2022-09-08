@@ -20,10 +20,10 @@ const sequelize = new Sequelize(
 const mongoConfig = require("../config/mongo.config.js");
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1:27017/translate_platform').then(() => {
-    console.log('successfully connected to the database');
+mongoose.connect('mongodb://'+mongoConfig.HOST+':'+mongoConfig.PORT+'/'+mongoConfig.DB+'').then(() => {
+    console.log('successfully connected to MongoDB');
 }).catch(err => {
-    console.log('error connecting to the database');
+    console.log('error connecting to MongoDB');
     process.exit();
 });
 
