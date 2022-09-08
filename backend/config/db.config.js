@@ -1,5 +1,5 @@
 module.exports = {
-    HOST: "host.docker.internal",
+    HOST: "postgres_translate",
     USER: "postgres",
     PASSWORD: "postgres",
     DB: "translate_platform",
