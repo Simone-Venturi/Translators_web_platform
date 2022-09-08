@@ -17,10 +17,8 @@ async function massiveAgrgegation(job){
             let documents = await MongoTranslation
                 .aggregate([{ $match: { [job.data.original_language]: translation.tuv[0].seg[0]}}])
                 .exec()
-            console.log(documents)
             const result = documents.reduce((accumulator, current) => Object.assign({}, {...accumulator}, {...current}), {})
             let fields = Object.keys(result).filter(elem => !['_id', 'dataset', 'createdAt', 'updatedAt', '__v'].includes(elem))
-            console.log(result)
             let updaterecord = await MongoTranslation.findOneAndUpdate({_id: result["_id"]}, result, {new:true})
             await updaterecord.save()
             let n_record_deleted = await MongoTranslation.deleteMany({

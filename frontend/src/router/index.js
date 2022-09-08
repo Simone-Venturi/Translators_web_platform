@@ -91,7 +91,6 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresTranslator)) {
     const user = JSON.parse(sessionStorage.getItem('user'));
     if (!user.roles.role_translator) {
-      console.log(user.roles.role_translator)
       next('/');
     } else {
       next();
