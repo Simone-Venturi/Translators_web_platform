@@ -3,9 +3,14 @@ const db = require("../models");
 const MongoDataset = db.mongoDataset;
 const MongoTranslation = db.mongoTranslation;
 
-MongoDataset.createCollection().then(function(collection) {
-    console.log('Collection is created!');
-});
-MongoTranslation.createCollection().then(function(collection) {
-    console.log('Collection is created!');
-});
+const createCollections = async () => {
+    try{
+        await MongoDataset.createCollection()
+        await MongoTranslation.createCollection()
+        console.log('Collection Created')
+    } catch(exception) {
+        console.log(exception)
+    }
+}
+
+createCollections();
