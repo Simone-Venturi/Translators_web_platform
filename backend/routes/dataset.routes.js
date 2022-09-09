@@ -36,6 +36,6 @@ module.exports = function(app) {
   app.post(
     "/api/dataset/download",
     [authJwt.verifyToken, authJwt.isDataScientist],
-    controller.downalodDataSet
+    controller.downloadDataSet
   );
 };
