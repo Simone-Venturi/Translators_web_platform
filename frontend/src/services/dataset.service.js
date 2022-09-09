@@ -23,21 +23,21 @@ class DatasetsService {
       file: file
     },{headers: { ...authHeader(), 'Content-Type': 'multipart/form-data'}})
   }
-  checkDownloadSize(datasetID, languageFrom, languageTo, minReviewScore, maxReviewScore, atLeastAReview){
+  checkDownloadSize(datasetID, languageFrom, languagesTo, minReviewScore, maxReviewScore, atLeastAReview){
     return ApiClient.post(API_CHECK_DOWNLOAD_SIZE_DATASET_ENDPOINT, {
       dataset: datasetID,
       languageFrom: languageFrom,
-      languageTo: languageTo,
+      languagesTo: languagesTo,
       minReviewScore: minReviewScore,
       maxReviewScore: maxReviewScore,
       atLeastAReview: atLeastAReview
     },{headers: authHeader()})
   }
-  downloadDataset(datasetID, languageFrom, languageTo, minReviewScore, maxReviewScore, atLeastAReview){
+  downloadDataset(datasetID, languageFrom, languagesTo, minReviewScore, maxReviewScore, atLeastAReview){
     return ApiClient.post(API_DOWNLOAD_SIZE_DATASET_ENDPOINT, {
       dataset: datasetID,
       languageFrom: languageFrom,
-      languageTo: languageTo,
+      languagesTo: languagesTo,
       minReviewScore: minReviewScore,
       maxReviewScore: maxReviewScore,
       atLeastAReview: atLeastAReview

@@ -10,9 +10,23 @@
           <div style="display:block;align-items:baseline;" class="p-2 m-1">
             <label for="language-from">Translations from </label>
             <Dropdown optionLabel="title" optionValue="idlanguage" :options="this.$store.getters['language/getAllLanguagesKnownByUser']" ref="language_from" ariaLabelledBy="language-from" @change="changeLanguageFrom"/>
-            <label for="language-to"> to </label>
-            <Dropdown optionLabel="title" optionValue="idlanguage" :options="this.$store.getters['language/getAllLanguagesKnownByUser']" ref="language_to" ariaLabelledBy="language-to" @change="changeLanguageTo"/>
-          </div>
+            <label for="language-to"> to </label>            
+            <MultiSelect v-model="languagesTo" :options="this.$store.getters['language/getAllLanguagesKnownByUser']" optionLabel="title" placeholder="Select Languages" :filter="true" class="multiselect-custom" @change="changeLanguageTo">
+                <template #value="slotProps">
+                    <div class="language-item language-item-value" v-for="option of slotProps.value" :key="option.idlanguage">
+                        <div>{{option.title}}</div>
+                    </div>
+                    <template v-if="!slotProps.value || slotProps.value.length === 0">
+                        Select languages
+                    </template>
+                </template>
+                <template #option="slotProps">
+                    <div class="language-item">
+                        <div>{{slotProps.option.title}}</div>
+                    </div>
+                </template>
+            </MultiSelect>
+            </div>
           <div style="display:block;align-items:baseline;" class="p-2 m-1">
             <label for="min-review-score">Translations must have an average review score between </label>
             <Dropdown optionLabel="val" optionValue="id" :options="$store.getters['dataset/getReviewValues']" ref="min_review_score" ariaLabelledBy="min-review-score"  @change="changeMinReviewValue"/>
@@ -39,6 +53,7 @@
 <script>
 import Dropdown from '@/components/DropdownLayout.vue'
 import InputText from 'primevue/inputtext'
+import MultiSelect from 'primevue/multiselect'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
 import DatasetsService from '@/services/dataset.service.js'
@@ -48,6 +63,7 @@ export default {
   components: {
     Dropdown,
     InputText,
+    MultiSelect,
     Checkbox,
     Button
   },
@@ -57,7 +73,7 @@ export default {
       stima: false,
       selectedDataset: null,
       languageFrom: null,
-      languageTo: null,
+      languagesTo: null,
       minReviewScore: 0,
       maxReviewScore: 5,
       recordsEstimated: 0
@@ -86,24 +102,23 @@ export default {
       this.resetStima()
     },
     changeLanguageTo(){
-      this.languageTo = this.$refs.language_to.selected
       this.resetStima()
     },
     resetStima(){
       this.stima = false;
     },
     checkSize(){
-      if(this.selectedDataset !== null && this.languageFrom !== null && this.languageTo !== null){
-        DatasetsService.checkDownloadSize(this.selectedDataset, this.languageFrom, this.languageTo, this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
+      if(this.selectedDataset !== null && this.languageFrom !== null && this.languagesTo !== null){
+        DatasetsService.checkDownloadSize(this.selectedDataset, this.languageFrom, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
           .then( res => {
             this.stima = !this.stima
-            this.recordsEstimated = res.data.count
+            this.recordsEstimated = res.data.total
           })
       }
     },
     downloadDataset(){
-      if(this.selectedDataset !== null && this.languageFrom !== null && this.languageTo !== null){
-        DatasetsService.downloadDataset(this.selectedDataset, this.languageFrom, this.languageTo, this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
+      if(this.selectedDataset !== null && this.languageFrom !== null && this.languagesTo !== null){
+        DatasetsService.downloadDataset(this.selectedDataset, this.languageFrom, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
           .then( res => {
             this.stima = !this.stima
           })
