@@ -132,3 +132,17 @@ exports.createAlignment = (req, res) => {
             res.sendStatus(200)
         })
 }
+
+exports.createParallelText = async (req, res) => {
+    try {
+        await ParallelText.create({
+            originalLanguage: req.body.idLanguageFrom,
+            originalText: req.body.originalText,
+            translatedLanguage: req.body.idLanguageTo,
+            translatedText: req.body.translatedText
+        })
+        res.sendStatus(200)
+    } catch (exception){
+        res.sendStatus(500)
+    }
+}
