@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Menu />
+    <Menu :isTranslator="true" :routesAvailable="['translate', 'review', 'alignment', 'profile']" />
     <div class="w-80">
       <div class="row ml-4 mr-4">
         <div class="col-12">

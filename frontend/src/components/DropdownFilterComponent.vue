@@ -17,7 +17,7 @@ export default {
         return {            
             fromLanguageSelected: null,
             toLanguageSelected: null,
-            routesAvailable: ['translate', 'review', 'alignment', 'profile']
+            routesAvailable: ['translate', 'review', 'alignment', 'profile', 'dataset', 'paralleltext']
         }
     },
     props: {
