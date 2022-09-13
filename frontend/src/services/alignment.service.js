@@ -1,4 +1,4 @@
-import { ApiClient, API_ALIGNMENTS_AVAILABLE_ENDPOINT, API_GET_PARALLEL_TEXT_FROM_ID_ENDPOINT, API_CREATE_ALIGNMENT_ENDPOINT} from '@/services/app.services';
+import { ApiClient, API_ALIGNMENTS_AVAILABLE_ENDPOINT, API_GET_PARALLEL_TEXT_FROM_ID_ENDPOINT, API_CREATE_ALIGNMENT_ENDPOINT, API_CREATE_PARALLELTEXT_ENDPOINT} from '@/services/app.services';
 import authHeader from '@/services/auth-header';
 class AlignmentsService {
   getAllAlignments() {
@@ -47,6 +47,14 @@ class AlignmentsService {
       translationObjectsArray, translationObjectsArray,
       sentenceArrayOriginal: sentenceArrayOriginal,
       sentenceArrayTranslated: sentenceArrayTranslated
+    },{headers: authHeader()})
+  }
+  createParallelText(idLanguageFrom, originalText, idLanguageTo, translatedText){
+    return ApiClient.post(API_CREATE_PARALLELTEXT_ENDPOINT, {
+      idLanguageFrom: parseInt(idLanguageFrom),
+      originalText, originalText,
+      idLanguageTo: parseInt(idLanguageTo),
+      translatedText: translatedText
     },{headers: authHeader()})
   }
 }

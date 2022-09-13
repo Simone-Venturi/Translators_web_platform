@@ -3,7 +3,8 @@ import Home from "@/views/Home.vue";
 import Translate from "@/views/Translate.vue";
 import Review from "@/views/Review.vue";
 import Alignment from "@/views/Alignment.vue";
-import Admin from "@/views/Admin.vue";
+import AdminDataset from "@/views/AdminDataset.vue";
+import AdminParallelText from "@/views/AdminParallelText.vue";
 import DataScientistBoard from "@/views/DataScientistBoard.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
@@ -23,8 +24,13 @@ const routes = [
     meta: {requiresDataScientist: true}
   },
   {
-    path: "/admin",
-    component: Admin,
+    path: "/dataset",
+    component: AdminDataset,
+    meta: {requiresAdmin: true}
+  },
+  {
+    path: "/paralleltext",
+    component: AdminParallelText,
     meta: {requiresAdmin: true}
   },
   {
