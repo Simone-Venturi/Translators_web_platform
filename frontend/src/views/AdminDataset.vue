@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Menu :isAdmin="true" :routesAvailable="['dataset', 'paralleltext']" />
     <div class="row h-100">
       <div class="col-12 m-2">
         <h3>All Datasets</h3>
@@ -51,6 +52,7 @@
 import DatasetDataTable from '@/components/DatasetDataTable.vue';
 import Dropdown from '@/components/DropdownLayout.vue'
 import GeneralButton from '@/components/GeneralButton.vue'
+import Menu from '@/components/Menu.vue'
 import FileUpload from 'primevue/fileupload';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
@@ -59,11 +61,12 @@ import InputText from 'primevue/inputtext';
 import DatasetsService from '@/services/dataset.service.js'
 
 export default {
-  name: "Admin",
+  name: "AdminDataset",
   components: {
     DatasetDataTable,
     Dropdown,
     GeneralButton,
+    Menu,
     FileUpload,
     Dialog,
     Button,
@@ -129,9 +132,5 @@ export default {
 <style scoped>
 .col-12 *{
   text-align: left;
-}
-.row {
-  margin: 0 !important;
-  padding: 0 !important;
 }
 </style>

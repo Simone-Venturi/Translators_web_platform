@@ -16,7 +16,7 @@
                 <router-link to="/data" class="nav-link">Data Scientist Board</router-link>
               </li>
               <li v-if="showAdminBoard" class="nav-item">
-                <router-link to="/admin" class="nav-link">Admin Board</router-link>
+                <router-link to="/dataset" class="nav-link">Admin Board</router-link>
               </li>
             </ul>            
             <div v-if="!currentUser" class="navbar-nav ml-auto">
