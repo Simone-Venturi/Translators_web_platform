@@ -44,7 +44,7 @@ services:
     build: ../backend
     image: express_app:0.0.1
     depends_on:
-      - postgres
+      - postgres_translate
     container_name: "express_app_container"
     ports:
       - "3000:3000"
