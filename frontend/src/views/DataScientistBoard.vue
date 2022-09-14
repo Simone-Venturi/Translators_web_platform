@@ -137,7 +137,7 @@ export default {
             link.click()
           })
           .catch(error => {
-            toggleDisplayErrorDownloadModal()
+            this.toggleDisplayErrorDownloadModal()
           })
       }
     },
