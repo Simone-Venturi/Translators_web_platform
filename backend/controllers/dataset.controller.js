@@ -1,4 +1,7 @@
 const db = require("../models");
+const fs = require('fs');
+const archiver = require('archiver');
+const { createHash } = require('crypto');
 const DataSet = db.dataset;
 const Language = db.language;
 const Translation = db.translation;
@@ -124,12 +127,22 @@ exports.checkMongoData = (req, res) => {
 }
 
 exports.downloadDataSet = async (req, res) => {
+    const all_languages = await Language.findAll();
+    const dataset = await DataSet.findByPk(req.body.dataset)
     const languages_requested = req.body.languagesTo
     const languages_before_language_from = languages_requested.filter(elem => req.body.languageFrom > elem)
     const languages_after_language_from = languages_requested.filter(elem => req.body.languageFrom < elem)
-    let translations = []
+    const abbreviation_language_from = all_languages.filter(lang => lang.idlanguage == req.body.languageFrom)[0].abbreviation
+    const dir = 'resources/requests/' + hash(Date.now().toString())
+    const languages_abbreviation_string = all_languages.filter(lang => req.body.languagesTo.includes(lang.idlanguage)).map(lang => lang.abbreviation).join('-')
+    const filename = dataset.name+'-'+abbreviation_language_from+'to'+languages_abbreviation_string+'.zip'
+    const out = 'resources/zips/'+filename
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
     for await (let language_id of languages_before_language_from) {
-        let translation = await Translation.findAll({
+        const abbreviation_language_to = all_languages.filter(lang => lang.idlanguage == language_id)[0].abbreviation
+        let translations = await Translation.findAll({
             include: ['OriginalSentence', 'TranslatedSentence'],
             where: {
                 '$OriginalSentence.languageId$' : { [db.Sequelize.Op.eq]: language_id },
@@ -138,10 +151,17 @@ exports.downloadDataSet = async (req, res) => {
                 average_score: {[db.Sequelize.Op.between]: [req.body.minReviewScore, req.body.maxReviewScore]}
             }
         })
-        translations.push(translation)
+        const file = fs.createWriteStream(dir+'/'+abbreviation_language_from+'-'+abbreviation_language_to+'.txt');
+        translations
+            .forEach((translation) => {
+                file.write(abbreviation_language_from+':'+translation.TranslatedSentence.sentence+'\n');
+                file.write(abbreviation_language_to+':'+translation.OriginalSentence.sentence+'\n');
+            });            
+        file.end();
     }
     for await (let language_id of languages_after_language_from) {
-        let translation = await Translation.findAll({
+        const abbreviation_language_to = all_languages.filter(lang => lang.idlanguage == language_id)[0].abbreviation
+        let translations = await Translation.findAll({
             include: ['OriginalSentence', 'TranslatedSentence'],
             where: {
                 '$OriginalSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageFrom },
@@ -150,7 +170,40 @@ exports.downloadDataSet = async (req, res) => {
                 average_score: {[db.Sequelize.Op.between]: [req.body.minReviewScore, req.body.maxReviewScore]}
             }
         })        
-        translations.push(translation)
+        const file = fs.createWriteStream(dir+'/'+abbreviation_language_from+'-'+abbreviation_language_to+'.txt');
+        translations
+            .forEach((translation) => {
+                file.write(abbreviation_language_from+':'+translation.OriginalSentence.sentence+'\n');
+                file.write(abbreviation_language_to+':'+translation.TranslatedSentence.sentence+'\n');
+            });            
+        file.end();
     }
-    res.status(200).send(translations)
+    await zipDirectory(dir,out)
+    res.download(out);
+}
+
+function hash(string) {
+return createHash('sha256').update(string).digest('hex');
+}
+
+//https://stackoverflow.com/questions/15641243/need-to-zip-an-entire-directory-using-node-js 
+/**
+ * @param {String} sourceDir: /some/folder/to/compress
+ * @param {String} outPath: /path/to/created.zip
+ * @returns {Promise}
+ */
+function zipDirectory(sourceDir, outPath) {
+  const archive = archiver('zip', { zlib: { level: 9 }});
+  const stream = fs.createWriteStream(outPath);
+
+  return new Promise((resolve, reject) => {
+    archive
+      .directory(sourceDir, false)
+      .on('error', err => reject(err))
+      .pipe(stream)
+    ;
+
+    stream.on('close', () => resolve());
+    archive.finalize();
+  });
 }
