@@ -133,10 +133,10 @@ exports.downloadDataSet = async (req, res) => {
     const languages_before_language_from = languages_requested.filter(elem => req.body.languageFrom > elem)
     const languages_after_language_from = languages_requested.filter(elem => req.body.languageFrom < elem)
     const abbreviation_language_from = all_languages.filter(lang => lang.idlanguage == req.body.languageFrom)[0].abbreviation
-    const dir = 'resources/requests/' + hash(Date.now().toString())
+    const dir = 'dist/resources/requests/' + hash(Date.now().toString())
     const languages_abbreviation_string = all_languages.filter(lang => req.body.languagesTo.includes(lang.idlanguage)).map(lang => lang.abbreviation).join('-')
     const filename = dataset.name+'-'+abbreviation_language_from+'to'+languages_abbreviation_string+'.zip'
-    const out = 'resources/zips/'+filename
+    const out = 'dist/resources/zips/'+filename
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
     }
