@@ -87,7 +87,7 @@ services:
     build: ../backend
     image: express_app:0.0.1
     depends_on:
-      - postgres
+      - postgres_translate
       - mongodb
       - redis
     container_name: "express_app_container"
