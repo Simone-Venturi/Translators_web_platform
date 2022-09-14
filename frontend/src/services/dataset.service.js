@@ -41,7 +41,7 @@ class DatasetsService {
       minReviewScore: minReviewScore,
       maxReviewScore: maxReviewScore,
       atLeastAReview: atLeastAReview
-    },{headers: authHeader()})
+    },{headers: authHeader(), responseType: 'arraybuffer'})
   }
 }
 export default new DatasetsService();

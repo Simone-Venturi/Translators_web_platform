@@ -45,7 +45,13 @@
             <Button v-if="!stima" label="Check size" icon="pi pi-check" @click="checkSize" autofocus />
             <Button v-else  label="Download translations" icon="pi pi-check" @click="downloadDataset" autofocus />
           </div>
-      </div>
+      </div>      
+        <Dialog header="Error during download" :visible="displayErrorDownloadModal" :breakpoints="{'960px': '75vw', '640px': '90vw'}" :style="{width: '50vw'}" :modal="true">
+            <p class="m-0">Download finished with an error. <br/> Please try again.</p>
+            <template #footer>
+                <Button label="Ok" icon="pi pi-check" @click="toggleDisplayErrorDownloadModal" autofocus />
+            </template>
+        </Dialog>
     </div>
   </div>
 </template>
@@ -56,6 +62,7 @@ import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
 import DatasetsService from '@/services/dataset.service.js'
 
 export default {
@@ -65,7 +72,8 @@ export default {
     InputText,
     MultiSelect,
     Checkbox,
-    Button
+    Button,
+    Dialog
   },
   data(){
     return {
@@ -76,7 +84,8 @@ export default {
       languagesTo: null,
       minReviewScore: 0,
       maxReviewScore: 5,
-      recordsEstimated: 0
+      recordsEstimated: 0,
+      displayErrorDownloadModal: false
     }
   },
   mounted() {
@@ -119,10 +128,21 @@ export default {
     downloadDataset(){
       if(this.selectedDataset !== null && this.languageFrom !== null && this.languagesTo !== null){
         DatasetsService.downloadDataset(this.selectedDataset, this.languageFrom, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
-          .then( res => {
-            this.stima = !this.stima
+          .then(response => {
+            var blob = new Blob([response.data])
+            let dataset_name = this.$store.getters['dataset/getAllDatasets'].filter(dataset => dataset.id == this.selectedDataset).map(dataset => dataset.name)[0]
+            var link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = dataset_name+'.zip'
+            link.click()
+          })
+          .catch(error => {
+            toggleDisplayErrorDownloadModal()
           })
       }
+    },
+    toggleDisplayErrorDownloadModal(){
+      this.displayErrorDownloadModal = ! this.displayErrorDownloadModal
     }
   }
 };
