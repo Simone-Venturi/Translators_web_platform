@@ -96,7 +96,10 @@ services:
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81    
+    volumes:
+      - plain-texts:/express_app/dist/resources/requests/
+      - zips:/express_app/dist/resources/zips/
     networks:
       - frontend-network
       - backend-network
@@ -108,6 +111,8 @@ volumes:
   mongodb-data:  
   redis-data:
     driver: local
+  plain-texts:
+  zips:
 
 networks:
   frontend-network:
