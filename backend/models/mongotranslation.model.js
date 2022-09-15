@@ -129,7 +129,10 @@ module.exports = (mongoose) => {
         egl: String,
         el: String,
         eml: String,
-        en: String,
+        en: {
+            type:String,
+            index:true
+        },
         'en-ca': String,
         eo: String,
         es: String,
