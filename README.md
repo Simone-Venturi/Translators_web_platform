@@ -22,6 +22,6 @@ Così saran creati 4 container:
 
 ### Esecuzione dei seeder per la popolazione del database
 ```
-docker exec -ti <nome_container_backend> bash
+docker exec -ti express_app_container bash
 node dist/seeders/index.js
 ```
