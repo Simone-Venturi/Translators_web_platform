@@ -15,6 +15,8 @@ COPY package*.json ./
 RUN npm i --only=production
 COPY --from=builder /express_app ./dist
 ENV NODE_ENV=production
+ENV NODE_OPTIONS=--max_old_space_size=4096
+ENV GENERATE_SOURCEMAP=false
 EXPOSE 3000
 
 ENTRYPOINT ["node", "./dist/index.js"]
