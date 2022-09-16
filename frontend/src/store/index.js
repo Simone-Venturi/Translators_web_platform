@@ -4,6 +4,7 @@ import { auth } from "./auth.module"
 import { sentence } from "./sentence.module"
 import { language } from "./language.module"
 import { stat } from "./stat.module"
+import { dataset } from "./dataset.module"
 export default createStore({
   state: {
   },
@@ -15,7 +16,8 @@ export default createStore({
     auth,
     sentence,
     language,
-    stat
+    stat,
+    dataset
   },
   plugins: [createPersistedState()]
 })

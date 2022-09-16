@@ -1,11 +1,11 @@
 module.exports = {
-    HOST: "host.docker.internal",
+    HOST: "postgres_translate",
     USER: "postgres",
     PASSWORD: "postgres",
     DB: "translate_platform",
     dialect: "postgres",
     pool: {
-      max: 5,
+      max: 10,
       min: 0,
       acquire: 30000,
       idle: 10000

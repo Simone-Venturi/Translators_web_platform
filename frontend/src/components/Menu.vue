@@ -1,5 +1,13 @@
 <template>    
-    <div class="row menu4button">
+    <div v-if="isAdmin" class="row menu4button">
+      <div class="col-3">
+        <MenuButton class="menubutton" text="Dataset" @click="showDataset"/>
+      </div>
+      <div class="col-3">
+        <MenuButton class="menubutton" text="ParallelText" @click="showParallelText"/>
+      </div>
+    </div>
+    <div v-else-if="isTranslator" class="row menu4button">
       <div class="col-3">
         <MenuButton class="menubutton" text="Translate" @click="showTranslate"/>
       </div>
@@ -12,7 +20,7 @@
       <div class="col-3">
         <MenuButton class="menubutton" text="Profile" @click="showProfile"/>
       </div>
-    </div> 
+    </div>
 </template>
 
 <script>
@@ -20,14 +28,32 @@ import MenuButton from '@/components/MenuButton.vue'
 export default {
     data() {
         return {
-            content: null,
-            routesAvailable: ['translate', 'review', 'alignment', 'profile']
+            content: null
         }
+    },
+    props: {
+      isAdmin: {
+        type: Boolean,
+        default: false
+      },
+      isTranslator: {
+        type: Boolean,
+        default: false
+      },
+      routesAvailable: {
+        type: Array
+      }
     },
     components: {
         MenuButton
     },
-    methods: {        
+    methods: {
+        showDataset(event){
+            this.hadSelectedClassToSelectedButton(event)
+        },
+        showParallelText(event){
+            this.hadSelectedClassToSelectedButton(event)
+        },
         showTranslate(event){
             this.hadSelectedClassToSelectedButton(event)
         },
@@ -68,6 +94,8 @@ export default {
   }
   .menu4button{
     margin: 2% 0%;
+    align-items: center;
+    justify-content: center;
   }
   @media only screen and (max-width: 600px) {
     .col-3 {

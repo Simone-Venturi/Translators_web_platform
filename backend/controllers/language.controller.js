@@ -20,7 +20,10 @@ exports.allLanguagesKnownByUser = (req, res) => {
         include: ['TranslatorTranslateLanguage'],
         where: {
             '$TranslatorTranslateLanguage.id$': { [db.Sequelize.Op.eq]: req.userId }
-        }
+        },
+        order:[
+            ['idlanguage', 'asc']
+        ]
     }).then( languages => {
         if (!languages) {
             return res.status(404).send({ message: "Languages not found." });

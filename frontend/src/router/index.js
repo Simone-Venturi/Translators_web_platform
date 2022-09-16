@@ -3,6 +3,9 @@ import Home from "@/views/Home.vue";
 import Translate from "@/views/Translate.vue";
 import Review from "@/views/Review.vue";
 import Alignment from "@/views/Alignment.vue";
+import AdminDataset from "@/views/AdminDataset.vue";
+import AdminParallelText from "@/views/AdminParallelText.vue";
+import DataScientistBoard from "@/views/DataScientistBoard.vue";
 import Login from "@/views/Login.vue";
 import Register from "@/views/Register.vue";
 // lazy-loaded
@@ -17,8 +20,18 @@ const routes = [
   },
   {
     path: "/data",
-    component: Home,
+    component: DataScientistBoard,
     meta: {requiresDataScientist: true}
+  },
+  {
+    path: "/dataset",
+    component: AdminDataset,
+    meta: {requiresAdmin: true}
+  },
+  {
+    path: "/paralleltext",
+    component: AdminParallelText,
+    meta: {requiresAdmin: true}
   },
   {
     path: "/translate",
@@ -84,7 +97,6 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresTranslator)) {
     const user = JSON.parse(sessionStorage.getItem('user'));
     if (!user.roles.role_translator) {
-      console.log(user.roles.role_translator)
       next('/');
     } else {
       next();
@@ -98,6 +110,19 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresDataScientist)) {
     const user = JSON.parse(sessionStorage.getItem('user'));
     if (!user.roles.role_data_scientist) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAdmin)) {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user.roles.role_admin) {
       next('/');
     } else {
       next();

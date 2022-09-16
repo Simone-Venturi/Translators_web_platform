@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Menu />
+    <Menu :isTranslator="true" :routesAvailable="['translate', 'review', 'alignment', 'profile']" />
     <div class="w-80">
       <div class="row ml-4 mr-4">
         <div class="col-12">
@@ -12,12 +12,12 @@
           <p>{{sentence.sentence}}</p>
         </div>
       </div>    
-      <div class="row h-100">
+      <div class="row ml-4 mr-4 h-100">
         <div class="col-12">
-          <Textarea v-model="text" :autoResize="true" rows="10" cols="80" />
+          <Textarea v-model="text" :autoResize="true" rows="10" cols="80" style="width:100%" />
         </div>
       </div>
-      <div class="row d-flex justify-content-between">
+      <div class="row ml-4 mr-4 d-flex justify-content-between">
         <div class="col-4">
           <GeneralButton @click="resetTranslation" text="Cancel" colorHover="red"/>
         </div>

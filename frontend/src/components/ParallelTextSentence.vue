@@ -7,12 +7,12 @@
             <div class="col-10">
                 <p>{{showSentenceText}}</p>
             </div>
-            <div v-if="translated" class="col-1 tools">
+            <div class="col-1 tools">
                 <div class="d-flex flex-column">
-                    <div class="clickable" v-if="!isFirst" @click="goUp(index)"><i class="pi pi-arrow-circle-up"></i></div>
+                    <div class="clickable" v-if="translated && !isFirst" @click="goUp(index)"><i class="pi pi-arrow-circle-up"></i></div>
                     <div class="clickable" v-if="!isEmptyTranslation()" @click="addBlock(index)"><i class="pi pi-plus-circle"></i></div>
                     <div class="clickable" v-else @click="removeBlock(index)"><i class="pi pi-minus-circle"></i></div>
-                    <div class="clickable" v-if="!isLast" @click="goDown(index)"><i class="pi pi-arrow-circle-down"></i></div>
+                    <div class="clickable" v-if="translated && !isLast" @click="goDown(index)"><i class="pi pi-arrow-circle-down"></i></div>
                 </div>
             </div>
         </div>

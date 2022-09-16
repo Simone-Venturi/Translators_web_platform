@@ -19,7 +19,8 @@ exports.allAccess = (req, res) => {
       let n_translation = await Translation.count({
         where: {
           translator: req.userId,
-          is_generated_from_alignment: false
+          is_generated_from_alignment: false,
+          dataset_id: null
         }
       })
       let n_alignment = await Translation.count({
@@ -108,7 +109,8 @@ exports.allAccess = (req, res) => {
         ],
         where: {
           translator: req.userId,
-          createdAt: {[db.Sequelize.Op.gte]: date1month}
+          createdAt: {[db.Sequelize.Op.gte]: date1month},
+          dataset_id: null
         },
         group: [db.Sequelize.fn('date_trunc', 'week', db.Sequelize.col('createdAt')), 'createdAtWeek']
       })

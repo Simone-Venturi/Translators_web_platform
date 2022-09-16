@@ -107,7 +107,7 @@ exports.createAlignment = (req, res) => {
                 })
             });
             //create sentences without a translation
-            req.body.sentenceArray.forEach(element => {
+            req.body.sentenceArrayOriginal.forEach(element => {
                 Sentence.create({
                     sentence: element,
                     languageId: parallelText.originalLanguage
@@ -117,6 +117,32 @@ exports.createAlignment = (req, res) => {
                     }
                 })
             });
+
+            //create sentences translated without a original text
+            req.body.sentenceArrayTranslated.forEach(element => {
+                Sentence.create({
+                    sentence: element,
+                    languageId: parallelText.translatedLanguage
+                }).then( sentenceTranslated => {
+                    if(!sentenceTranslated){
+                        return res.status(404).send({ message: "SentenceTranslated not created." });
+                    }
+                })
+            });
             res.sendStatus(200)
         })
+}
+
+exports.createParallelText = async (req, res) => {
+    try {
+        await ParallelText.create({
+            originalLanguage: req.body.idLanguageFrom,
+            originalText: req.body.originalText,
+            translatedLanguage: req.body.idLanguageTo,
+            translatedText: req.body.translatedText
+        })
+        res.sendStatus(200)
+    } catch (exception){
+        res.sendStatus(500)
+    }
 }
