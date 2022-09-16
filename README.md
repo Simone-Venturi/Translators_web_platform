@@ -14,11 +14,14 @@ Il progetto si suddivide in tre cartelle principali:
 cd docker
 docker compose up --build
 ```
-Così saran creati 4 container:
-- database Postgres su porta di default 5432;
+Così saran creati 7 container:
 - backend su porta 3000;
 - frontend su porta 80;
-- istanza pgAdmin4 su porta 5555.
+- database relazionale Postgres;
+- database documentale MongoDB;
+- istanza di Redis;
+- istanza pgAdmin4 su porta 5555;
+- istanza Redis Commander su porta 8081;
 
 ### Esecuzione dei seeder per la popolazione del database
 ```
