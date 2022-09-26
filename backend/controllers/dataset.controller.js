@@ -5,6 +5,7 @@ const { createHash } = require('crypto');
 const DataSet = db.dataset;
 const Language = db.language;
 const Translation = db.translation;
+const DatasetHasLanguage = db.translator_translate_language;
 const MongoDataset = db.mongoDataset;
 const MongoTranslation = db.mongoTranslation;
 const xml2js = require('xml2js');
@@ -48,6 +49,18 @@ exports.loadDataSet = async (req, res) => {
                 res.status(404).send({message: 'Translated Language not found'})
             }
             const dataset = await DataSet.findByPk(req.body.id)
+            await DatasetHasLanguage.findOrCreate({            
+                where: {
+                    dataset: dataset.id,
+                    language: original_language.idlanguage
+                }
+            })
+            await DatasetHasLanguage.findOrCreate({            
+                where: {
+                    dataset: dataset.id,
+                    language: translated_language.idlanguage
+                }
+            })
             MongoDataset.findOne({name: dataset.name}, async (err, mongoDataset) => {
                 if(mongoDataset == null) {
                     await MongoDataset.create({
