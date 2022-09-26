@@ -1,6 +1,6 @@
 <template>
     <div class="datatable">
-        <DataTable :value="translations" :paginator="true" class="p-datatable-translations" :rows="10" dataKey="idtranslation" :filters="filters" filterDisplay="menu" :loading="loading"
+        <DataTable :value="translations" :paginator="true" class="p-datatable-translations" :rows="10" dataKey="idtranslation" :filters="filters" filterDisplay="menu" 
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[10,25,50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             :globalFilterFields="['OriginalSentence.sentence', 'TranslatedSentence.sentence']" responsiveLayout="scroll">
@@ -14,17 +14,17 @@
                  </div>
             </template>
             <template #empty>
-                No translations found.
+                No translations found. Please select other languages.
             </template>
             <template #loading>
                 Loading translations. Please wait.
             </template>
-            <Column field="OriginalSentence.sentence" header="Sentences" sortable style="min-width: 14rem">
+            <Column field="OriginalSentence.sentence" header="Original sentences" sortable style="min-width: 14rem">
                 <template #body="{data}">
                     {{data.OriginalSentence.sentence}}
                 </template>
             </Column>
-            <Column field="TranslatedSentence.sentence" header="Translations" sortable style="min-width: 14rem">
+            <Column field="TranslatedSentence.sentence" header="Translated Sentences" sortable style="min-width: 14rem">
                 <template #body="{data}">
                     {{data.TranslatedSentence.sentence}}
                 </template>
@@ -90,33 +90,22 @@ export default {
         GeneralButton
     },
     mounted() {
-        this.getTranslations();
+        // this.getTranslations();
     },
     watch: { 
       	'languageFilter.update': function(newVal) {
-            if (newVal === true){
-                this.translations = this.allTranslations
-                    .filter(translation => {
-                        if(this.languageFilter.fromLanguageSelected == null){
-                            return true
-                        } else {   
-                            return translation.OriginalSentence.languageId == this.languageFilter.fromLanguageSelected
-                        }
-                    })
-                    .filter(translation => {
-                        if(this.languageFilter.toLanguageSelected == null){
-                            return true
-                        } else {
-                            return translation.TranslatedSentence.languageId == this.languageFilter.toLanguageSelected
-                        }
-                    })
-                this.$emit('updatedLanguageFilter');
+            console.log(this.languageFilter)
+            if (newVal === true && this.languageFilter.fromLanguageSelected && this.languageFilter.toLanguageSelected){
+                this.getTranslations(this.languageFilter.fromLanguageSelected, this.languageFilter.toLanguageSelected)
+                    .then( _ => this.$emit('updatedLanguageFilter'))
+            } else {
+                this.$emit('updatedLanguageFilter')
             }
         }
     },
     methods: {
-        getTranslations(){            
-            return TranslationsService.getAllTranslationsNotReviewed().then(result => {
+        getTranslations(original_language, translated_language){            
+            return TranslationsService.getAllTranslationsNotReviewed(original_language, translated_language).then(result => {
                 this.allTranslations = result.data;
                 this.allTranslations = this.allTranslations.map(translation => ({...translation, score_review: null}));
                 this.translations = this.allTranslations;
@@ -128,7 +117,7 @@ export default {
             if(translation.score_review !== null){
                 ReviewsService.createReview(translation.id, translation.score_review).then(
                 (response) => {
-                    this.getTranslations()
+                    this.getTranslations(this.languageFilter.fromLanguageSelected, this.languageFilter.fromLanguageSelected)
                         .then(() => this.$emit('rated'))
                 },
                 (error) => {
