@@ -39,6 +39,7 @@ db.translation = require("../models/translation.model.js")(sequelize, Sequelize)
 db.review = require("../models/review.model.js")(sequelize, Sequelize);
 db.parallel_text = require("../models/parallel_text.model.js")(sequelize, Sequelize);
 db.dataset = require("../models/dataset.model.js")(sequelize, Sequelize);
+db.datasets_have_languages = require("../models/dataset_has_language.model.js")(sequelize, Sequelize);
 db.mongoDataset = require("../models/mongodataset.model")(mongoose)
 db.mongoTranslation = require("../models/mongotranslation.model")(mongoose)
 
@@ -128,6 +129,19 @@ db.dataset.hasMany(db.translation, {
 db.translation.belongsTo(db.dataset, {
   as: 'DataSet',
   foreignKey: 'dataset_id'
+});
+
+db.dataset.belongsToMany(db.language, {
+  through: db.datasets_have_languages,
+  as: 'DatasetHasLanguage',
+  foreignKey: "dataset",
+  otherKey: "language"
+});
+db.language.belongsToMany(db.dataset, {
+  through: db.datasets_have_languages,
+  as: 'DatasetHasLanguage',
+  foreignKey: "language",
+  otherKey: "dataset"
 });
 
 module.exports = db;
