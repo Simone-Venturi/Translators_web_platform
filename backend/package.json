@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed-postgres": "node dist/seeders/index.js",
-    "seed-mongo": "node dist/seeders/mongo.seeder.js"
+    "seed-postgres": "node seeders/index.js",
+    "seed-mongo": "node seeders/mongo.seeder.js"
   },
   "author": "",
   "license": "ISC",
