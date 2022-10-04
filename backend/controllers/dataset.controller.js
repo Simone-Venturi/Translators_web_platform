@@ -90,43 +90,21 @@ exports.loadDataSet = async (req, res) => {
 };
 
 exports.checkDataSetSize = async (req, res) => {
-    const languages_requested = req.body.languagesTo
-    const languages_before_language_from = languages_requested.filter(elem => req.body.languageFrom > elem)
-    const languages_after_language_from = languages_requested.filter(elem => req.body.languageFrom < elem)
-    let translationsCounts = []
-    for await (let language_id of languages_before_language_from) {
-        let count = await Translation.count({
-            include: ['OriginalSentence', 'TranslatedSentence'],
+    try {
+        const languages_requested = await Language.findAll({
             where: {
-                '$OriginalSentence.languageId$' : { [db.Sequelize.Op.eq]: language_id },
-                '$TranslatedSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageFrom  },
-                dataset_id: req.body.dataset,
-                average_score: {[db.Sequelize.Op.between]: [req.body.minReviewScore, req.body.maxReviewScore]}
+                idlanguage: {
+                    [db.Sequelize.Op.in] : req.body.languagesTo
+                }
             }
         })
-        translationsCounts.push({
-            language_id: language_id,
-            count: count
-        })
-    }
-    for await (let language_id of languages_after_language_from) {
-        let count = await Translation.count({
-            include: ['OriginalSentence', 'TranslatedSentence'],
-            where: {
-                '$OriginalSentence.languageId$' : { [db.Sequelize.Op.eq]: req.body.languageFrom },
-                '$TranslatedSentence.languageId$' : { [db.Sequelize.Op.eq]: language_id },
-                dataset_id: req.body.dataset,
-                average_score: {[db.Sequelize.Op.between]: [req.body.minReviewScore, req.body.maxReviewScore]}
-            }
-        })
-        translationsCounts.push({
-            language_id: language_id,
-            count: count
-        })
-    }
-    const total = translationsCounts.map(translation => translation.count)
-        .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-    res.status(200).send({partials: translationsCounts, total: total})
+        const mongo_filter = Object.assign({}, ...languages_requested.map(lang => { return {[lang.abbreviation.toLowerCase()]: { $exists: true}}}))
+        const total = await MongoTranslation.count(mongo_filter).exec()
+        res.status(200).send({total: total})
+    } catch (e){
+        console.log(e)
+        res.status(404)
+    }    
 }
 
 exports.checkMongoData = (req, res) => {
