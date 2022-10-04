@@ -1,7 +1,7 @@
 const db = require("../models");
 const fs = require('fs');
 const archiver = require('archiver');
-const { createHash } = require('crypto');
+var sha256 = require('js-sha256');
 const DataSet = db.dataset;
 const Language = db.language;
 const Translation = db.translation;
@@ -146,7 +146,7 @@ exports.downloadDataSet = async (req, res) => {
     const languages_before_language_from = languages_requested.filter(elem => req.body.languageFrom > elem)
     const languages_after_language_from = languages_requested.filter(elem => req.body.languageFrom < elem)
     const abbreviation_language_from = all_languages.filter(lang => lang.idlanguage == req.body.languageFrom)[0].abbreviation
-    const dir = 'dist/resources/requests/' + hash(Date.now().toString())
+    const dir = 'dist/resources/requests/' + sha256(Date.now().toString())
     const languages_abbreviation_string = all_languages.filter(lang => req.body.languagesTo.includes(lang.idlanguage)).map(lang => lang.abbreviation).join('-')
     const filename = dataset.name+'-'+abbreviation_language_from+'to'+languages_abbreviation_string+'.zip'
     const out = 'dist/resources/zips/'+filename
@@ -193,10 +193,6 @@ exports.downloadDataSet = async (req, res) => {
     }
     await zipDirectory(dir,out)
     res.download(out);
-}
-
-function hash(string) {
-return createHash('sha256').update(string).digest('hex');
 }
 
 //https://stackoverflow.com/questions/15641243/need-to-zip-an-entire-directory-using-node-js 
