@@ -1,4 +1,5 @@
 import AuthService from '../services/auth.service';
+import { sha256 } from 'js-sha256';
 const user = JSON.parse(sessionStorage.getItem('user'));
 const initialState = user
   ? { status: { loggedIn: true }, user }
@@ -8,7 +9,7 @@ export const auth = {
   state: initialState,
   actions: {
     login({ commit }, user) {
-      return AuthService.login(user).then(
+      return AuthService.login({...user, password: sha256(user.password)}).then(
         user => {
           commit('loginSuccess', user);
           return Promise.resolve(user);
@@ -24,7 +25,7 @@ export const auth = {
       commit('logout');
     },
     register({ commit }, user) {
-      return AuthService.register(user).then(
+      return AuthService.register({...user, password: sha256(user.password)}).then(
         response => {
           commit('registerSuccess');
           return Promise.resolve(response.data);

@@ -8,10 +8,8 @@
             <Dropdown optionLabel="name" optionValue="id" :options="$store.getters['dataset/getAllDatasets']" ref="dataset" placeholder="select a dataset" @change="changeDataset" ariaLabelledBy="dataset-dropdown" />
           </div>
           <div style="display:block;align-items:baseline;" class="p-2 m-1">
-            <label for="language-from">Translations from </label>
-            <Dropdown optionLabel="title" optionValue="idlanguage" :options="this.$store.getters['language/getAllLanguagesKnownByUser']" ref="language_from" ariaLabelledBy="language-from" @change="changeLanguageFrom"/>
-            <label for="language-to"> to </label>            
-            <MultiSelect v-model="languagesTo" :options="this.$store.getters['language/getAllLanguagesKnownByUser']" optionLabel="title" placeholder="Select Languages" :filter="true" class="multiselect-custom" @change="changeLanguageTo">
+            <label for="language">Translations in </label>       
+            <MultiSelect v-model="languagesTo" :options="this.$store.getters['language/getAllLanguagesAvailable']" optionLabel="title" placeholder="Select Languages" :filter="true" class="multiselect-custom" @change="changeLanguageTo">
                 <template #value="slotProps">
                     <div class="language-item language-item-value" v-for="option of slotProps.value" :key="option.idlanguage">
                         <div>{{option.title}}</div>
@@ -32,12 +30,7 @@
             <Dropdown optionLabel="val" optionValue="id" :options="$store.getters['dataset/getReviewValues']" ref="min_review_score" ariaLabelledBy="min-review-score"  @change="changeMinReviewValue"/>
             <label for="max-review-score"> and </label>
             <Dropdown optionLabel="val" optionValue="id" :options="$store.getters['dataset/getReviewValues']" ref="max_review_score" ariaLabelledBy="max-review-score"  @change="changeMaxReviewValue"/>
-          </div>
-          <!-- <div style="display:block;align-items:baseline;" class="p-2 m-1">
-            <label for="binary">Translations with at least a review</label>
-            <Checkbox inputId="binary" v-model="atLeastAReview" :binary="true" />
-          </div> -->
-          
+          </div>          
           <div style="display:block;align-items:baseline;color:blue;" class="p-2 m-1" v-if="stima">
             Your request will produce {{recordsEstimated}} records
           </div>
@@ -117,8 +110,8 @@ export default {
       this.stima = false;
     },
     checkSize(){
-      if(this.selectedDataset !== null && this.languageFrom !== null && this.languagesTo !== null){
-        DatasetsService.checkDownloadSize(this.selectedDataset, this.languageFrom, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
+      if(this.selectedDataset !== null && this.languagesTo !== null){
+        DatasetsService.checkDownloadSize(this.selectedDataset, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
           .then( res => {
             this.stima = !this.stima
             this.recordsEstimated = res.data.total
@@ -126,8 +119,8 @@ export default {
       }
     },
     downloadDataset(){
-      if(this.selectedDataset !== null && this.languageFrom !== null && this.languagesTo !== null){
-        DatasetsService.downloadDataset(this.selectedDataset, this.languageFrom, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
+      if(this.selectedDataset !== null && this.languagesTo !== null){
+        DatasetsService.downloadDataset(this.selectedDataset, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
           .then(response => {
             var blob = new Blob([response.data])
             let dataset_name = this.$store.getters['dataset/getAllDatasets'].filter(dataset => dataset.id == this.selectedDataset).map(dataset => dataset.name)[0]
@@ -138,6 +131,9 @@ export default {
           })
           .catch(error => {
             this.toggleDisplayErrorDownloadModal()
+          })
+          .finally(() => {
+            this.resetStima()
           })
       }
     },

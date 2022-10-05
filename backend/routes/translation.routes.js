@@ -19,7 +19,7 @@ module.exports = function(app) {
     controller.createTranslation
   );
   app.get(
-    "/api/translation/allNotReviewed",
+    "/api/translation/allNotReviewed/:fromLanguage/:toLanguage",
     [authJwt.verifyToken, authJwt.isTranslator],
     controller.allTranslationsNotReviewdByUser
   );
