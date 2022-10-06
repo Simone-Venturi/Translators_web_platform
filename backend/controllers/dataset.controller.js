@@ -116,7 +116,7 @@ exports.checkMongoData = (req, res) => {
 
 exports.downloadDataSet = async (req, res) => {
     try {
-        const dataset = await DataSet.findByPk(req.body.dataset)
+        const dataset = await DataSet.findByPk(1)
         const languages_requested = await Language.findAll({
             where: {
                 idlanguage: {
@@ -124,8 +124,9 @@ exports.downloadDataSet = async (req, res) => {
                 }
             }
         })
-        const mongo_filter = Object.assign({}, ...languages_requested.map(lang => { return {[lang.abbreviation.toLowerCase()]: { $exists: true}}}))
-        const all_translations = await MongoTranslation.find(mongo_filter).exec()
+        let datasets = req.body.datasets.map(v => v == null ? "null" : v)
+        let query = queryBuilder(req.body.languagesTo, datasets, req.body.minReviewScore, req.body.maxReviewScore, req.body.minReview, false)
+        const [all_translations, metadata] = await db.sequelize.query(query);
         const dir = path.join(__dirname,'/../resources/requests/' + sha256(Date.now().toString()))
         const languages_abbreviation_string = languages_requested.filter(lang => req.body.languagesTo.includes(lang.idlanguage)).map(lang => lang.abbreviation).join('-')
         const filename = dataset.name+'-langs-'+languages_abbreviation_string+'.zip'
@@ -135,8 +136,8 @@ exports.downloadDataSet = async (req, res) => {
         }
         const file = fs.createWriteStream(dir+'/langs-'+languages_abbreviation_string+'.txt');
         for(let translation of all_translations){
-            for await (let lang of languages_requested.map(l => l.abbreviation.toLowerCase())){
-                file.write(lang+':'+translation[lang]+'\n')
+            for await (let lang of languages_requested.map(l => l.idlanguage)){
+                file.write(languages_requested.filter(l => l.idlanguage == lang).map(l => l.abbreviation.toLowerCase())[0]+':'+translation[lang]+'\n')
             }
         }
         file.end();
