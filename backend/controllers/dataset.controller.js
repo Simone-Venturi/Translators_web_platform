@@ -93,10 +93,13 @@ exports.loadDataSet = async (req, res) => {
 exports.checkDataSetSize = async (req, res) => {
     try {
         let datasets = req.body.datasets.map(v => v == null ? "null" : v)
-        let query = queryBuilder(req.body.languagesTo, datasets, req.body.minReviewScore, req.body.maxReviewScore, req.body.minReview, true)
-        const [results, metadata] = await db.sequelize.query(query);
-        const total = results.reduce((previousValue, currentValue) => {
-            return previousValue + parseInt(currentValue.total)}, 0);
+        let languages_permutations = permutations(req.body.languagesTo)
+        let total = 0
+        for (let i = 0; i<languages_permutations.length; i++){            
+            let query = queryBuilder(req.body.languagesTo, datasets, req.body.minReviewScore, req.body.maxReviewScore, req.body.minReview, true, languages_permutations[i])
+            const [result, metadata] = await db.sequelize.query(query);
+            total += parseInt(result[0].total)
+        }
         res.status(200).send({total: total})
     } catch (e){
         console.log(e)
@@ -125,8 +128,7 @@ exports.downloadDataSet = async (req, res) => {
             }
         })
         let datasets = req.body.datasets.map(v => v == null ? "null" : v)
-        let query = queryBuilder(req.body.languagesTo, datasets, req.body.minReviewScore, req.body.maxReviewScore, req.body.minReview, false)
-        const [all_translations, metadata] = await db.sequelize.query(query);
+        let languages_permutations = permutations(req.body.languagesTo)
         const dir = path.join(__dirname,'/../resources/requests/' + sha256(Date.now().toString()))
         const languages_abbreviation_string = languages_requested.filter(lang => req.body.languagesTo.includes(lang.idlanguage)).map(lang => lang.abbreviation).join('-')
         const filename = dataset.name+'-langs-'+languages_abbreviation_string+'.zip'
@@ -135,9 +137,13 @@ exports.downloadDataSet = async (req, res) => {
             fs.mkdirSync(dir);
         }
         const file = fs.createWriteStream(dir+'/langs-'+languages_abbreviation_string+'.txt');
-        for(let translation of all_translations){
-            for await (let lang of languages_requested.map(l => l.idlanguage)){
-                file.write(languages_requested.filter(l => l.idlanguage == lang).map(l => l.abbreviation.toLowerCase())[0]+':'+translation[lang]+'\n')
+        for (let i = 0; i<languages_permutations.length; i++){            
+            let query = queryBuilder(req.body.languagesTo, datasets, req.body.minReviewScore, req.body.maxReviewScore, req.body.minReview, false, languages_permutations[i])
+            const [translations, metadata] = await db.sequelize.query(query);
+            for(let translation of translations){
+                for await (let lang of languages_requested.map(l => l.idlanguage)){
+                    file.write(languages_requested.filter(l => l.idlanguage == lang).map(l => l.abbreviation.toLowerCase())[0]+':'+translation[lang]+'\n')
+                }
             }
         }
         file.end();
@@ -181,54 +187,52 @@ const permutations = arr => {  if (arr.length <= 2) return arr.length === 2 ? [a
   );
 };
 
-function queryBuilder(languages_array, datasets_array, score_min = 0, score_max = 5, n_score = 0, isCounter = false) {
-    let languages_permutations = permutations(languages_array)    
-    let query = ""
-    for (let i = 0; i<languages_permutations.length; i++){
-        query += "SELECT"
-        if(!isCounter){
-            for (let l=0; l<languages_array.length; l++){ 
-                query += ` s${l}.sentence as "${languages_permutations[i][l]}"`;
-                if(l!= languages_array.length -1){
-                    query += ","; 
-                }
-            }
-        } else {
-            query += " COUNT(*) AS total"
-        }
-        query += " FROM "
-    
+function queryBuilder(languages_array, datasets_array, score_min = 0, score_max = 5, n_score = 0, isCounter = false, permutation) {
+    let doDatasetsContainsNull = datasets_array.filter(v => v == "null" ).length > 0 ? true : false
+    let query = "SELECT"
+    if(!isCounter){
         for (let l=0; l<languages_array.length; l++){ 
-            query += "sentences s" + l + ", "; 
-        }
-        for (let l=0; l<languages_array.length-1; l++){ 
-            query += "translations t" + l + ", "; 
-        }
-        query = query.slice(0, -2) + " \n";
-        query += "WHERE ";
-        for (let l=0; l<languages_array.length-1; l++){
-            if(l != 0){
-                query += " AND "
+            query += ` s${l}.sentence as "${permutation[l]}"`;
+            if(l!= languages_array.length -1){
+                query += ","; 
             }
-            query += `"s${l}"."languageId" = ${languages_permutations[i][l]}
-                AND s${l}.idsentence = t${l}.original
-                AND s${l+1}.idsentence = t${l}.translated
-                AND "s${l+1}"."languageId" = ${languages_permutations[i][l+1]}
-            `;
         }
-        for (let l=0; l<languages_array.length-1; l++){
-            query += `AND t${l}.average_score BETWEEN ${score_min} AND ${score_max} `
+    } else {
+        query += " COUNT(*) AS total"
+    }
+    query += " FROM "
+
+    for (let l=0; l<languages_array.length; l++){ 
+        query += "sentences s" + l + ", "; 
+    }
+    for (let l=0; l<languages_array.length-1; l++){ 
+        query += "translations t" + l + ", "; 
+    }
+    query = query.slice(0, -2) + " \n";
+    query += "WHERE ";
+    for (let l=0; l<languages_array.length-1; l++){
+        if(l != 0){
+            query += " AND "
         }
-        for (let l=0; l<languages_array.length-1; l++){
-            query += `AND t${l}.n_scores >= ${n_score} `
-        }    
-        for (let l=0; l<languages_array.length-1; l++){
+        query += `"s${l}"."languageId" = ${permutation[l]}
+            AND s${l}.idsentence = t${l}.original
+            AND s${l+1}.idsentence = t${l}.translated
+            AND "s${l+1}"."languageId" = ${permutation[l+1]}
+        `;
+    }
+    for (let l=0; l<languages_array.length-1; l++){
+        query += `AND t${l}.average_score BETWEEN ${score_min} AND ${score_max} `
+    }
+    for (let l=0; l<languages_array.length-1; l++){
+        query += `AND t${l}.n_scores >= ${n_score} `
+    }    
+    for (let l=0; l<languages_array.length-1; l++){
+        if(doDatasetsContainsNull) {
+            query += `AND ( t${l}.dataset_id IN (${datasets_array}) OR t${l}.dataset_id IS NULL) `
+        } else {
             query += `AND t${l}.dataset_id IN (${datasets_array}) `
         }
-        query += `\n`
-        if( i != languages_permutations.length -1) {
-            query += "UNION ALL \n"
-        }
     }
+    query += `\n`
     return query
 }
