@@ -68,6 +68,10 @@ export const dataset = {
     getAllDatasets(state){
       return state.datasets
     },
+    getAllDatasetsPlusTranslationDataset(state){
+      let translation_option = {id: null, name:'Translations'}
+      return [...state.datasets, translation_option]
+    },
     getReviewValues(state){
       return state.reviewValues
     }
