@@ -7,7 +7,16 @@ module.exports = (sequelize, Sequelize) => {
       },
       sentence: {
         type: Sequelize.TEXT
-      } 
+      },
+      languageId: {
+        type: Sequelize.INTEGER
+      }
+    },{
+      uniqueKeys: {
+          sentence_unique: {
+              fields: ['sentence', 'languageId']
+          }
+      }
     });
     return Sentence;
 };
