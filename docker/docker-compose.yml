@@ -3,8 +3,6 @@ services:
   postgres_translate:
     image: postgres
     hostname: postgres
-    # ports:
-    #   - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -24,8 +22,6 @@ services:
       MONGO_INITDB_DATABASE: translate_platform
     volumes:
     - mongodb-data:/data/db
-    # ports:
-    # - 27017:27017
     networks:
       - backend-network
     healthcheck:
@@ -38,8 +34,6 @@ services:
   redis:
     image: redis:6.2-alpine
     hostname: redis
-    # ports:
-    #   - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes: 
       - redis-data:/data
@@ -72,11 +66,13 @@ services:
     restart: unless-stopped
 
   frontend:
-    build: ../frontend
+    build: 
+      context: ../frontend
     image: vue_app:0.0.1
     depends_on:
       - backend
     container_name: "vue_app_container"
+    env_file: ../frontend/.env
     ports:
       - "80:80"
     networks:
@@ -92,7 +88,8 @@ services:
       - redis
     container_name: "express_app_container"
     ports:
-      - "3000:3000"
+      - "3000:3000"      
+    env_file: ../backend/.env
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
