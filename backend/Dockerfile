@@ -18,5 +18,6 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=4096
 ENV GENERATE_SOURCEMAP=false
 EXPOSE 3000
-
-ENTRYPOINT ["node", "./dist/index.js"]
+RUN rm package*.json
+WORKDIR /express_app/dist
+ENTRYPOINT ["node", "./index.js"]

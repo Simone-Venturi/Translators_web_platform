@@ -5,7 +5,21 @@
           <h3 class="p-2 m-1">Download translations</h3>
           <div style="display:block;align-items:baseline;" class="p-2 m-1">
             <label for="dataset-dropdown">Dataset</label>
-            <Dropdown optionLabel="name" optionValue="id" :options="$store.getters['dataset/getAllDatasets']" ref="dataset" placeholder="select a dataset" @change="changeDataset" ariaLabelledBy="dataset-dropdown" />
+            <MultiSelect v-model="datasets" :options="this.$store.getters['dataset/getAllDatasetsPlusTranslationDataset']" optionLabel="name" placeholder="Select a dataset" :filter="true" class="multiselect-custom" @change="changeDataset">
+                <template #value="slotProps">
+                    <div class="dataset-item dataset-item-value" v-for="option of slotProps.value" :key="option.id">
+                        <div>{{option.name}}</div>
+                    </div>
+                    <template v-if="!slotProps.value || slotProps.value.length === 0">
+                        Select datasets
+                    </template>
+                </template>
+                <template #option="slotProps">
+                    <div class="dataset-item">
+                        <div>{{slotProps.option.name}}</div>
+                    </div>
+                </template>
+            </MultiSelect>
           </div>
           <div style="display:block;align-items:baseline;" class="p-2 m-1">
             <label for="language">Translations in </label>       
@@ -30,6 +44,11 @@
             <Dropdown optionLabel="val" optionValue="id" :options="$store.getters['dataset/getReviewValues']" ref="min_review_score" ariaLabelledBy="min-review-score"  @change="changeMinReviewValue"/>
             <label for="max-review-score"> and </label>
             <Dropdown optionLabel="val" optionValue="id" :options="$store.getters['dataset/getReviewValues']" ref="max_review_score" ariaLabelledBy="max-review-score"  @change="changeMaxReviewValue"/>
+          </div>          
+          <div style="display:block;align-items:baseline" class="p-2 m-1">
+            <label for="nMinReviews">Translations must have </label>
+            <InputNumber v-model="nMinReview" :min="0" :max="100" inputId="nMinReviews" />
+            <label for="nMinReviews"> reviews at least</label>
           </div>          
           <div style="display:block;align-items:baseline;color:blue;" class="p-2 m-1" v-if="stima">
             Your request will produce {{recordsEstimated}} records
@@ -56,6 +75,7 @@ import MultiSelect from 'primevue/multiselect'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
+import InputNumber from 'primevue/inputnumber';
 import DatasetsService from '@/services/dataset.service.js'
 
 export default {
@@ -66,13 +86,14 @@ export default {
     MultiSelect,
     Checkbox,
     Button,
+    InputNumber,
     Dialog
   },
   data(){
     return {
-      atLeastAReview: false,
+      nMinReview: 0,
       stima: false,
-      selectedDataset: null,
+      datasets: null,
       languageFrom: null,
       languagesTo: null,
       minReviewScore: 0,
@@ -88,7 +109,6 @@ export default {
   },
   methods: {
     changeDataset(){
-      this.selectedDataset = this.$refs.dataset.selected
       this.resetStima()
     },
     changeMinReviewValue(){
@@ -110,8 +130,8 @@ export default {
       this.stima = false;
     },
     checkSize(){
-      if(this.selectedDataset !== null && this.languagesTo !== null){
-        DatasetsService.checkDownloadSize(this.selectedDataset, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
+      if(this.datasets !== null && this.languagesTo !== null && this.languagesTo.length >= 2){
+        DatasetsService.checkDownloadSize(this.datasets.map(dataset => dataset.id), this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.nMinReview)
           .then( res => {
             this.stima = !this.stima
             this.recordsEstimated = res.data.total
@@ -119,11 +139,11 @@ export default {
       }
     },
     downloadDataset(){
-      if(this.selectedDataset !== null && this.languagesTo !== null){
-        DatasetsService.downloadDataset(this.selectedDataset, this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.atLeastAReview)
+      if(this.datasets !== null && this.languagesTo !== null && this.languagesTo.length >= 2){
+        DatasetsService.downloadDataset(this.datasets.map(dataset => dataset.id), this.languagesTo.map(language => language.idlanguage), this.minReviewScore, this.maxReviewScore, this.nMinReview)
           .then(response => {
             var blob = new Blob([response.data])
-            let dataset_name = this.$store.getters['dataset/getAllDatasets'].filter(dataset => dataset.id == this.selectedDataset).map(dataset => dataset.name)[0]
+            let dataset_name = this.$store.getters['dataset/getAllDatasetsPlusTranslationDataset'].filter(dataset => this.datasets.map(dataset => dataset.id).includes(dataset.id)).map(dataset => dataset.name).join("-")
             var link = document.createElement('a')
             link.href = window.URL.createObjectURL(blob)
             link.download = dataset_name+'.zip'

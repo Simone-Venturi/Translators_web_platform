@@ -7,10 +7,9 @@ exports.aggregation = async (job) => {
 
 async function massiveAgrgegation(job){
     let jobResult = {
-        recordsMerged: [],
+        records: [],
         dataset_id: job.data.dataset_id,
-        translator: job.data.translator,
-        newRecords: []
+        translator: job.data.translator
     }
     for (let translation of job.data.data) {
         try {
@@ -27,17 +26,10 @@ async function massiveAgrgegation(job){
             })
             let languages = Object.keys(updaterecord._doc).filter(elem => !['_id', 'dataset', 'createdAt', 'updatedAt', '__v'].includes(elem))
             languages.sort()
-            if (n_record_deleted.deletedCount >= 1 ){
-                jobResult.recordsMerged.push({
-                    object: result,
-                    languages: languages
-                })            
-            } else {
-                jobResult.newRecords.push({
-                    object: result,
-                    languages:languages
-                })
-            }
+            jobResult.records.push({
+                object: result,
+                languages: languages
+            })
         } catch(e) {
             console.log(e)
         }
