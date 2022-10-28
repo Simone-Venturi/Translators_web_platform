@@ -1,16 +1,16 @@
 module.exports = {
     development: {        
         HOST: process.env.MONGO_HOST,
-        PORT: process.env.MONGO_PASSWORD,
+        PORT: process.env.MONGO_PORT,
         USER: process.env.MONGO_USER,
-        PASSWORD: MONGO_PASSWORD,
-        DB: MONGO_DB
+        PASSWORD: process.env.MONGO_PASSWORD,
+        DB: process.env.MONGO_DB
     },
     test: {        
         HOST: process.env.MONGO_HOST_TEST,
-        PORT: process.env.MONGO_PASSWORD_TEST,
+        PORT: process.env.MONGO_PORT_TEST,
         USER: process.env.MONGO_USER_TEST,
-        PASSWORD: MONGO_PASSWORD_TEST,
-        DB: MONGO_DB_TEST
+        PASSWORD: process.env.MONGO_PASSWORD_TEST,
+        DB: process.env.MONGO_DB_TEST
     }
   }
