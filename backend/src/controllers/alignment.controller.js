@@ -76,67 +76,65 @@ exports.getParallelTextFromID = (req, res) => {
         })
 }
 
-exports.createAlignment = (req, res) => {
-    ParallelText.findByPk(req.body.idParallelText)
-        .then( parallelText => {
-            if (!parallelText) {
-                return res.status(404).send({ message: "Prallel Text not found." });
+exports.createAlignment = async (req, res) => {
+    try {
+        const parallelText = await ParallelText.findByPk(req.body.idParallelText)
+        if (!parallelText) {
+            return res.status(404).send({ message: "Prallel Text not found." });
+        }
+        //create translations
+        for await (let element of req.body.translationObjectsArray) {
+            const sentenceOriginal = await Sentence.create({
+                sentence: element.original_sentence,
+                languageId: parallelText.originalLanguage
+            })
+            if(!sentenceOriginal){
+                return res.status(404).send({ message: "SentenceOriginal not created." });
             }
-            //create translations
-            req.body.translationObjectsArray.forEach(element => {
-                Sentence.create({
-                    sentence: element.original_sentence,
-                    languageId: parallelText.originalLanguage
-                }).then( sentenceOriginal => {
-                    if(!sentenceOriginal){
-                        return res.status(404).send({ message: "SentenceOriginal not created." });
-                    }
-                    Sentence.create({
-                        sentence: element.translated_sentence,
-                        languageId: parallelText.translatedLanguage
-                    }).then( sentenceTranslated => {
-                        if(!sentenceTranslated){
-                            return res.status(404).send({ message: "SentenceTranslated not created." });
-                        }
-                        Translation.create({
-                            original: sentenceOriginal.idsentence,
-                            translated: sentenceTranslated.idsentence,
-                            translator: req.userId,
-                            parallel_text_id: parallelText.id,
-                            is_generated_from_alignment: true
-                        }).then( translation => {
-                            if(!translation){
-                                return res.status(404).send({ message: "Translation not created." });
-                            }
-                        })
-                    })
-                })
-            });
-            //create sentences without a translation
-            req.body.sentenceArrayOriginal.forEach(element => {
-                Sentence.create({
-                    sentence: element,
-                    languageId: parallelText.originalLanguage
-                }).then( sentenceTranslated => {
-                    if(!sentenceTranslated){
-                        return res.status(404).send({ message: "SentenceTranslated not created." });
-                    }
-                })
-            });
+            const sentenceTranslated = await Sentence.create({
+                sentence: element.translated_sentence,
+                languageId: parallelText.translatedLanguage
+            })
+            if(!sentenceTranslated){
+                return res.status(404).send({ message: "SentenceTranslated not created." });
+            }
+            const translation = await Translation.create({
+                original: sentenceOriginal.idsentence,
+                translated: sentenceTranslated.idsentence,
+                translator: req.userId,
+                parallel_text_id: parallelText.id,
+                is_generated_from_alignment: true
+            })
+            if(!translation){
+                return res.status(404).send({ message: "Translation not created." });
+            }
+        }
+        //create sentences without a translation
+        for await (let element of req.body.sentenceArrayOriginal) {
+            const sentenceTranslated = await Sentence.create({
+                sentence: element,
+                languageId: parallelText.originalLanguage
+            })
+            if(!sentenceTranslated){
+                return res.status(404).send({ message: "SentenceTranslated not created." });
+            }
+        }
 
-            //create sentences translated without a original text
-            req.body.sentenceArrayTranslated.forEach(element => {
-                Sentence.create({
-                    sentence: element,
-                    languageId: parallelText.translatedLanguage
-                }).then( sentenceTranslated => {
-                    if(!sentenceTranslated){
-                        return res.status(404).send({ message: "SentenceTranslated not created." });
-                    }
-                })
-            });
-            res.sendStatus(200)
-        })
+        //create sentences translated without a original text
+        for await (let element of req.body.sentenceArrayTranslated) {
+            const sentenceTranslated = await Sentence.create({
+                sentence: element,
+                languageId: parallelText.translatedLanguage
+            })
+            if(!sentenceTranslated){
+                return res.status(404).send({ message: "SentenceTranslated not created." });
+            }
+        }
+        return res.sendStatus(200)
+    } catch (e){
+        console.log(e)
+        return res.status(500).send({error: "error during alignment"})
+    }
 }
 
 exports.createParallelText = async (req, res) => {
