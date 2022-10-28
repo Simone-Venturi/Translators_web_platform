@@ -15,26 +15,30 @@ exports.allTranslations = (req, res) => {
     })
 }
 
-exports.createTranslation = (req, res) => {
-    Sentence.create({
-        sentence: req.body.translationText,
-        languageId: req.body.idLanguage
-    }).then( sentence => {
+exports.createTranslation = async (req, res) => {
+    try {        
+        const sentence = await Sentence.create({
+            sentence: req.body.translationText,
+            languageId: req.body.idLanguage
+        })
         if(!sentence){
             return res.status(404).send({ message: "Sentence not created." });
         }
-        Translation.create({
+        const translation = await Translation.create({
             original: req.body.idSentence,
             translated: sentence.idsentence,
             translator: req.userId
-        }).then( translation => {
-            if(!translation){
-                return res.status(404).send({ message: "Translation not created." });
-            }
-            return res.status(200).send(translation);
         })
-    })
+        if(!translation){
+            return res.status(404).send({ message: "Translation not created." });
+        }
+        return res.status(200).send(translation);
+    } catch (e){
+        console.log(e)
+        return res.status(500).send({error: "Error during creation"})
+    }
 }
+
 exports.allTranslationsNotReviewdByUser = async (req, res) => {
     try {
         let all_translations = await Translation.findAll({
