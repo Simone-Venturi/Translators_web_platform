@@ -10,7 +10,7 @@ exports.allSentences = async (req, res) => {
     if (!sentences) {
         return res.status(404).send({ message: "Sentences not found." });
     }
-    res.status(200).send(sentences)
+    return res.status(200).send(sentences)
 };
 
 exports.getSentenceFromID = async (req, res) => {
@@ -18,7 +18,7 @@ exports.getSentenceFromID = async (req, res) => {
     if (!sentence) {
         return res.status(404).send({ message: "Sentence not found." });
     }        
-    res.status(200).send(sentence)
+    return res.status(200).send(sentence)
 }
 
 exports.getSentenceFromLanguageToTranslate = async (req, res) => {
@@ -61,7 +61,7 @@ exports.getSentenceFromLanguageToTranslate = async (req, res) => {
             sentences = sentences
                 .filter(sentence => !array_id_done_to_req_toLanguage_param.includes(sentence.idsentence))
                 .filter(sentence => !array_id_done_from_req_toLanguage_to_req_fromLanguage.includes(sentence.idsentence))
-            res.status(200).send(sentences)
+            return res.status(200).send(sentences)
         }
     }
 }
