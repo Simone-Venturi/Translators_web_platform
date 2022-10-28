@@ -65,4 +65,28 @@ describe("Test translator interaction", () => {
             .set({ 'x-access-token': accessToken, Accept: 'application/json' })
         expect(res.statusCode).toEqual(403)
     })
+
+    test('should create a new translation', async () => {
+        const resNTranslation = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resNTranslation.statusCode).toEqual(200)
+        const nTranslation = resNTranslation.body.length
+
+        const res = await request(app)
+            .post('/api/translation/create')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                translationText: "Szia",
+                idLanguage: 199,
+                idSentence: 8
+            })
+        expect(res.statusCode).toEqual(200)
+
+        const resNTranslation1 = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resNTranslation.statusCode).toEqual(200)
+        expect(resNTranslation1.body.length).toEqual(nTranslation+1)
+    })
 })
