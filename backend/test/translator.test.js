@@ -201,5 +201,45 @@ describe("Test translator interaction", () => {
         expect(resTranslationsAfter.statusCode).toEqual(200)
         expect(resTranslationsAfter.body.length).toEqual(nTranslationsBefore + 2)
     })
+
+    test('should align a parallel text. Should create 1 new translation and 4 new sentences', async () => {
+        const resSentencesBefore = await request(app)
+            .get('/api/sentence/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resSentencesBefore.statusCode).toEqual(200)
+        const nSentencesBefore = resSentencesBefore.body.length
+
+        const resTranslationsBefore = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resTranslationsBefore.statusCode).toEqual(200)
+        const nTranslationsBefore = resTranslationsBefore.body.length
+
+        const res = await request(app)
+            .post('/api/alignment/create')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                idParallelText: 2,
+                translationObjectsArray: [{
+                    original_sentence: "No existe la muerte.",
+                    translated_sentence: "La morte non esiste."
+                }],
+                sentenceArrayOriginal: ["La gente solo muere cuando nos olvidamos de ellos."],
+                sentenceArrayTranslated: ["Le persone muoiono solo quando ci dimentichiamo di loro."]
+            })
+        expect(res.statusCode).toEqual(200)
+
+        const resSentencesAfter = await request(app)
+            .get('/api/sentence/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resSentencesAfter.statusCode).toEqual(200)        
+        expect(resSentencesAfter.body.length).toEqual(nSentencesBefore + 4)
+
+        const resTranslationsAfter = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })        
+        expect(resTranslationsAfter.statusCode).toEqual(200)
+        expect(resTranslationsAfter.body.length).toEqual(nTranslationsBefore + 1)
+    })
     
 })
