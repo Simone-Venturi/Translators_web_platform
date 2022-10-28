@@ -66,6 +66,7 @@ describe("Test translator interaction", () => {
         expect(res.statusCode).toEqual(403)
     })
 
+    // Test translate features
     test('should create a new translation', async () => {
         const resNTranslation = await request(app)
             .get('/api/translation/all')
@@ -86,7 +87,22 @@ describe("Test translator interaction", () => {
         const resNTranslation1 = await request(app)
             .get('/api/translation/all')
             .set({ 'x-access-token': accessToken, Accept: 'application/json' })
-        expect(resNTranslation.statusCode).toEqual(200)
+        expect(resNTranslation1.statusCode).toEqual(200)
         expect(resNTranslation1.body.length).toEqual(nTranslation+1)
+    })
+
+    // Test review features    
+    test('same languages should have the same number of available translations to be reviewed', async () => {
+        const resNSentences = await request(app)
+            .get('/api/translation/allNotReviewed/130/133')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resNSentences.statusCode).toEqual(200)
+        const nSentences = resNSentences.body.length
+
+        const resNSentences1 = await request(app)
+            .get('/api/translation/allNotReviewed/133/130')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resNSentences1.statusCode).toEqual(200)
+        expect(resNSentences1.body.length).toEqual(nSentences)
     })
 })
