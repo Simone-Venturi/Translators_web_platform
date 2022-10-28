@@ -134,4 +134,29 @@ describe("Test translator interaction", () => {
         const translation = resTranslations.body.filter(t => t.id == 3)[0]
         expect(translation.n_scores).toEqual(1)
     })
+
+    // Test alignment features
+    test('should check the number of parallel text available for an user without languages', async () => {
+        const resParallelText = await request(app)
+            .get('/api/alignment/available')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            expect(resParallelText.statusCode).toEqual(200)
+            expect(resParallelText.body.length).toEqual(0)
+    })
+
+    test('should check the number of parallel text available for an user with languages', async () => {
+        const res = await request(app)
+            .post('/api/language/known')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                idsLanguages: [133,215]
+            })
+        expect(res.statusCode).toEqual(200)
+        const resParallelText = await request(app)
+            .get('/api/alignment/available')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resParallelText.statusCode).toEqual(200)
+        expect(resParallelText.body.length).toEqual(3)
+    })
+    
 })

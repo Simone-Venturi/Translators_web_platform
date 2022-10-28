@@ -10,5 +10,6 @@ module.exports = {
         await require("./language.seeder").createLanguages()
         await require("./sentence.seeder").createSentences()
         await require("./translation.seeder").createTranslations()
+        await require("./parallel_text.seeder").createParallelTexts()
     }
 }
