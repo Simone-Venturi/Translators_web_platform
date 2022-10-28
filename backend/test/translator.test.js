@@ -14,6 +14,7 @@ describe("Test translator interaction", () => {
         
     afterAll(async () => {
         await db.sequelize.close();
+        await db.mongoConnection.disconnect()
     });
 
     test('should create a new user', async () => {
