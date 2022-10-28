@@ -5,9 +5,9 @@ const Language = db.language;
 
 /* creation basic users */
 module.exports = {
-    createLanguages : () => {  
+    createLanguages : async () => {  
         const fs = require('fs');
-        let rawdata = fs.readFileSync(path.resolve(__dirname,'../resources/languages.json'));
+        let rawdata = fs.readFileSync(path.resolve(__dirname,'../../../resources/languages.json'));
         let languages = JSON.parse(rawdata);
         languages.forEach(async language => {
             await Language.create({

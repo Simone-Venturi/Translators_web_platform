@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../db/models");
 const ParallelText = db.parallel_text;
 const Sentence = db.sentence;
 const Translation = db.translation;

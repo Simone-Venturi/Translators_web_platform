@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../db/models");
 const Sentence = db.sentence;
 const Translation = db.translation;
 

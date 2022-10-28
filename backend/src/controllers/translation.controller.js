@@ -1,8 +1,6 @@
-const db = require("../models");
+const db = require("../db/models");
 const Translation = db.translation;
-const Review = db.review;
 const Sentence = db.sentence;
-const Language = db.language;
 
 exports.allTranslations = (req, res) => {
     Translation.findAll({

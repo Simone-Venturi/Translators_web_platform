@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../db/models");
 const Language = db.language;
 const TranslatorTranslateLanguage = db.translator_translate_language;
 

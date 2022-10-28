@@ -1,23 +1,8 @@
-const postgresConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(
-  postgresConfig.DB,
-  postgresConfig.USER,
-  postgresConfig.PASSWORD,
-  {
-    host: postgresConfig.HOST,
-    dialect: postgresConfig.dialect,
-    operatorsAliases: false,
-    pool: {
-      max: postgresConfig.pool.max,
-      min: postgresConfig.pool.min,
-      acquire: postgresConfig.pool.acquire,
-      idle: postgresConfig.pool.idle
-    }
-  }
-);
+const env = process.env.NODE_ENV || 'development';
+const postgresConfig = require(__dirname + '/../config/postgres.config')[env];
+const mongoConfig = require(__dirname + '/../config/mongo.config')[env];
 
-const mongoConfig = require("../config/mongo.config.js");
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://'+mongoConfig.HOST+':'+mongoConfig.PORT+'/'+mongoConfig.DB+'').then(() => {
@@ -28,20 +13,28 @@ mongoose.connect('mongodb://'+mongoConfig.HOST+':'+mongoConfig.PORT+'/'+mongoCon
 });
 
 const db = {};
+
+let sequelize;
+if (postgresConfig.use_env_variable) {
+  sequelize = new Sequelize(process.env[postgresConfig.use_env_variable], postgresConfig);
+} else {
+  sequelize = new Sequelize(postgresConfig.database, postgresConfig.username, postgresConfig.password, postgresConfig);
+}
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.user = require("../models/user.model.js")(sequelize, Sequelize);
-db.role = require("../models/role.model.js")(sequelize, Sequelize);
-db.language = require("../models/language.model.js")(sequelize, Sequelize);
-db.translator_translate_language = require("../models/translator_translate_language.model.js")(sequelize, Sequelize);
-db.sentence = require("../models/sentence.model.js")(sequelize, Sequelize);
-db.translation = require("../models/translation.model.js")(sequelize, Sequelize);
-db.review = require("../models/review.model.js")(sequelize, Sequelize);
-db.parallel_text = require("../models/parallel_text.model.js")(sequelize, Sequelize);
-db.dataset = require("../models/dataset.model.js")(sequelize, Sequelize);
-db.datasets_have_languages = require("../models/dataset_has_language.model.js")(sequelize, Sequelize);
-db.mongoDataset = require("../models/mongodataset.model")(mongoose)
-db.mongoTranslation = require("../models/mongotranslation.model")(mongoose)
+db.user = require("./user.model.js")(sequelize, Sequelize);
+db.role = require("./role.model.js")(sequelize, Sequelize);
+db.language = require("./language.model.js")(sequelize, Sequelize);
+db.translator_translate_language = require("./translator_translate_language.model.js")(sequelize, Sequelize);
+db.sentence = require("./sentence.model.js")(sequelize, Sequelize);
+db.translation = require("./translation.model.js")(sequelize, Sequelize);
+db.review = require("./review.model.js")(sequelize, Sequelize);
+db.parallel_text = require("./parallel_text.model.js")(sequelize, Sequelize);
+db.dataset = require("./dataset.model.js")(sequelize, Sequelize);
+db.datasets_have_languages = require("./dataset_has_language.model.js")(sequelize, Sequelize);
+db.mongoConnection = mongoose;
+db.mongoDataset = require("./mongodataset.model")(mongoose)
+db.mongoTranslation = require("./mongotranslation.model")(mongoose)
 
 db.role.hasMany(db.user);
 db.user.belongsTo(db.role);

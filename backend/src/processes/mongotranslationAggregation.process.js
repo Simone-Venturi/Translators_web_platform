@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../db/models");
 const MongoTranslation = db.mongoTranslation;
 
 exports.aggregation = async (job) => {
