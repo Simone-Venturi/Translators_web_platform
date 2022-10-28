@@ -158,5 +158,48 @@ describe("Test translator interaction", () => {
         expect(resParallelText.statusCode).toEqual(200)
         expect(resParallelText.body.length).toEqual(3)
     })
+
+    test('should align a parallel text. Should create 2 new translations and 4 new sentences', async () => {
+        const resSentencesBefore = await request(app)
+            .get('/api/sentence/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resSentencesBefore.statusCode).toEqual(200)
+        const nSentencesBefore = resSentencesBefore.body.length
+
+        const resTranslationsBefore = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resTranslationsBefore.statusCode).toEqual(200)
+        const nTranslationsBefore = resTranslationsBefore.body.length
+
+        const res = await request(app)
+            .post('/api/alignment/create')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                idParallelText: 3,
+                translationObjectsArray: [{
+                    original_sentence: "No soy extraño.",
+                    translated_sentence: "Non sono strano."
+                }, {
+                    original_sentence: "Sólo no soy normal.",
+                    translated_sentence: "È solo che non sono normale."
+                }],
+                sentenceArrayOriginal: [],
+                sentenceArrayTranslated: []
+            })
+        expect(res.statusCode).toEqual(200)
+
+        const resSentencesAfter = await request(app)
+            .get('/api/sentence/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resSentencesAfter.statusCode).toEqual(200)        
+        expect(resSentencesAfter.body.length).toEqual(nSentencesBefore + 4)
+
+        const resTranslationsAfter = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })        
+        expect(resTranslationsAfter.statusCode).toEqual(200)
+        expect(resTranslationsAfter.body.length).toEqual(nTranslationsBefore + 2)
+    })
     
 })
