@@ -23,17 +23,17 @@ exports.getSentenceFromID = async (req, res) => {
 
 exports.getSentenceFromLanguageToTranslate = async (req, res) => {
     if(req.params.fromLanguage === req.params.toLanguage){        
-        res.status(200).send([])
+        return res.status(200).send([])
     } else {
         if(req.params.fromLanguage === 'null'){
-            res.status(400).send([])
+            return res.status(400).send([])
         } else if(req.params.toLanguage === 'null'){
             let sentences = await Sentence.findAll({
                 where: {
                     languageId: { [db.Sequelize.Op.eq]: req.params.fromLanguage }
                 }
             })
-            res.status(200).send(sentences)
+            return res.status(200).send(sentences)
         } else {
             let sentences = await Sentence.findAll({
                 where: {
