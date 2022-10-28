@@ -241,5 +241,14 @@ describe("Test translator interaction", () => {
         expect(resTranslationsAfter.statusCode).toEqual(200)
         expect(resTranslationsAfter.body.length).toEqual(nTranslationsBefore + 1)
     })
-    
+
+    test('check profile statistics: 1 translation, 2 alignments, 1 review should be done', async () => {
+        const res = await request(app)
+            .get('/api/profile/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(res.statusCode).toEqual(200)
+        expect(res.body.translations).toEqual(1)
+        expect(res.body.alignments).toEqual(2)
+        expect(res.body.reviews).toEqual(1)
+    })
 })
