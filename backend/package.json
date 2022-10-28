@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest --runInBand",
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "seed-postgres": "node src/db/seeders/index.js",
     "seed-mongo": "node src/db/seeders/mongo.seeder.js"
   },
