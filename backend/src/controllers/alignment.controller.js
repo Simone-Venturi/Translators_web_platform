@@ -4,60 +4,66 @@ const Sentence = db.sentence;
 const Translation = db.translation;
 const Language = db.language;
 
-exports.allAlignments = (req, res) => {
-    ParallelText.findAll({
-        attributes: ['id', 'originalText', 'translatedText', 'originalLanguage', 'translatedLanguage']
-    }).then( parrallelTexts => {        
+exports.allAlignments = async (req, res) => {
+    try {
+        let parrallelTexts = await ParallelText.findAll({
+            attributes: ['id', 'originalText', 'translatedText', 'originalLanguage', 'translatedLanguage']
+        })
         if (!parrallelTexts) {
             return res.status(404).send({ message: "ParallelTexts not found." });
         }
-        Language.findAll({
+        const languages = await Language.findAll({
             attributes: ['idlanguage', 'title', 'abbreviation'],
             include: ['TranslatorTranslateLanguage'],
             where: {
                 '$TranslatorTranslateLanguage.id$': { [db.Sequelize.Op.eq]: req.userId }
             }
-        }).then( languages => {
-            if (!languages) {
-                return res.status(404).send({ message: "Languages not found." });
-            }
-            let array_id_language = languages.map(language => language.idlanguage)
-            parrallelTexts = parrallelTexts
-                .filter(parallel_text => array_id_language.includes(parallel_text.originalLanguage))
-                .filter(parallel_text => array_id_language.includes(parallel_text.translatedLanguage))
-            res.status(200).send(parrallelTexts)
-        });
-    })
+        })
+        if (!languages) {
+            return res.status(404).send({ message: "Languages not found." });
+        }
+        let array_id_language = languages.map(language => language.idlanguage)
+        parrallelTexts = parrallelTexts
+            .filter(parallel_text => array_id_language.includes(parallel_text.originalLanguage))
+            .filter(parallel_text => array_id_language.includes(parallel_text.translatedLanguage))
+        return res.status(200).send(parrallelTexts)
+    } catch(e) {
+        console.log(e)
+        return res.status(500).send({error: "error during reading parallel texts"})
+    }
 }
 
-exports.allAlignmentsAvailable = (req, res) => {
-    ParallelText.findAll({
-        attributes: ['id', 'originalText', 'translatedText', 'originalLanguage', 'translatedLanguage'],
-        include: ['Translations'],
-        where: {
-            '$Translations.id$': { [db.Sequelize.Op.eq]: null },
-        }
-    }).then( parrallelTexts => {        
+exports.allAlignmentsAvailable = async (req, res) => {
+    try {
+        let parrallelTexts = await ParallelText.findAll({
+            attributes: ['id', 'originalText', 'translatedText', 'originalLanguage', 'translatedLanguage'],
+            include: ['Translations'],
+            where: {
+                '$Translations.id$': { [db.Sequelize.Op.eq]: null },
+            }
+        })   
         if (!parrallelTexts) {
             return res.status(404).send({ message: "ParallelTexts not found." });
         }
-        Language.findAll({
+        const languages = await Language.findAll({
             attributes: ['idlanguage', 'title', 'abbreviation'],
             include: ['TranslatorTranslateLanguage'],
             where: {
                 '$TranslatorTranslateLanguage.id$': { [db.Sequelize.Op.eq]: req.userId }
             }
-        }).then( languages => {
-            if (!languages) {
-                return res.status(404).send({ message: "Languages not found." });
-            }
-            let array_id_language = languages.map(language => language.idlanguage)
-            parrallelTexts = parrallelTexts
-                .filter(parallel_text => array_id_language.includes(parallel_text.originalLanguage))
-                .filter(parallel_text => array_id_language.includes(parallel_text.translatedLanguage))
-            res.status(200).send(parrallelTexts)
-        });
-    })
+        })
+        if (!languages) {
+            return res.status(404).send({ message: "Languages not found." });
+        }
+        let array_id_language = languages.map(language => language.idlanguage)
+        parrallelTexts = parrallelTexts
+            .filter(parallel_text => array_id_language.includes(parallel_text.originalLanguage))
+            .filter(parallel_text => array_id_language.includes(parallel_text.translatedLanguage))
+        return res.status(200).send(parrallelTexts)
+    } catch(e) {
+        console.log(e)
+        return res.status(500).send({error: "error during reading parallel texts"})
+    }
 }
 
 exports.getParallelTextFromID = (req, res) => {
