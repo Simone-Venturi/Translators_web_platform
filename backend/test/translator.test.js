@@ -105,4 +105,33 @@ describe("Test translator interaction", () => {
         expect(resNSentences1.statusCode).toEqual(200)
         expect(resNSentences1.body.length).toEqual(nSentences)
     })
+    
+    test('should create a review', async () => {
+        const res = await request(app)
+            .post('/api/review/create')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                idTranslation: 3,
+                rateReview: 5
+            })
+        expect(res.statusCode).toEqual(200)
+    })
+
+    test('should check the last translation reviewed (id=3) has 5 stars as average score', async () => {
+        const resTranslations = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resTranslations.statusCode).toEqual(200)
+        const translation = resTranslations.body.filter(t => t.id == 3)[0]
+        expect(translation.average_score).toEqual(5)
+    })
+
+    test('should check the last translation reviewed (id=3) has 1 as review counter', async () => {
+        const resTranslations = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resTranslations.statusCode).toEqual(200)
+        const translation = resTranslations.body.filter(t => t.id == 3)[0]
+        expect(translation.n_scores).toEqual(1)
+    })
 })
