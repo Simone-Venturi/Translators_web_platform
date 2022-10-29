@@ -55,3 +55,7 @@ exports.bulkInsertMongo = (dataChunk, original_language, translated_language, da
         translator: translator
     });
 }
+
+exports.mongoTranslationsQueue = mongoTranslationsQueue
+exports.mongoTranslationAggregationQueue = mongoTranslationAggregationQueue
+exports.postgresTranslationQueue = postgresTranslationQueue
