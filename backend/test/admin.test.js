@@ -260,12 +260,47 @@ describe("Test translator interaction", () => {
     //test Admin only features
     test('should create a Dataset', async () => {
         const res = await request(app)
-            .get('/api/dataset/create')
+            .post('/api/dataset/create')
             .set({ 'x-access-token': accessToken, Accept: 'application/json' })
             .send({
                 name:"dummy dataset",
-                URL:"https://opus.nlpl.eu/dummy.php"
+                url:"https://opus.nlpl.eu/dummy.php"
             })
         expect(res.statusCode).toEqual(200)
+    })
+
+    test('should create a Parallel Text', async () => {
+        await request(app)
+            .post('/api/language/known')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                idsLanguages: [130,133,215]
+            })
+            .expect(200)
+        const resParallelTextBefore = await request(app)
+            .get('/api/alignment/available')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resParallelTextBefore.statusCode).toEqual(200)
+        const res = await request(app)
+            .post('/api/paralleltext/create')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .send({
+                originalText: "As I walk through the valley of the shadow of death \
+                    I take a look at my life, and realize there's nothin' left \
+                    'Cause I've been blastin' and laughin' so long \
+                    That even my momma thinks that my mind is gone.",
+                translatedText: "Mentre cammino attraverso la valle dell'ombra della morte \
+                    Do' un'occhiata alla mia vita e mi rendo conto che non mi e' rimasto niente \
+                    perchè mi sono ubriacato e ho riso cosi' a lungo, che \
+                    anche mia mamma pensa che la mia testa sia partita.",
+                idLanguageFrom: 130,
+                idLanguageTo: 215
+            })
+        expect(res.statusCode).toEqual(200)
+        const resParallelTextAfter = await request(app)
+            .get('/api/alignment/available')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resParallelTextAfter.statusCode).toEqual(200)
+        expect(resParallelTextAfter.body.length).toEqual(resParallelTextBefore.body.length + 1)
     })
 })
