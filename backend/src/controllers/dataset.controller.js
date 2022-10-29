@@ -17,15 +17,20 @@ exports.allDataSets = async (req, res) => {
     if (!datasets) {
         return res.status(404).send({ message: "DataSet not found." });
     }
-    res.status(200).send(datasets)
+    return res.status(200).send(datasets)
 };
 
 exports.createDataSet = async (req, res) => {
-    let dataset = await DataSet.create({
-        name: req.body.name,
-        URL: req.body.url
-    });
-    res.status(200).send(dataset)
+    try {
+        let dataset = await DataSet.create({
+            name: req.body.name,
+            URL: req.body.url
+        });
+        return res.status(200).send(dataset)
+    } catch (e) {
+        console.log(e)
+        return res.status(500).send({error: "error during creation"})
+    }
 };
 
 exports.loadDataSet = async (req, res) => {
@@ -39,7 +44,7 @@ exports.loadDataSet = async (req, res) => {
                 }
             })
             if ( original_language == null ){
-                res.status(404).send({message: 'Original Language not found'})
+                return res.status(404).send({message: 'Original Language not found'})
             }
             const translated_language = await Language.findOne({
                 where: {
@@ -47,7 +52,7 @@ exports.loadDataSet = async (req, res) => {
                 }
             })
             if ( translated_language == null ){
-                res.status(404).send({message: 'Translated Language not found'})
+                return res.status(404).send({message: 'Translated Language not found'})
             }
             const dataset = await DataSet.findByPk(req.body.id)
             await DatasetHasLanguage.findOrCreate({            
@@ -80,13 +85,13 @@ exports.loadDataSet = async (req, res) => {
                     bulkInsertMongo(chunk, original_language.abbreviation.toLowerCase(), translated_language.abbreviation.toLowerCase(), dataset.name, dataset.id, req.userId)                    
                 }             
             })           
-            res.sendStatus(200)
+            return res.sendStatus(200)
           })
           .catch((err) => {
-            res.status(500).send({message: 'error during dataset parsing'})
+            return res.status(500).send({message: 'error during dataset parsing'})
           })
     } catch (e) {
-        res.sendStatus(500)
+        return res.sendStatus(500)
     }
 };
 
