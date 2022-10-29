@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../app");
 const db = require("../src/db/models");
 const seed = require("../src/db/seeders/test.seeder");
+const { mongoTranslationsQueue, mongoTranslationAggregationQueue, postgresTranslationQueue } = require("../src/queues/translation.queue");
 
 describe("Test datascientist interaction", () => {
     
@@ -14,7 +15,10 @@ describe("Test datascientist interaction", () => {
         
     afterAll(async () => {
         await db.sequelize.close();
-        await db.mongoConnection.disconnect()
+        await db.mongoConnection.disconnect();
+        await mongoTranslationsQueue.close();
+        await postgresTranslationQueue.close();
+        await mongoTranslationAggregationQueue.close();
     });
 
     test('should create a new user', async () => {

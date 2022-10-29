@@ -1,11 +1,15 @@
 const request = require("supertest");
 const app = require("../app");
 const db = require("../src/db/models");
+const { mongoTranslationsQueue, mongoTranslationAggregationQueue, postgresTranslationQueue } = require("../src/queues/translation.queue");
 
 describe("Test basic paths", () => {
   
 	afterAll(async () => {
-		await db.mongoConnection.disconnect()
+		await db.mongoConnection.disconnect();
+        await mongoTranslationsQueue.close();
+        await postgresTranslationQueue.close();
+        await mongoTranslationAggregationQueue.close();
 	});
 
 	test("It should response the GET method", done => {
