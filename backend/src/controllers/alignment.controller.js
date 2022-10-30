@@ -145,8 +145,8 @@ exports.createParallelText = async (req, res) => {
             translatedLanguage: req.body.idLanguageTo,
             translatedText: req.body.translatedText
         })
-        res.sendStatus(200)
+        return res.sendStatus(200)
     } catch (exception){
-        res.sendStatus(500)
+        return res.sendStatus(500)
     }
 }
