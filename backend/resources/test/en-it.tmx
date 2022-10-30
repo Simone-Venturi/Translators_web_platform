@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<tmx version="1.4">
+<header creationdate="Sat Mar  3 21:07:58 2018"
+          srclang="en"
+          adminlang="en"
+          o-tmf="unknown"
+          segtype="sentence"
+          creationtool="Uplug"
+          creationtoolversion="unknown"
+          datatype="PlainText" />
+  <body>
+    <tu>
+      <tuv xml:lang="en"><seg>ALICE'S ADVENTURES IN WONDERLAND!</seg></tuv>
+      <tuv xml:lang="it"><seg>ALICE NEL PAESE DELLE MERAVIGLIE!</seg></tuv>
+    </tu>
+  </body>
+</tmx>
