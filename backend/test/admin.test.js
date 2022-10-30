@@ -14,11 +14,11 @@ describe("Test translator interaction", () => {
     });
         
     afterAll(async () => {
-        await db.sequelize.close();
-        await db.mongoConnection.disconnect();
         await mongoTranslationsQueue.close();
-        await postgresTranslationQueue.close();
         await mongoTranslationAggregationQueue.close();
+        await db.mongoConnection.disconnect();
+        await postgresTranslationQueue.close();            
+        await db.sequelize.close();
     });
 
     test('should create a new user', async () => {
@@ -267,6 +267,69 @@ describe("Test translator interaction", () => {
                 url:"https://opus.nlpl.eu/dummy.php"
             })
         expect(res.statusCode).toEqual(200)
+    })
+
+    test('should upload dataset file', async () => {
+        const resTranslationsBefore = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+        expect(resTranslationsBefore.statusCode).toEqual(200)
+
+        await request(app)
+            .post('/api/dataset/load')
+            .set({ 'x-access-token': accessToken})
+            .set('Content-Type', 'multipart/form-data')
+            .field("id", 1 )
+            .attach('file', "./resources/test/en-it.tmx")
+            .expect(200)
+        await new Promise(r => setTimeout(r, 2000));
+        const resTranslationsAfter1 = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .expect(200)
+        expect(resTranslationsAfter1.body.length).toEqual(resTranslationsBefore.body.length + 1)
+
+        await request(app)
+            .post('/api/dataset/load')
+            .set({ 'x-access-token': accessToken})
+            .set('Content-Type', 'multipart/form-data')
+            .field("id", 1 )
+            .attach('file', "./resources/test/en-fr.tmx")
+            .expect(200)
+        await new Promise(r => setTimeout(r, 2000));
+        const resTranslationsAfter2 = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .expect(200)
+        expect(resTranslationsAfter2.body.length).toEqual(resTranslationsAfter1.body.length + 2)
+
+        await request(app)
+            .post('/api/dataset/load')
+            .set({ 'x-access-token': accessToken})
+            .set('Content-Type', 'multipart/form-data')
+            .field("id", 1 )
+            .attach('file', "./resources/test/en-pt.tmx")
+            .expect(200)
+        await new Promise(r => setTimeout(r, 2000));
+        const resTranslationsAfter3 = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .expect(200)
+        expect(resTranslationsAfter3.body.length).toEqual(resTranslationsAfter2.body.length + 3)
+
+        await request(app)
+            .post('/api/dataset/load')
+            .set({ 'x-access-token': accessToken})
+            .set('Content-Type', 'multipart/form-data')
+            .field("id", 1 )
+            .attach('file', "./resources/test/en-ro.tmx")
+            .expect(200)
+        await new Promise(r => setTimeout(r, 2000));
+        const resTranslationsAfter4 = await request(app)
+            .get('/api/translation/all')
+            .set({ 'x-access-token': accessToken, Accept: 'application/json' })
+            .expect(200)
+        expect(resTranslationsAfter4.body.length).toEqual(resTranslationsAfter3.body.length + 4)
     })
 
     test('should create a Parallel Text', async () => {
