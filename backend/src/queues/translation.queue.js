@@ -1,4 +1,5 @@
-const redisConfig = require("../config/redis.config.js");
+const env = process.env.NODE_ENV || 'development';
+const redisConfig = require(__dirname + '/../config/redis.config')[env];
 const Bull = require('bull');
 const mongoTranslationProcess = require("../processes/mongotranslation.process");
 const mongoTranslationAggregationProcess = require("../processes/mongotranslationAggregation.process");
