@@ -10,7 +10,7 @@ exports.allLanguages = (req, res) => {
         if (!languages) {
             return res.status(404).send({ message: "Languages not found." });
         }
-        res.status(200).send(languages)
+        return res.status(200).send(languages)
     });
 }
 
@@ -34,7 +34,7 @@ exports.allLanguagesKnownByUser = (req, res) => {
                 title: language.title,
                 abbreviation: language.abbreviation
         }});
-        res.status(200).send(languages)
+        return res.status(200).send(languages)
     });
 }
 
@@ -50,7 +50,7 @@ exports.updateLanguagesKnownByUser = (req, res) => {
             language: {[db.Sequelize.Op.notIn]: req.body.idsLanguages}
         }
     }).then( () => {
-        res.sendStatus(200)
+        return res.sendStatus(200)
     });
 
 }
