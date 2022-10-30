@@ -9,10 +9,30 @@ Il progetto si suddivide in tre cartelle principali:
 
 ## Istruzioni per l'esecuzione:
 
-### Esecuzione del sistema
+### Esecuzione del sistema in produzione
 ```
 cd docker
-docker compose up --build
+docker compose --file docker-compose.prod.yml up --build -d
+```
+
+Così saran creati 5 container:
+- backend su porta 3000;
+- frontend su porta 80;
+- database relazionale Postgres;
+- database documentale MongoDB;
+- istanza di Redis;
+
+### Esecuzione dei seeder per la popolazione del database
+```
+docker exec -ti express_app_container bash
+npm run seed-postgres
+npm run seed-mongo
+```
+
+### Esecuzione del sistema per testing
+```
+cd docker
+docker compose --file docker-compose.dev.yml up --build -d
 ```
 Così saran creati 7 container:
 - backend su porta 3000;
@@ -23,9 +43,8 @@ Così saran creati 7 container:
 - istanza pgAdmin4 su porta 5555;
 - istanza Redis Commander su porta 8081;
 
-### Esecuzione dei seeder per la popolazione del database
+#### Esecuzione dei test
 ```
 docker exec -ti express_app_container bash
-npm run seed-postgres
-npm run seed-mongo
+npm test
 ```
