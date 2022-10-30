@@ -12,17 +12,6 @@ services:
     networks:
       - backend-network
     restart: always
-  
-  postgres_translate_test:
-    image: postgres
-    hostname: postgres
-    environment:
-      POSTGRES_USER: postgres_test
-      POSTGRES_PASSWORD: postgres_test
-      POSTGRES_DB: translate_platform_test
-    networks:
-      - backend-network
-    restart: always
 
   mongodb:
     image: mongo
@@ -31,20 +20,6 @@ services:
       MONGO_INITDB_DATABASE: translate_platform
     volumes:
     - mongodb-data:/data/db
-    networks:
-      - backend-network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo 10.10.10.60:27017/test --quiet
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    restart: always
-
-  mongodb_test:
-    image: mongo
-    container_name: mongodb_test
-    environment:
-      MONGO_INITDB_DATABASE: translate_platform_test
     networks:
       - backend-network
     healthcheck:
@@ -63,30 +38,6 @@ services:
     networks:
       - redis-network
     restart: always
-
-  redis-commander:
-    container_name: redis-commander
-    image: rediscommander/redis-commander
-    environment:
-      REDIS_HOSTS: local:redis:6379:0:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-    ports:
-      - "8081:8081"
-    networks:
-      - redis-network
-    restart: always
-
-  pgadmin:
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres_translate
-    ports:
-      - "5555:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: simone@simone.it
-      PGADMIN_DEFAULT_PASSWORD: simonesimone
-    networks:
-      - backend-network
-    restart: unless-stopped
 
   frontend:
     build: 
