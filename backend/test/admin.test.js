@@ -11,6 +11,8 @@ describe("Test translator interaction", () => {
     beforeAll(async () => {
         await db.sequelize.sync({force:true});
         await seed.translatorTestSeeds();
+        await db.mongoDataset.deleteMany({})
+        await db.mongoTranslation.deleteMany({})
     });
         
     afterAll(async () => {
