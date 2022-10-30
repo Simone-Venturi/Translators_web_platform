@@ -1,0 +1,95 @@
+version: '3'
+services:
+  postgres_translate:
+    image: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: translate_platform
+    volumes:
+      - postgres-translate-data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+    restart: always
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_DATABASE: translate_platform
+    volumes:
+    - mongodb-data:/data/db
+    networks:
+      - backend-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo 10.10.10.60:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+
+  redis:
+    image: redis:6.2-alpine
+    hostname: redis
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes: 
+      - redis-data:/data
+    networks:
+      - redis-network
+    restart: always
+
+  frontend:
+    build: 
+      context: ../frontend
+    image: vue_app:0.0.1
+    depends_on:
+      - backend
+    container_name: "vue_app_container"
+    env_file: ../frontend/.env
+    ports:
+      - "80:80"
+    networks:
+      - frontend-network
+    restart: always
+
+  backend:
+    build: ../backend
+    image: express_app:0.0.1
+    depends_on:
+      - postgres_translate
+      - mongodb
+      - redis
+    container_name: "express_app_container"
+    ports:
+      - "3000:3000"      
+    env_file: ../backend/.env
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81    
+    volumes:
+      - plain-texts:/express_app/dist/resources/requests/
+      - zips:/express_app/dist/resources/zips/
+    networks:
+      - frontend-network
+      - backend-network
+      - redis-network
+    restart: always
+
+volumes:
+  postgres-translate-data:
+  mongodb-data:  
+  redis-data:
+    driver: local
+  plain-texts:
+  zips:
+
+networks:
+  frontend-network:
+    name: custom_frontend
+    driver: bridge
+  backend-network:
+    name: custom_backend
+    driver: bridge
+  redis-network:

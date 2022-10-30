@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "seed-postgres": "node seeders/index.js",
-    "seed-mongo": "node seeders/mongo.seeder.js"
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
+    "seed-postgres": "node src/db/seeders/index.js",
+    "seed-mongo": "node src/db/seeders/mongo.seeder.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,5 +25,15 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.19.2",
     "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "jest": "^29.2.2",
+    "superagent": "^8.0.3",
+    "supertest": "^6.3.1"
+  },
+  "jest": {
+    "injectGlobals": true,
+    "testEnvironment": "node",
+    "testTimeout": 30000
   }
 }
