@@ -117,6 +117,9 @@ services:
       - postgres_translate
       - mongodb
       - redis
+      - postgres_translate_test
+      - mongodb_test
+      - redis_test
     container_name: "express_app_container"
     ports:
       - "3000:3000"      
