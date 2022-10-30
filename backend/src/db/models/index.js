@@ -5,12 +5,11 @@ const mongoConfig = require(__dirname + '/../config/mongo.config')[env];
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://'+mongoConfig.HOST+':'+mongoConfig.PORT+'/'+mongoConfig.DB+'').then(() => {
-    console.log('successfully connected to MongoDB');
-}).catch(err => {
-    console.log('error connecting to MongoDB');
-    process.exit();
-});
+mongoose.connect('mongodb://'+mongoConfig.HOST+':'+mongoConfig.PORT+'/'+mongoConfig.DB+'')
+  .catch(err => {
+      console.log('error connecting to MongoDB');
+      process.exit();
+  });
 
 const db = {};
 
