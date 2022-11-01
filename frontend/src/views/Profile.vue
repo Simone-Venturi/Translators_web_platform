@@ -4,7 +4,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-3">
-          <div class="row">
+          <div class="row container">
             <div class="col-12 col-sm-12">
               <i class="pi pi-user"></i>
             </div>
