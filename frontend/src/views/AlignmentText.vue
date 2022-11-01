@@ -37,11 +37,11 @@
           </Splitter>
         </div>
       </div>
-      <div class="row justify-content-end m-4">
-        <div class="col-md-auto">
+      <div class="row ml-4 mr-4 d-flex justify-content-between">
+        <div class="col-4">
           <GeneralButton text="Cancel" colorHover="red" />
         </div>
-        <div class="col-md-auto">
+        <div class="col-4">
           <GeneralButton text="Align" @click="validateAlignment()" />
         </div>
       </div>
