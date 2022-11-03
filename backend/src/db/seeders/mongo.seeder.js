@@ -10,7 +10,10 @@ const createCollections = async () => {
         console.log('Collection Created')
     } catch(exception) {
         console.log(exception)
+    } finally {        
+        process.exit();
     }
+    
 }
 
 createCollections();

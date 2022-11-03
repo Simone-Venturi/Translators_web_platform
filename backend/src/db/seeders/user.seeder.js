@@ -6,7 +6,16 @@ const User = db.user;
 
 /* creation basic users */
 module.exports = {
-    createUsers : async () => {  
+    createUsers : async () => {        
+        await User.create({
+            username: "admin",
+            email: "admin@simone.it",
+            password:bcrypt.hashSync("admin", 8),
+            roleId: 3
+        });
+        console.log("Users created")
+    },
+    createTestUsers : async () => {  
         await User.create({
             username: "translator",
             email: "translator@simone.it",
