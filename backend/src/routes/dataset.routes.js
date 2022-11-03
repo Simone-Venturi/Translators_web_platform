@@ -29,11 +29,6 @@ module.exports = function(app) {
     controller.checkDataSetSize
   );
   app.post(
-    "/api/dataset/checkMongo",
-    [authJwt.verifyToken, authJwt.isDataScientist],
-    controller.checkMongoData
-  );
-  app.post(
     "/api/dataset/download",
     [authJwt.verifyToken, authJwt.isDataScientist],
     controller.downloadDataSet

@@ -112,16 +112,6 @@ exports.checkDataSetSize = async (req, res) => {
     }    
 }
 
-exports.checkMongoData = (req, res) => {
-    MongoTranslation.find({'en' : { $regex: new RegExp(req.body.text), $options: 'i' }})
-        .sort({createdAt: "desc"})
-        .lean()
-        .exec(async function (err, translations) {
-            console.log(translations)
-            return res.status(200).send({message: JSON.stringify(translations)});
-        });
-}
-
 exports.downloadDataSet = async (req, res) => {
     try {
         const dataset = await DataSet.findByPk(1)
