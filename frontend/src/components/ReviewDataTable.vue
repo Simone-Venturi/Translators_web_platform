@@ -94,7 +94,6 @@ export default {
     },
     watch: { 
       	'languageFilter.update': function(newVal) {
-            console.log(this.languageFilter)
             if (newVal === true && this.languageFilter.fromLanguageSelected && this.languageFilter.toLanguageSelected){
                 this.getTranslations(this.languageFilter.fromLanguageSelected, this.languageFilter.toLanguageSelected)
                     .then( _ => this.$emit('updatedLanguageFilter'))
