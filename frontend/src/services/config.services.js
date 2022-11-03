@@ -17,7 +17,7 @@ export function setJsonEndpointHeaders(headers = undefined) {
  */
 export function setApiURL(path) {
     const base_url = process.env.VUE_APP_BACKEND_URL
-    console.log(base_url)
+    // console.log(base_url)
     if (path) return base_url + path
     return base_url
 }

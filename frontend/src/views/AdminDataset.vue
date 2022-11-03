@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Menu :isAdmin="true" :routesAvailable="['dataset', 'paralleltext']" />
+    <Menu :fromAdminPage="true" :routesAvailable="['dataset', 'paralleltext']" />
     <div class="row h-100">
       <div class="col-12 m-2">
         <h3>All Datasets</h3>

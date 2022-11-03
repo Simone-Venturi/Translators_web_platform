@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Menu :isTranslator="true" :routesAvailable="['translate', 'review', 'alignment', 'profile']" />
+    <Menu :routesAvailable="['translate', 'review', 'alignment', 'profile']" />
     <div class="container">
       <div class="row">
         <div class="col-sm-3">
