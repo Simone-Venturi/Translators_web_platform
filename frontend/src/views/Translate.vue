@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Menu :isTranslator="true" :routesAvailable="['translate', 'review', 'alignment', 'profile']" />
+    <Menu :routesAvailable="['translate', 'review', 'alignment', 'profile']" />
     <div class="row h-100">
       <LanguageFilter optionLabel="title" optionValue="idlanguage" :options="languages" placeholder="Select a language" @changeFrom="changeFrom" @changeTo="changeTo"/>
       <div class="col-12">

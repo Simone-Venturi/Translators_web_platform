@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Menu :isAdmin="true" :routesAvailable="['dataset', 'paralleltext']" />
+    <Menu :fromAdminPage="true" :routesAvailable="['dataset', 'paralleltext']" />
     <div class="row h-100">
       <LanguageFilter optionLabel="title" optionValue="idlanguage" :options="languages" placeholder="Select a language" @changeFrom="changeFrom" @changeTo="changeTo"/>
       <div class="col-12 m-2">

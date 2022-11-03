@@ -1,5 +1,5 @@
 <template>    
-    <div v-if="isAdmin" class="row menu4button">
+    <div v-if="fromAdminPage" class="row menu4button">
       <div class="col-3">
         <MenuButton class="menubutton" text="Dataset" @click="showDataset"/>
       </div>
@@ -7,14 +7,14 @@
         <MenuButton class="menubutton" text="ParallelText" @click="showParallelText"/>
       </div>
     </div>
-    <div v-else-if="isTranslator" class="row menu4button">
-      <div class="col-3">
+    <div v-else class="row menu4button">
+      <div v-if="isTranslator" class="col-3">
         <MenuButton class="menubutton" text="Translate" @click="showTranslate"/>
       </div>
-      <div class="col-3">
+      <div v-if="isTranslator" class="col-3">
         <MenuButton class="menubutton" text="Review" @click="showReview"/>
       </div>
-      <div class="col-3">
+      <div v-if="isTranslator" class="col-3">
         <MenuButton class="menubutton" text="Alignment" @click="showAlignment"/>
       </div>
       <div class="col-3">
@@ -32,11 +32,7 @@ export default {
         }
     },
     props: {
-      isAdmin: {
-        type: Boolean,
-        default: false
-      },
-      isTranslator: {
+      fromAdminPage: {
         type: Boolean,
         default: false
       },
@@ -46,6 +42,11 @@ export default {
     },
     components: {
         MenuButton
+    },
+    computed: {
+        isTranslator() {
+          return this.$store.getters['auth/isTranslator']
+        }      
     },
     methods: {
         showDataset(event){
@@ -80,7 +81,7 @@ export default {
                     el.classList.remove("selected")
                 }
             })
-        },
+        }
     },
     mounted() {
         this.selectCurrentButton(this.$route.fullPath)

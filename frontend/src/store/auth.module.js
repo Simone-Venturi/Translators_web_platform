@@ -56,5 +56,16 @@ export const auth = {
     registerFailure(state) {
       state.status.loggedIn = false;
     }
+  },
+  getters: {
+    isAdmin(state) {
+      return state.user.roles.role_admin
+    },
+    isTranslator(state) {
+      return state.user.roles.role_translator
+    },
+    isDataScientist(state) {
+      return state.user.roles.role_data_scientist
+    }
   }
 };
