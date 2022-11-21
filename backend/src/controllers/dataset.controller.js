@@ -114,7 +114,13 @@ exports.checkDataSetSize = async (req, res) => {
 
 exports.downloadDataSet = async (req, res) => {
     try {
-        const dataset = await DataSet.findByPk(1)
+        const datasetDb = await DataSet.findAll({
+            where: {
+                id: {
+                    [db.Sequelize.Op.in] : req.body.datasets
+                }
+            }
+        })
         const languages_requested = await Language.findAll({
             where: {
                 idlanguage: {
@@ -124,10 +130,11 @@ exports.downloadDataSet = async (req, res) => {
         })
         let datasets = req.body.datasets.map(v => v == null ? "null" : v)
         let languages_permutations = permutations(req.body.languagesTo)
-        const dir = path.join(__dirname,'/../resources/requests/' + sha256(Date.now().toString()))
-        const languages_abbreviation_string = languages_requested.filter(lang => req.body.languagesTo.includes(lang.idlanguage)).map(lang => lang.abbreviation).join('-')
-        const filename = dataset.name+'-langs-'+languages_abbreviation_string+'.zip'
-        const out = path.join(__dirname, '/../resources/zips/'+filename)
+        const dir = path.join(__dirname,'/../../resources/requests/' + sha256(Date.now().toString()))
+        const languages_abbreviation_string = languages_requested.map(lang => lang.abbreviation).join('-')
+        const datasets_name_string = (req.body.datasets.includes(null) ? 'Translations-' : '') + datasetDb.map(v => v.name).join('-');
+        const filename = datasets_name_string+'-langs-'+languages_abbreviation_string+'.zip'
+        const out = path.join(__dirname, '/../../resources/zips/'+filename)
         if (!fs.existsSync(dir)){
             fs.mkdirSync(dir);
         }
