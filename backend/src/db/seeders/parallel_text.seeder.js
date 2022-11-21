@@ -82,6 +82,36 @@ module.exports = {
             originalLanguage: 130,
             translatedLanguage: 215
         });
+        await ParallelText.create({
+            originalText: "Daddy's flown across the ocean leaving just a memory, snapshot in the family album. Daddy what else did you leave for me? Daddy what d'ya leave behind for me? All in all it was just a brick in the wall, all in all it was all just bricks in the wall.",
+            translatedText: "Papà ha attraversato l'oceano lasciando solo un ricordo, un'istantanea nell'album di famiglia. Papà, che altro mi hai lasciato? Papà, cos'altro hai lasciato per me? Dopo tutto era solo un mattone nel muro, dopo tutto erano solo mattoni nel muro.",
+            originalLanguage: 130,
+            translatedLanguage: 215
+        });
+        await ParallelText.create({
+            originalText: "We don't need no education. We don't need no thought control, no dark sarcasm in the classroom. Teachers leave the kids alone. Hey teacher live us kids alone. All in all it's just another brick in the wall, all in all you're just another brick in the wall.",
+            translatedText: "Noi non abbiamo bisogno di istruzione. Noi non abbiamo bisogno di controllo sul pensiero di sinistro sarcasmo in classe. Insegnanti, lasciate stare i ragazzi. Hei, maestro, lascia stare noi ragazzi. Dopo tutto è solo un altro mattone nel muro, dopo tutto sei solo un altro mattone nel muro.",
+            originalLanguage: 130,
+            translatedLanguage: 215
+        });
+        await ParallelText.create({
+            originalText: "I don't need no arms around me, I don't need no drugs to calm me. I have seen the writings on the wall, don't think I need anything at all. All in all it was all just bricks in the wall, all in all you were all just bricks in the wall.",
+            translatedText: "Non ho bisogno di braccia attorno a me, non ho bisogno di droghe per calmarmi. Ho visto i destini segnati, non pensare che abbia bisogno di una cosa qualsiasi. Dopo tutto erano solo mattoni nel muro, dopo tutto eravate tutti solo mattoni nel muro.",
+            originalLanguage: 130,
+            translatedLanguage: 215
+        });
+        await ParallelText.create({
+            originalText: "Well, it ain't no use to sit and wonder why, babe even you don't know by nowand it ain't no use to sit and wonder why, babe it'll never do somehow.",
+            translatedText: "Non serve a niente stare seduta e chiederti perché,se non lo sai ancora, non serve a niente stare seduta e chiedenti perché, bambina non servirà a niente lo stesso.",
+            originalLanguage: 130,
+            translatedLanguage: 215
+        });
+        await ParallelText.create({
+            originalText: "They're selling postcards of the hanging, they're painting the passports brown, the beauty parlor is filled with sailors. The circus is in town. Here comes the blind commissioner, they've got him in a trance, one hand is tied to the tight-rope walker the other is in his pants. And the riot squad they're restless, they need somewhere to go as Lady and I look out tonight from Desolation Row.",
+            translatedText: "Vendono cartoline dell'impiccagione, tingono i passaporti di marrone, il salone di bellezza è pieno di marinai, il circo è in città. Ecco che arriva il commissario cieco, l'hanno fatto cadere in trance, ha una mano legata al funambolo ubriaco, l'altra la tiene nei pantaloni. Le forze dell'ordine sono irrequiete, hanno bisogno di un posto dove andare mentre la mia donna e io ci teniamo alla larga dal vicolo della desolazione.",
+            originalLanguage: 130,
+            translatedLanguage: 215
+        });
         console.log("Parallel Texts created")
     },
     createTestParallelTexts : async () => {  
