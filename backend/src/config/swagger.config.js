@@ -7,7 +7,19 @@ const options = {
     info: {
       title: "Translator Web Platform REST API Docs",
       version: "1.0.0",
-    }
+    },
+    components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-access-token'
+        }
+      }
+    },
+    security: [{
+      ApiKeyAuth: []
+    }]
   },
   apis: ["./src/routes/*js"],
 };
