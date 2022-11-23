@@ -146,6 +146,8 @@ module.exports = function(app) {
    *                properties:
    *                  message: 
    *                    type: string
+   *                  accessToken: 
+   *                    type: string
    *                example:
    *                  message: Invalid Password!
    *                  accessToken: null
