@@ -12,8 +12,10 @@ module.exports = function(app) {
    * @openapi
    * '/api/alignment/all':
    *  get:
+   *    security:
+   *      - ApiKeyAuth: []
    *    tags:
-   *      - All Alignment
+   *      - All Alignments
    *    summary: Retrieve all parallel text that could be aligned
    *    responses:
    *        200:
@@ -74,7 +76,7 @@ module.exports = function(app) {
    *    security:
    *      - ApiKeyAuth: []
    *    tags:
-   *      - All Alignment available
+   *      - All Alignments
    *    summary: Retrieve all parallel text that could be aligned by the user
    *    responses:
    *        200:
