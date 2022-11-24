@@ -82,7 +82,7 @@ exports.allAccess = (req, res) => {
         .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
       let weighted_average_review_translations_from_alignment = translations_from_alignment.length == 0 ? 'nd' : weighted_accumulator_review_translations_from_alignment / weighted_counter_review_translations_from_alignment
     
-      res.status(200).send({
+      return res.status(200).send({
         translations: n_translation,
         alignments: n_alignment,
         reviews: n_review,
@@ -94,7 +94,7 @@ exports.allAccess = (req, res) => {
         weighted_average_review_translations_from_alignment: weighted_average_review_translations_from_alignment
       });
     } catch (e){
-      res.sendStatus(500)
+      return res.sendStatus(500)
     }
   };
 
@@ -125,12 +125,12 @@ exports.allAccess = (req, res) => {
         },
         group: [db.Sequelize.fn('date_trunc', 'week', db.Sequelize.col('createdAt')), 'createdAtWeek']
       })
-      res.status(200).send({
+      return res.status(200).send({
         translations: translations,
         reviews: reviews
       })
     } catch(e){
-      res.sendStatus(500)
+      return res.sendStatus(500)
     }
 
   }
