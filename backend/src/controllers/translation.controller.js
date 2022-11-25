@@ -43,7 +43,7 @@ exports.allTranslationsNotReviewdByUser = async (req, res) => {
     try {
         let all_translations = await Translation.findAll({
             attributes: ['id', 'average_score', 'n_scores'],
-            include: ['OriginalSentence','TranslatedSentence', 'Reviews'],            
+            include: ['OriginalSentence','TranslatedSentence'],
             where: {
                 [db.Sequelize.Op.or]: [
                     {
