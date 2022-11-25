@@ -2,11 +2,15 @@
 
 Progetto sviluppato per la mia tesi di laurea magistrale in Ingegneria e Scienze Unformatiche presso l'Università di Bologna.
 
+## Contenuto del progetto:
+Il progetto si pone come obiettivo la costruzione di una piattaforma web che accoglie frasi e traduzioni in diverse lingue. Un utente può registrarsi come traduttore ed entrare all'interno del sistema. Al suo accesso sarà possibile scegliere le proprie lingue di competenza, di conseguenza nelle varie sezioni della piattaforma gli saranno proposte solamente frasi da tradurre, traduzioni da valutare e testi da allineare che riguardano unicamente le sue lingue di interesse.
+Tramite il contributo della comunity, la piattaforma costruirà circolarità di informazione costruendo catene di traduzione, valutate da esperti validando così la bontà della traduzione. 
+
+
 Il progetto si suddivide in tre cartelle principali:
-- backend: contiene il codice per eseguire un backed in node.js;
+- backend: contiene il codice per eseguire un backed sviluppato in node.js;
 - frontend: contiene il codice per eseguire una SPA sviluppata con il framework Vue.js;
 - docker: contiene le istruzioni per creare l'infrastruttura e gestisce la replicabilità.
-
 ## Istruzioni per l'esecuzione:
 
 ### Esecuzione del sistema in produzione
@@ -48,3 +52,7 @@ Così saran creati 7 container:
 docker exec -ti express_app_container bash
 npm test
 ```
+
+## Swagger
+Le API costruite sono consultabili anche attraverso Swagger.
+Di default su porta 3000 al percorso /docs, ad esempio http://localhost:3000/docs/
