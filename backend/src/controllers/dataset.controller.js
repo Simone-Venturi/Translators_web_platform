@@ -88,7 +88,7 @@ exports.loadDataSet = async (req, res) => {
             return res.sendStatus(200)
           })
           .catch((err) => {
-            return res.status(500).send({message: 'error during dataset parsing'})
+            return res.status(400).send({message: 'error during dataset parsing'})
           })
     } catch (e) {
         return res.sendStatus(500)
